@@ -9,12 +9,13 @@ class Wikidata:
     """
     Wikidata access wrapper
     """
-    def __init__(self,endpoint:str="https://query.wikidata.org/sparql"):
+    def __init__(self,endpoint:str="https://query.wikidata.org/sparql",debug:bool=False):
         """
         constructor
         """
         self.endpoint=endpoint
         self.sparql = SPARQL(endpoint)
+        self.debug=debug
         
         
     def getClassQids(self,qids:list)->dict:
@@ -26,7 +27,7 @@ class Wikidata:
             qids(list): the list of id
         """
         sparql_query=f"""# get the instanceof values for a given entity
-SELECT ?item ?qid ?class_qid ?class 
+SELECT ?item ?itemLabel ?qid ?class_qid ?class ?classLabel
 WHERE 
 {{
   VALUES ?item {{
@@ -38,10 +39,16 @@ WHERE
                 wd_url=qid
             sparql_query+=f"    <{wd_url}>\n"
         sparql_query+=f"""}}
-  ?item wdt:P279*/wdt:P31* ?class.
+  ?item wdt:P31/wdt:P279* ?class.
+  ?item rdfs:label ?itemLabel
+  FILTER(LANG(?itemLabel)="en")
+  ?class rdfs:label ?classLabel
+  FILTER(LANG(?classLabel)="en")
   BIND(REPLACE(STR(?class),"http://www.wikidata.org/entity/","") AS ?class_qid)
   BIND(REPLACE(STR(?item),"http://www.wikidata.org/entity/","") AS ?qid)
 }}"""
+        if self.debug:
+            print(sparql_query)
         class_rows=self.sparql.queryAsListOfDicts(sparql_query)
         class_map=LOD.getLookup(class_rows, "qid", withDuplicates=True)
         return class_map

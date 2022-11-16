@@ -15,7 +15,6 @@ from skg.wdsearch import WikidataSearch
 from skg.wikidata import Wikidata
 from skg.kg import SKG_Def
 from skg.graph import Node
-from skg.scholar import Scholar
 
 class SotSog():
     """
@@ -40,7 +39,7 @@ class SotSog():
         search with the given search list
         """
         search_term=' '.join(search_list)
-        wd=Wikidata()
+        wd=Wikidata(debug=self.debug)
         wds=WikidataSearch(language=lang,debug=self.debug)
         search_options=wds.searchOptions(search_term)
         items=[]

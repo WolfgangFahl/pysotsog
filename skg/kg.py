@@ -38,6 +38,7 @@ class SKG_Def:
             ("DBLP_publication_ID","P8978"),
             ("publication_date","P577")
         ])
+        # scientific event
         self.concepts["Event"].map_wikidata("Q52260246","event",[
             ("title","P1476"),
             ("location","P276"),
