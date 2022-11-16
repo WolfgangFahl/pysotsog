@@ -56,6 +56,8 @@ test = [
 
 [tool.hatch.build.targets.wheel]
 packages = [
-  "jpcore",
-  "justpy",
+  "skg",
 ]
+
+[project.scripts]
+scholar = "skg.scholar:main"
