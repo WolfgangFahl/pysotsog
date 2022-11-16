@@ -5,6 +5,7 @@ Created on 2022-11-16
 '''
 from tests.basetest import Basetest
 from skg.wdsearch import WikidataSearch
+from skg.wikidata import Wikidata
 
 class TestWikidataSearch(Basetest):
     """
@@ -13,6 +14,7 @@ class TestWikidataSearch(Basetest):
     
     def test_wikidata_search(self):
         """
+        test the wikidata serarch API
         """
         search="Tim Berners-Lee"
         wd=WikidataSearch()
@@ -21,3 +23,12 @@ class TestWikidataSearch(Basetest):
         qid,_itemLabel,_desc=search_options[0]
         self.assertEqual("Q80",qid)
         pass
+    
+    def test_item_instanceof(self):
+        """
+        test getting the classes Q-Identifiers of a given instance 
+        """
+        wd=Wikidata()
+        classes_map=wd.getClassQids(["Q80","Q937"])
+        print(classes_map)
+        

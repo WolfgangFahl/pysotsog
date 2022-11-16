@@ -4,6 +4,7 @@ Created on 2022-11-16
 @author: wf
 '''
 from skg.scholar import Scholar
+from skg.paper import Paper
 from skg.graph import Concept
 
 class SKG_Def:
@@ -16,10 +17,40 @@ class SKG_Def:
         constructor
         """
         self.concepts={
-            "Scholar": Concept(name="Scholar",samples=Scholar.getSamples())
+            "Scholar": Concept(name="Scholar",cls=Scholar),
+            "Paper": Concept(name="Paper",cls=Paper)
         }
-        self.concepts["Scholar"].map_wikidata("Q5",[
+        self.concepts["Scholar"].map_wikidata("Q5","author",[
+            ("name","label"),
             ("dblpId","P2456"),("gndId","P227"),
             ("linkedInId","P6634"),
             ("homepage","P6634"),
-            ("googleScholarUser","P1960"),("orcid","P496")])
+            ("googleScholarUser","P1960"),("orcid","P496"),
+            ("givenName","P735"),
+            ("familyName","P734")
+        ])
+        self.concepts["Paper"].map_wikidata("Q13442814","work",[
+            ("title","label"),
+            ("DOI","P356"),
+            ("DBLP_publication_ID","P8978"),
+            ("publication_date","P577")
+        ])
+        self.concepts_by_qid={}
+        for concept in self.concepts.values():
+            if concept.wd_class in self.concepts_by_qid:
+                raise Exception(f"duplicate wd_class definition: {concept.wd_class}")
+            self.concepts_by_qid[concept.wd_class]=concept
+        
+    def conceptForQid(self,qid:str)->Concept:
+        """
+        get the concept for the given wikidata Q Identifieer
+        
+        Args:
+            qid(str): get the concept for the given Qid
+            
+        Return:
+            Concept: or None if none is found
+        """
+        concept=self.concepts_by_qid.get(qid,None)
+        return concept
+        

@@ -14,14 +14,23 @@ class Scholar(skg.graph.Node):
     @classmethod
     def getSamples(cls):
         samples=[
-            {"wikiDataId":"Q54303353",
-             "gndId":"",
-             "dblpId":"d/StefanDecker",
-             "orcid":"0000-0001-6324-7164",
-             "linkedInId":"",
-             "googleScholarUser":"uhVkSswAAAAJ",
-             "homepage":"http://www.stefandecker.org"
-             }]
+            {
+                "wikiDataId":"Q54303353",
+                "name": "Stefan Decker",
+                "gndId":"",
+                "dblpId":"d/StefanDecker",
+                "orcid":"0000-0001-6324-7164",
+                "linkedInId":"",
+                "googleScholarUser":"uhVkSswAAAAJ",
+                "homepage":"http://www.stefandecker.org"
+            },
+            {
+                "name": "Tim Berners-Lee",
+                "wikiDataId": "Q80",
+                "givenName": "Timothy",
+                "familyName": "Berners-Lee" 
+            }
+        ]
         return samples
         
     
@@ -29,15 +38,3 @@ class Scholar(skg.graph.Node):
         """
         constructor
         """
-        
-    def scholia_url(self):
-        """
-        get my scholia url
-        """
-        prefix="https://scholia.toolforge.org/author"
-        wd_url=getattr(self, "wikiDataId",None)
-        if wd_url is None:
-            return prefix
-        else:
-            qid=wd_url.replace("http://www.wikidata.org/entity/","")
-            return f"{prefix}/{qid}"

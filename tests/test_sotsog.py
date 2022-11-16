@@ -12,8 +12,19 @@ class TestSotsog(Basetest):
 
     def test_sotsog_search(self):
         """
+        test searches
         """
         sotsog=SotSog()
-        scholars=sotsog.search(["Albert","Einstein"], lang="en", show=False, open_browser=False)
-        for scholar in scholars:
-            print(scholar)
+        search_examples=[
+            {
+                "search": ["Albert","Einstein"],
+            },
+            {
+                "search": ["Designing the web for an open society"]
+            }
+        ]
+        for i,search_example in enumerate(search_examples):
+            search=search_example["search"]
+            items=sotsog.search(search,show=False, open_browser=False)        
+            for item in items:
+                print(item)

@@ -12,7 +12,9 @@ from skg.version import Version
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 from skg.wdsearch import WikidataSearch
+from skg.wikidata import Wikidata
 from skg.kg import SKG_Def
+from skg.graph import Node
 from skg.scholar import Scholar
 
 class SotSog():
@@ -20,10 +22,15 @@ class SotSog():
     Standing on the shoulders of giants
     """
     
-    def __init__(self):
+    def __init__(self,debug:bool=False):
         """
         constructor
+        
+        Args:
+            debug(bool): if True debugging should be switched on
         """
+        self.debug=debug
+        Node.debug=debug
         self.wikipedia_url="https://en.wikipedia.org/wiki/Standing_on_the_shoulders_of_giants"
         self.skg_def=SKG_Def()
         self.scholar_concept=self.skg_def.concepts["Scholar"]
@@ -33,22 +40,33 @@ class SotSog():
         search with the given search list
         """
         search_term=' '.join(search_list)
-        wd=WikidataSearch(language=lang)
-        search_options=wd.searchOptions(search_term)
-        scholars=[]
+        wd=Wikidata()
+        wds=WikidataSearch(language=lang,debug=self.debug)
+        search_options=wds.searchOptions(search_term)
+        items=[]
+        qids=[]
         for qid,itemLabel,desc in search_options:
-            wd_scholars=Scholar.from_wikidata_via_id(self.scholar_concept,"wikiDataId", qid, lang=lang)
-            if len(wd_scholars)>0:
-                scholar=wd_scholars[0]
-                scholars.append(scholar)
-                if show:
-                    print(f"{itemLabel}({qid}):{desc}✅")
-                    print(scholar)
-                if open_browser:
-                    scholia_url=scholar.scholia_url()
-                    print(f"opening {scholia_url} in browser")
-                    webbrowser.open(scholia_url)
-        return scholars
+            qids.append(qid)
+        class_map=wd.getClassQids(qids)
+        for qid,itemLabel,desc in search_options:
+            if qid in class_map:
+                class_rows=class_map[qid]
+                for class_row in class_rows:
+                    class_qid=class_row["class_qid"]
+                    concept=self.skg_def.conceptForQid(class_qid)
+                    if concept is not None:
+                        wd_items=concept.cls.from_wikidata_via_id(concept,"wikiDataId", qid, lang=lang)
+                        if len(wd_items)>0:
+                            item=wd_items[0]
+                            items.append(item)
+                            if show:
+                                print(f"{itemLabel}({qid}):{desc}✅")
+                                print(item)
+                            if open_browser:
+                                scholia_url=item.scholia_url()
+                                print(f"opening {scholia_url} in browser")
+                                webbrowser.open(scholia_url)
+        return items
 
 __version__ = Version.version
 __date__ = Version.date
@@ -93,7 +111,7 @@ USAGE
         if len(argv) < 2:
             parser.print_usage()
             sys.exit(1)
-        sotsog=SotSog()
+        sotsog=SotSog(debug=args.debug)
         sotsog.search(args.search,lang=args.lang,open_browser=True)
         pass
     except KeyboardInterrupt:

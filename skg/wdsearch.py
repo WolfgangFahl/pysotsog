@@ -13,16 +13,18 @@ class WikidataSearch(object):
     Wikidata Search
     '''
 
-    def __init__(self,language='en',timeout=2.0):
+    def __init__(self,language='en',timeout=2.0,debug:bool=False):
         '''
         Constructor
         
         Args:
             language(str): the language to use e.g. en/fr
             timeout(float): maximum time to wait for result
+            debug(bool): if True debug details should be shown
         '''
         self.language=language
         self.timeout=timeout
+        self.debug=debug
         
     def searchOptions(self,searchFor:str,limit:int=9)->list:
         '''

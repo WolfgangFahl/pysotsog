@@ -9,26 +9,33 @@ class Concept:
     """
     an Entity
     """
-    def __init__(self,name:str,samples:list):
+    def __init__(self,name:str,cls):
         """
         constructor
         
         Args:
             name(str): the name of the node
-            samples(list): a list of dicts of sample values
+            cls: a class
         """
         self.name=name
         self.props={}
-        for sample in samples:
+        self.cls=cls
+        # @TODO check that getSamples exists
+        for sample in cls.getSamples():
             for key in sample.keys():
                 if not key in self.props:
                     self.props[key]=Property(key)
                     
-    def map_wikidata(self,wd_class:str,map_list:list):
+    def map_wikidata(self,wd_class:str,scholia_suffix,map_list:list):
         """
         map wikidata entries
+        
+        Args:
+            wd_class(str): the main wikidata base class
+            scholia_suffix(str): the scholia suffix
         """
         self.wd_class=wd_class
+        self.scholia_suffix=scholia_suffix
         for prop_name,wd_prop in map_list:
             if prop_name in self.props:
                 self.props[prop_name].wd_prop=wd_prop
@@ -44,6 +51,7 @@ class Node:
     """
     a Node in the scholary knowledge graph
     """
+    debug=False
     
     def __init__(self):
         """
@@ -70,6 +78,18 @@ class Node:
         for key in concept.props.keys():
             if key in record:
                 setattr(self, key, record[key])
+                
+    def scholia_url(self):
+        """
+        get my scholia url
+        """
+        prefix=f"https://scholia.toolforge.org/{self.concept.scholia_suffix}"
+        wd_url=getattr(self, "wikiDataId",None)
+        if wd_url is None:
+            return prefix
+        else:
+            qid=wd_url.replace("http://www.wikidata.org/entity/","")
+            return f"{prefix}/{qid}"
         
     @classmethod
     def from_wikidata_via_id(cls,concept,id_name:str,id_value:str,lang:str="en"):
@@ -104,6 +124,8 @@ WHERE {{
                 clause=f"OPTIONAL {{ {clause} }}"
             sparql_query+="\n  "+clause
         sparql_query+="\n}"
+        if Node.debug:
+            print(sparql_query)
         records=wikidata.sparql.queryAsListOfDicts(sparql_query)
         instances=[]
         for record in records:
