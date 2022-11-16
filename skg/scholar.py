@@ -73,7 +73,9 @@ USAGE
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
         
         args = parser.parse_args(argv[1:])
-    
+        if len(argv) < 2:
+            parser.print_usage()
+            sys.exit(1)
         pass
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###

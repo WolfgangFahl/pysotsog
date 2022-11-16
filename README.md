@@ -9,7 +9,7 @@ python Library for Scholars to achieve "Standing on the shoulders of giants"
 [![License](https://img.shields.io/github/license/WolfgangFahl/pysotsog.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
 ## Introduction
-Jpysotsog is a python library for scholars to help navigate the conceptual knowledge graph consisting of
+pysotsog is a python library for scholars to help navigate the conceptual knowledge graph consisting of
 
 - authors
 - organizations
