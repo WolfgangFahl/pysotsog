@@ -50,4 +50,21 @@ class EventSeries(skg.graph.Node):
             }
         ]
         return samples
+    
+class Proceedings(skg.graph.Node):
+    """
+    Proceedings of an event
+    """
+    @classmethod
+    def getSamples(cls):
+        samples=[
+            {
+                "wikiDataId": "Q115053286",
+                "short_name": "Wikidata 2022 (English)",
+                "title": "Proceedings of the 3rd Wikidata Workshop 2022 (English)",
+                "publication_date": "2022-11-03",
+                "full_work_available_at_URL": "http://ceur-ws.org/Vol-3262/"
+            }
+        ]
+        return samples
                 

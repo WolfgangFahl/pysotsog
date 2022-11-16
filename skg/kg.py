@@ -5,7 +5,7 @@ Created on 2022-11-16
 '''
 from skg.scholar import Scholar
 from skg.paper import Paper
-from skg.event import Event,EventSeries
+from skg.event import Event,EventSeries,Proceedings
 from skg.graph import Concept
 
 
@@ -22,7 +22,8 @@ class SKG_Def:
             "Scholar": Concept(name="Scholar",cls=Scholar),
             "Paper": Concept(name="Paper",cls=Paper),
             "Event": Concept(name="Event",cls=Event),
-            "EventSeries": Concept(name="EventSeries",cls=EventSeries)
+            "EventSeries": Concept(name="EventSeries",cls=EventSeries),
+            "Proceedings": Concept(name="Proceedings",cls=Proceedings)
         }
         self.concepts["Scholar"].map_wikidata("Q5","author",[
             ("name","label"),
@@ -53,6 +54,13 @@ class SKG_Def:
             ("VIAF_ID","P214"),
             ("DBLP_venue_ID","P8926"),
             ("official_website","P856")
+        ])
+        # proceedings
+        self.concepts["Proceedings"].map_wikidata("Q1143604","venue",[
+            ("title","P1476"),
+            ("short_name","P1813"),
+            ("full_work_available_at_URL","P953"),
+            ("publication_date","P577")
         ])
                       
         self.concepts_by_qid={}

@@ -118,7 +118,7 @@ WHERE {{
             if prop.name=="wikiDataId":
                 continue
             if not hasattr(prop, "wd_prop"):
-                raise Exception(f"Property {prop.name} has no wikidata mapping")
+                raise Exception(f"Property {prop.name} of {concept.name} has no wikidata mapping")
             clause=f"?wikiDataId wdt:{prop.wd_prop} ?{prop.name}."
             if prop.name!=id_name:
                 clause=f"OPTIONAL {{ {clause} }}"
