@@ -6,6 +6,7 @@ Created on 2022-11-16
 from tests.basetest import Basetest
 from skg.wdsearch import WikidataSearch
 from skg.wikidata import Wikidata
+import json
 
 class TestWikidataSearch(Basetest):
     """
@@ -29,6 +30,6 @@ class TestWikidataSearch(Basetest):
         test getting the classes Q-Identifiers of a given instance 
         """
         wd=Wikidata()
-        classes_map=wd.getClassQids(["Q80","Q937"])
-        print(classes_map)
+        classes_map=wd.getClassQids(["Q80","Q937","Q112055391"])
+        print(json.dumps(classes_map,indent=2))
         

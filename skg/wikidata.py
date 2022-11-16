@@ -38,7 +38,7 @@ WHERE
                 wd_url=qid
             sparql_query+=f"    <{wd_url}>\n"
         sparql_query+=f"""}}
-  ?item wdt:P31 ?class.
+  ?item wdt:P279*/wdt:P31* ?class.
   BIND(REPLACE(STR(?class),"http://www.wikidata.org/entity/","") AS ?class_qid)
   BIND(REPLACE(STR(?item),"http://www.wikidata.org/entity/","") AS ?qid)
 }}"""

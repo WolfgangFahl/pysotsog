@@ -5,7 +5,9 @@ Created on 2022-11-16
 '''
 from skg.scholar import Scholar
 from skg.paper import Paper
+from skg.event import Event
 from skg.graph import Concept
+
 
 class SKG_Def:
     """
@@ -18,13 +20,14 @@ class SKG_Def:
         """
         self.concepts={
             "Scholar": Concept(name="Scholar",cls=Scholar),
-            "Paper": Concept(name="Paper",cls=Paper)
+            "Paper": Concept(name="Paper",cls=Paper),
+            "Event": Concept(name="Event",cls=Event)
         }
         self.concepts["Scholar"].map_wikidata("Q5","author",[
             ("name","label"),
             ("dblpId","P2456"),("gndId","P227"),
             ("linkedInId","P6634"),
-            ("homepage","P6634"),
+            ("homepage","P856"),
             ("googleScholarUser","P1960"),("orcid","P496"),
             ("givenName","P735"),
             ("familyName","P734")
@@ -35,6 +38,13 @@ class SKG_Def:
             ("DBLP_publication_ID","P8978"),
             ("publication_date","P577")
         ])
+        self.concepts["Event"].map_wikidata("Q52260246","event",[
+            ("title","P1476"),
+            ("location","P276"),
+            ("point_in_time","P585"),
+            ("official_website","P856")
+        ])
+                      
         self.concepts_by_qid={}
         for concept in self.concepts.values():
             if concept.wd_class in self.concepts_by_qid:

@@ -17,13 +17,16 @@ class TestSotsog(Basetest):
         sotsog=SotSog()
         search_examples=[
             {
+                "search": ["Wikidata Workshop 2022"],
+            }, 
+            {
                 "search": ["Albert","Einstein"],
             },
             {
                 "search": ["Designing the web for an open society"]
-            }
+            },
         ]
-        for i,search_example in enumerate(search_examples):
+        for _i,search_example in enumerate(search_examples):
             search=search_example["search"]
             items=sotsog.search(search,show=False, open_browser=False)        
             for item in items:
