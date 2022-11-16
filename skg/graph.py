@@ -62,7 +62,7 @@ class Node:
         """
         return a text representation of me
         """
-        text=f"{self.concept.name} {self.label}:"
+        text=f"{self.concept.name}➜{self.label}:"
         delim="\n  "
         for prop in self.concept.props.values():
             if hasattr(self, prop.name):

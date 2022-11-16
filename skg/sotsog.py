@@ -107,7 +107,7 @@ USAGE
         parser.add_argument("-l", "--lang",help="language code to use",default="en")
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
         args = parser.parse_args(argv)
-        if len(argv) < 2:
+        if len(argv) < 1:
             parser.print_usage()
             sys.exit(1)
         sotsog=SotSog(debug=args.debug)
