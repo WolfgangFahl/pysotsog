@@ -42,7 +42,7 @@ classifiers=[
     ]
 dynamic = ["version", "description"]
 [tool.hatch.version]
-path = "justpy/__init__.py"
+path = "skg/__init__.py"
 
 [project.urls]
 Home = "https://github.com/WolfgangFahl/pysotsog"
