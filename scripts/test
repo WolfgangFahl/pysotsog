@@ -1,0 +1,49 @@
+#!/bin/bash
+# WF 2022-08-20
+
+#
+# install packages
+#
+install_packages() {
+  # install test packages
+  pip install green
+  # install example packages
+  # pip install bokeh matplotlib pandas plotly pydeck pygments seaborn vega_datasets
+}
+
+#
+# test module by module
+#
+modulewise_test() {
+  foundErrors=0
+  foundTests=0
+  for testmodule in tests/test*.py
+  do
+    echo "testing $testmodule ..."
+    # see https://github.com/CleanCut/green/issues/263
+    #green $testmodule -s1
+    python -m unittest $testmodule
+    exit_code=$?
+    foundErrors=$((foundErrors+exit_code))
+    foundTests=$((foundTests+1))
+  done
+  echo "$foundErrors/$foundTests  module unit tests failed" 1>&2
+  if [[ $foundErrors -gt 0 ]]
+  then
+    exit 1
+  fi
+}
+
+install_packages
+export PYTHON_PATH="."
+while [  "$1" != ""  ]
+do
+  option="$1"
+  case $option in
+    -m|--module)
+      modulewise_test
+      exit 0
+  esac
+done
+# test importability might fail if we do this ...
+green tests -s 1

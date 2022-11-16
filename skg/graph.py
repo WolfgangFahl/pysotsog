@@ -55,9 +55,10 @@ class Node:
         return a text representation of me
         """
         text=f"{self.concept.name} {self.label}:"
+        delim="\n  "
         for prop in self.concept.props.values():
             if hasattr(self, prop.name):
-                text+=f"{prop.name}={getattr(self,prop.name)}"
+                text+=f"{delim}{prop.name}={getattr(self,prop.name)}"
         return text
         
     def from_dict(self,concept,record:str):
