@@ -74,6 +74,10 @@ class Node:
     @classmethod
     def from_wikidata_via_id(cls,concept,id_name:str,id_value:str,lang:str="en"):
         wikidata=Wikidata()
+        if id_name=="wikiDataId":
+            value_clause=f"<http://www.wikidata.org/entity/{id_value}>"
+        else:
+            value_clause=f'''"{id_value}"'''
         sparql_query=f"""# Query for {concept.name} details via ID {id_name} value {id_value}
 PREFIX wd: <http://www.wikidata.org/entity/>
 PREFIX wdt: <http://www.wikidata.org/prop/direct/>
@@ -84,7 +88,7 @@ SELECT ?{concept.name} ?qId"""
         sparql_query+=f"""
 WHERE {{
   VALUES ?{id_name} {{
-    "{id_value}"
+    {value_clause}
   }}
   ?wikiDataId wdt:P31 wd:{concept.wd_class}.
   ?wikiDataId rdfs:label ?{concept.name} .

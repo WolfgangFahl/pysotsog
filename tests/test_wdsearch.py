@@ -16,8 +16,8 @@ class TestWikidataSearch(Basetest):
         """
         search="Tim Berners-Lee"
         wd=WikidataSearch()
-        search_result=wd.search(search)
-        self.assertTrue(len(search_result)>0)
-        r1=search_result[0]
-        self.assertEqual("Q80",r1["id"])
+        search_options=wd.searchOptions(search)
+        self.assertTrue(len(search_options)>0)
+        qid,_itemLabel,_desc=search_options[0]
+        self.assertEqual("Q80",qid)
         pass

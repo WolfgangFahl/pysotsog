@@ -60,4 +60,4 @@ packages = [
 ]
 
 [project.scripts]
-scholar = "skg.scholar:main"
+sotsog = "skg.sotsog:main"
