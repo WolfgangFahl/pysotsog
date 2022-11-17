@@ -88,9 +88,9 @@ def main(argv=None): # IGNORE:C0111
     program_name = os.path.basename(__file__)
     program_shortdesc = Version.description
     
-    program_version = "v%s" % __version__
+    program_version =f"v{__version__}" 
     program_build_date = str(__updated__)
-    program_version_message = '%%(prog)s %s (%s)' % (program_version, program_build_date)
+    program_version_message = f'{program_name} ({program_version},{program_build_date})'
 
     user_name="Wolfgang Fahl"
     program_license = '''%s
@@ -110,6 +110,7 @@ USAGE
         # Setup argument parser
         parser = ArgumentParser(description=program_license, formatter_class=RawDescriptionHelpFormatter)
         parser.add_argument('search', action='store', nargs='*', help="search terms")
+        parser.add_argument("--about",help="show about info",action="store_true")
         parser.add_argument("-d", "--debug", dest="debug", action="store_true", help="show debug info")
         parser.add_argument("-la", "--lang",help="language code to use",default="en")
         parser.add_argument("-li", "--limit",help="limit the number of search results",type=int,default=9)
@@ -119,7 +120,13 @@ USAGE
             parser.print_usage()
             sys.exit(1)
         sotsog=SotSog(debug=args.debug)
-        sotsog.search(args.search,limit=args.limit,lang=args.lang,open_browser=True)
+        if args.about:
+            print(program_version_message)
+            doc_url="https://wiki.bitplan.com/index.php/Pysotsog"
+            print(f"see {doc_url}")
+            webbrowser.open(doc_url)
+        else:
+            sotsog.search(args.search,limit=args.limit,lang=args.lang,open_browser=True)
         pass
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
