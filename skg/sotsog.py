@@ -34,14 +34,21 @@ class SotSog():
         self.skg_def=SKG_Def()
         self.scholar_concept=self.skg_def.concepts["Scholar"]
     
-    def search(self,search_list,lang='en',show:bool=True,open_browser:bool=False)->list:
+    def search(self,search_list,limit:int=9,lang='en',show:bool=True,open_browser:bool=False)->list:
         """
         search with the given search list
+        
+        Args:
+            search_list(list): a list of search terms
+            limit(int): limit for the maximum number of results
+            lang(str): the language code to use for the search
+            show(bool): if True print the search results
+            open_browser(bool): if True open a browser for the target page of the item e.g. scholia
         """
         search_term=' '.join(search_list)
         wd=Wikidata(debug=self.debug)
         wds=WikidataSearch(language=lang,debug=self.debug)
-        search_options=wds.searchOptions(search_term)
+        search_options=wds.searchOptions(search_term,limit=limit)
         items=[]
         qids=[]
         for qid,itemLabel,desc in search_options:
@@ -104,14 +111,15 @@ USAGE
         parser = ArgumentParser(description=program_license, formatter_class=RawDescriptionHelpFormatter)
         parser.add_argument('search', action='store', nargs='*', help="search terms")
         parser.add_argument("-d", "--debug", dest="debug", action="store_true", help="show debug info")
-        parser.add_argument("-l", "--lang",help="language code to use",default="en")
+        parser.add_argument("-la", "--lang",help="language code to use",default="en")
+        parser.add_argument("-li", "--limit",help="limit the number of search results",type=int,default=9)
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
         args = parser.parse_args(argv)
         if len(argv) < 1:
             parser.print_usage()
             sys.exit(1)
         sotsog=SotSog(debug=args.debug)
-        sotsog.search(args.search,lang=args.lang,open_browser=True)
+        sotsog.search(args.search,limit=args.limit,lang=args.lang,open_browser=True)
         pass
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###

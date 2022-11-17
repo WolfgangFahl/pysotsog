@@ -3,7 +3,7 @@ Created on 2022-11-16
 
 @author: wf
 '''
-from skg.scholar import Scholar
+from skg.scholar import Scholar,Institution
 from skg.paper import Paper
 from skg.event import Event,EventSeries,Proceedings
 from skg.graph import Concept
@@ -20,6 +20,7 @@ class SKG_Def:
         """
         self.concepts={
             "Scholar": Concept(name="Scholar",cls=Scholar),
+            "Institution": Concept(name="Institution",cls=Institution),
             "Paper": Concept(name="Paper",cls=Paper),
             "Event": Concept(name="Event",cls=Event),
             "EventSeries": Concept(name="EventSeries",cls=EventSeries),
@@ -27,13 +28,26 @@ class SKG_Def:
         }
         self.concepts["Scholar"].map_wikidata("Q5","author",[
             ("name","label"),
-            ("dblpId","P2456"),("gndId","P227"),
+            ("dblpId","P2456"),
+            ("gndId","P227"),
             ("linkedInId","P6634"),
             ("homepage","P856"),
             ("googleScholarUser","P1960"),("orcid","P496"),
             ("givenName","P735"),
-            ("familyName","P734")
+            ("familyName","P734"),
+            ("gender","P21"),
+            ("image","P18"),
+            ("occupation","P106")
         ])
+        self.concepts["Institution"].map_wikidata("Q4671277","organization",[
+            ("short_name","P1813"), # 2.0 % 
+            ("inception","P571"), # 65.8 %
+            ("image","P18"), # 15.2 % 
+            ("country","P17"), # 88.8 %
+            ("located_in","P131"), # 51.9 %
+            ("official_website","P856"), # 59.1%
+            ("coordinate_location","P625") # 44.0 %
+        ])  
         self.concepts["Paper"].map_wikidata("Q13442814","work",[
             ("title","label"),
             ("DOI","P356"),
@@ -49,11 +63,13 @@ class SKG_Def:
         ])
         # academic event series
         self.concepts["EventSeries"].map_wikidata("Q47258130","event-series",[
-            ("title","P1476"),
-            ("short_name","P1813"),
-            ("VIAF_ID","P214"),
-            ("DBLP_venue_ID","P8926"),
-            ("official_website","P856")
+            ("title","P1476"), # 96.7 %
+            ("short_name","P1813"), # 93.1 %
+            ("VIAF_ID","P214"), # 60.5 %
+            ("DBLP_venue_ID","P8926"), # 96.4 %
+            ("gndId","P227"), #42.3 %
+            ("inception","P571"), # 22.3 %
+            ("official_website","P856") # 13.5 %
         ])
         # proceedings
         self.concepts["Proceedings"].map_wikidata("Q1143604","venue",[

@@ -46,7 +46,13 @@ class EventSeries(skg.graph.Node):
                 "short_name": "VNC (English)",
                 "DBLP_venue_ID": "conf/vnc",
                 "VIAF_ID": "267408611",
-                "title": "EEE Vehicular Networking Conference"
+                "title": "IEEE Vehicular Networking Conference"
+            },
+            {
+                "wikiDataId":"Q17012957",
+                "short_name":"ESWC",
+                "inception": "2004",
+                "gndId": "1091749205"
             }
         ]
         return samples

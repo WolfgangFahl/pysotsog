@@ -57,6 +57,8 @@ class WikidataSearch(object):
         '''
         try:
             apiurl=f"https://www.wikidata.org/w/api.php?action=wbsearchentities&language={self.language}&format=json&limit={limit}&search="
+            if self.debug:
+                print(apiurl)
             searchEncoded=urllib.parse.quote_plus(searchFor)
             apisearch=apiurl+searchEncoded
             with urllib.request.urlopen(apisearch,timeout=self.timeout) as url:
