@@ -80,7 +80,8 @@ class SotSog():
                                             bibentry=crossref.doiBibEntry([doi])
                                             print(bibentry)
                                         if scite:
-                                            scite_entry=crossref.doiScite([doi])
+                                            meta_data=crossref.doiMetaData([doi])
+                                            scite_entry=crossref.asScite(meta_data)
                                             print(scite_entry)
                             if open_browser:
                                 scholia_url=item.scholia_url()
