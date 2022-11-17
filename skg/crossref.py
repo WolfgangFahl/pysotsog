@@ -35,7 +35,9 @@ class Crossref:
             metadata = response['message']
         return metadata
     
-    def doiBibEntry(self,doi:str):
-        bibentry=cn.content_negotiation(ids = doi, format = "bibentry")
+    def doiBibEntry(self,dois:list):
+        """
+        """
+        bibentry=cn.content_negotiation(ids = dois, format = "bibentry")
         return bibentry
         

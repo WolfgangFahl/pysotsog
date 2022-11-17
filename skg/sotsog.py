@@ -15,6 +15,7 @@ from skg.wdsearch import WikidataSearch
 from skg.wikidata import Wikidata
 from skg.kg import SKG_Def
 from skg.graph import Node
+from skg.crossref import Crossref
 
 class SotSog():
     """
@@ -34,7 +35,7 @@ class SotSog():
         self.skg_def=SKG_Def()
         self.scholar_concept=self.skg_def.concepts["Scholar"]
     
-    def search(self,search_list,limit:int=9,lang='en',show:bool=True,open_browser:bool=False)->list:
+    def search(self,search_list,limit:int=9,lang='en',show:bool=True,bibtex:bool=False,open_browser:bool=False)->list:
         """
         search with the given search list
         
@@ -43,6 +44,7 @@ class SotSog():
             limit(int): limit for the maximum number of results
             lang(str): the language code to use for the search
             show(bool): if True print the search results
+            bibtex(bool): if True output bibtex for fitting search results
             open_browser(bool): if True open a browser for the target page of the item e.g. scholia
         """
         search_term=' '.join(search_list)
@@ -68,6 +70,12 @@ class SotSog():
                             if show:
                                 print(f"{itemLabel}({qid}):{desc}✅")
                                 print(item)
+                                if bibtex and item.concept.name=="Paper":
+                                    doi=getattr(item, "DOI",None)
+                                    if doi is not None:
+                                        crossref=Crossref()
+                                        bibentry=crossref.doiBibEntry([doi])
+                                        print(bibentry)
                             if open_browser:
                                 scholia_url=item.scholia_url()
                                 print(f"opening {scholia_url} in browser")
@@ -111,6 +119,8 @@ USAGE
         parser = ArgumentParser(description=program_license, formatter_class=RawDescriptionHelpFormatter)
         parser.add_argument('search', action='store', nargs='*', help="search terms")
         parser.add_argument("--about",help="show about info",action="store_true")
+        parser.add_argument("--bibtex",help="output bibtex format",action="store_true")
+        parser.add_argument("-nb","--nobrowser",help="do not open browser",action="store_true")
         parser.add_argument("-d", "--debug", dest="debug", action="store_true", help="show debug info")
         parser.add_argument("-la", "--lang",help="language code to use",default="en")
         parser.add_argument("-li", "--limit",help="limit the number of search results",type=int,default=9)
@@ -126,7 +136,8 @@ USAGE
             print(f"see {doc_url}")
             webbrowser.open(doc_url)
         else:
-            sotsog.search(args.search,limit=args.limit,lang=args.lang,open_browser=True)
+            sotsog.search(args.search,limit=args.limit,lang=args.lang,
+                          bibtex=args.bibtex,open_browser=not args.nobrowser)
         pass
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
