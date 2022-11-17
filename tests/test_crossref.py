@@ -17,9 +17,24 @@ class TestCrossref(Basetest):
         """
         test crossref
         """
+        debug=self.debug
+        debug=True
         dois=["10.1016/J.ARTMED.2017.07.002"]
         crossref=Crossref()
         bib_entry=crossref.doiBibEntry(dois)
-        print(bib_entry)
+        if debug:
+            print(bib_entry)
+        self.assertTrue("author = {Jean-Baptiste Lamy}," in bib_entry)
         meta_data=crossref.doiMetaData(dois)
-        print(json.dumps(meta_data,indent=2))
+        if debug:
+            print(json.dumps(meta_data,indent=2))
+        self.assertTrue("DOI" in meta_data)
+        self.assertEqual(dois[0].lower(),meta_data["DOI"])
+        scite_entry=crossref.asScite(meta_data)
+        if debug:
+            print(scite_entry)
+        
+    def test_scite(self):
+        """
+        test scite conversion
+        """
