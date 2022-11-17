@@ -33,7 +33,6 @@ class TestCrossref(Basetest):
         print (bib_text)
     
     def test_crossref_direct(self):
-        return
         import requests
         import json
         headers = {
