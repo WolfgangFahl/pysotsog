@@ -43,11 +43,13 @@ class SkgBrowser(App):
         """
         if index>0:
             style="color:grey"
-            text=f"&nbsp{term}{index+1}"
+            text=f"{term}<sub>{index+1}</sub>"
+            delim="&nbsp"
         else:
             style=""
             text=term
-        markup=Link.create(item.scholia_url(),text,tooltip=item.label,target="_blank",style=style)
+            delim=""
+        markup=delim+Link.create(item.scholia_url(),text,tooltip=item.label,target="_blank",style=style)
         return markup      
         
     async def onSearchButton(self,_msg):
@@ -58,6 +60,7 @@ class SkgBrowser(App):
             self.results.inner_html=""
             terms=self.searchTerms.value.split("\n")
             self.messages.text="Searching"
+            await self.wp.update()
             delim=""
             for term in terms:
                 if term:
