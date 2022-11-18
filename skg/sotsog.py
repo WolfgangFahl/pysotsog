@@ -23,15 +23,16 @@ class SotSog():
     Standing on the shoulders of giants
     """
     
-    def __init__(self,debug:bool=False):
+    def __init__(self,args):
         """
         constructor
         
         Args:
             debug(bool): if True debugging should be switched on
         """
-        self.debug=debug
-        Node.debug=debug
+        self.args=args
+        self.debug=args.debug
+        Node.debug=args.debug
         self.wikipedia_url="https://en.wikipedia.org/wiki/Standing_on_the_shoulders_of_giants"
         self.skg_def=SKG_Def()
         self.scholar_concept=self.skg_def.concepts["Scholar"]
@@ -141,7 +142,7 @@ USAGE
         if len(argv) < 1:
             parser.print_usage()
             sys.exit(1)
-        sotsog=SotSog(debug=args.debug)
+        sotsog=SotSog(args)
         if args.about:
             print(program_version_message)
             print(f"see {Version.doc_url}")
