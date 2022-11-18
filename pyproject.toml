@@ -18,11 +18,13 @@ readme = "README.md"
 license = { file="LICENSE" }
 dependencies = [
 		# https://github.com/justpy-org/justpy
-        'justpy~=0.11.1',
+        'justpy~=0.11.2',
         # https://pypi.org/project/pylodstorage/
         'pyLodStorage~=0.4.7',
         # https://pypi.org/project/habanero/
-        'habanero~=1.2.2'
+        'habanero~=1.2.2',
+        # https://pypi.org/project/pyJustpyWidgets/
+        'pyJustpyWidgets'
      ]
 
 requires-python = ">=3.7"
