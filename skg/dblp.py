@@ -13,7 +13,7 @@ class Dblp:
     Schloss Dagstuhl Dblp computer science bibliography
     """
     
-    def __init__(self,endpoint:str="https://qlever.cs.uni-freiburg.de/dblp"):
+    def __init__(self,endpoint:str="https://qlever.cs.uni-freiburg.de/api/dblp"):
         """
         constructor
         
@@ -34,6 +34,7 @@ class Dblp:
         g.parse (self.schema, format='application/rdf+xml')
         dblp = rdflib.Namespace('https://dblp.org/rdf/')
         g.bind('dblp', dblp)
+        g.bind('owl',OWL)
         query = """
         select distinct ?s ?p ?o 
         where { ?s ?p ?o}
