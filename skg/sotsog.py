@@ -18,6 +18,7 @@ from skg.graph import Node
 from skg.crossref import Crossref
 from skg.skgbrowser import SkgBrowser
 from jpcore.justpy_app import JustpyServer
+
 class SotSog():
     """
     Standing on the shoulders of giants
@@ -28,11 +29,14 @@ class SotSog():
         constructor
         
         Args:
-            debug(bool): if True debugging should be switched on
+            args(): command line Arguments(optional)
         """
         self.args=args
-        self.debug=args.debug
-        Node.debug=args.debug
+        debug=False
+        if args:
+            debug=args.debug
+        self.debug=debug
+        Node.debug=debug
         self.wikipedia_url="https://en.wikipedia.org/wiki/Standing_on_the_shoulders_of_giants"
         self.skg_def=SKG_Def()
         self.scholar_concept=self.skg_def.concepts["Scholar"]
