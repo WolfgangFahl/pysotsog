@@ -5,6 +5,7 @@ Created on 2022-11-17
 '''
 from lodstorage.sparql import SPARQL
 import rdflib
+from rdflib.namespace import OWL
 from skg.profiler import Profiler
 
 class Dblp:
@@ -23,7 +24,7 @@ class Dblp:
         self.schema="https://dblp.org/rdf/schema"
         self.sparql=SPARQL(self.endpoint)
         
-    def loadSchema(self,profile:bool=True):
+    def loadSchema(self,formats:str="n3",profile:bool=True):
         """
         load the schema
         """
@@ -31,7 +32,7 @@ class Dblp:
         profiler=Profiler("reading dblp schema")
         g = rdflib.Graph()
         g.parse (self.schema, format='application/rdf+xml')
-        dblp = rdflib.Namespace('https://dblp.org/rdf/schema#')
+        dblp = rdflib.Namespace('https://dblp.org/rdf/')
         g.bind('dblp', dblp)
         query = """
         select distinct ?s ?p ?o 
@@ -40,6 +41,10 @@ class Dblp:
         count=0
         for row in g.query(query):
             count+=1
-            print(row)
+            if "triples" in formats:
+                print(row)
         if profile:
-            profiler.time("for {count} triples")
+            profiler.time(f"for {count} triples")
+        for format in formats.split(","):
+            if format!="triples":
+                print (g.serialize(format=format))

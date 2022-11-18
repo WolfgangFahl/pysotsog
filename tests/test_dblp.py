@@ -21,5 +21,5 @@ class TestDblp(Basetest):
         test loading the dblp schema
         """
         dblp=Dblp()
-        dblp.loadSchema()
+        dblp.loadSchema(formats="n3,xml")
         
