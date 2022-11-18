@@ -2,15 +2,19 @@
 <projectDescription>
 	<name>pysotsog</name>
 	<comment></comment>
-	<projects></projects>
+	<projects>
+		<project>justpy</project>
+	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.python.pydev.PyDevBuilder</name>
-			<arguments></arguments>
+			<arguments>
+			</arguments>
 		</buildCommand>
 		<buildCommand>
 			<name>org.eclipse.wst.validation.validationbuilder</name>
-			<arguments></arguments>
+			<arguments>
+			</arguments>
 		</buildCommand>
 	</buildSpec>
 	<natures>

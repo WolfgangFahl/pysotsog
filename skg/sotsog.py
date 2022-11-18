@@ -16,7 +16,8 @@ from skg.wikidata import Wikidata
 from skg.kg import SKG_Def
 from skg.graph import Node
 from skg.crossref import Crossref
-
+from skg.skgbrowser import SkgBrowser
+from jpcore.justpy_app import JustpyServer
 class SotSog():
     """
     Standing on the shoulders of giants
@@ -128,10 +129,13 @@ USAGE
         parser.add_argument("--about",help="show about info",action="store_true")
         parser.add_argument("--bibtex",help="output bibtex format",action="store_true")
         parser.add_argument("-d", "--debug", dest="debug", action="store_true", help="show debug info")
-        parser.add_argument("-nb","--nobrowser",help="do not open browser",action="store_true")
+        parser.add_argument('--host',default=JustpyServer.getDefaultHost())
         parser.add_argument("-la", "--lang",help="language code to use",default="en")
         parser.add_argument("-li", "--limit",help="limit the number of search results",type=int,default=9)
+        parser.add_argument("-nb","--nobrowser",help="do not open browser",action="store_true")
+        parser.add_argument('--port',type=int,default=8765)
         parser.add_argument("--scite",help="output #scite format",action="store_true")
+        parser.add_argument("--serve",help="start webserver",action="store_true")
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
         args = parser.parse_args(argv)
         if len(argv) < 1:
@@ -140,9 +144,14 @@ USAGE
         sotsog=SotSog(debug=args.debug)
         if args.about:
             print(program_version_message)
-            doc_url="https://wiki.bitplan.com/index.php/Pysotsog"
-            print(f"see {doc_url}")
-            webbrowser.open(doc_url)
+            print(f"see {Version.doc_url}")
+            webbrowser.open(Version.doc_url)
+        elif args.serve:
+            skgBrowser=SkgBrowser(version=Version,sotsog=sotsog)
+            url=f"http://{args.host}:{args.port}"
+            webbrowser.open(url)
+            skgBrowser.start(args.host, args.port,debug=args.debug)
+            pass
         else:
             sotsog.search(args.search,limit=args.limit,lang=args.lang,
                           bibtex=args.bibtex,

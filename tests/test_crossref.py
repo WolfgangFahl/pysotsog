@@ -33,8 +33,10 @@ class TestCrossref(Basetest):
         scite_entry=crossref.asScite(meta_data)
         if debug:
             print(scite_entry)
-        
-    def test_scite(self):
+
+    def test_cookies(self):
         """
-        test scite conversion
         """
+        import requests
+        session = requests.Session()
+        print(session.cookies.get_dict())

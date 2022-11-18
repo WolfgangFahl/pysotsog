@@ -16,31 +16,10 @@ class TestDblp(Basetest):
         test dblp access
         """
         
-    def test_dblp_ontology(self):
+    def test_dblp_schema(self):
         """
+        test loading the dblp schema
         """
         dblp=Dblp()
-        import logging
-        import rdflib
-        import time
+        dblp.loadSchema()
         
-        logging.basicConfig()
-        logger = logging.getLogger('logger')
-        logger.warning('The system may break down')
-        
-        start_time = time.time()
-        
-        g = rdflib.Graph()
-        g.parse (dblp.schema, format='application/rdf+xml')
-        #nif = rdflib.Namespace('http://purl.org/nif/ontology/nif.owl')
-        #g.bind('nif', nif)
-        query = """
-        select distinct ?s ?p ?o 
-        where { ?s ?p ?o}
-        """
-        count=0
-        for row in g.query(query):
-            count+=1
-            print(row)
-        elapsed=time.time() - start_time
-        print(f"--- {elapsed} seconds for {count} triples---")
