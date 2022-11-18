@@ -23,7 +23,7 @@ class SotSog():
     Standing on the shoulders of giants
     """
     
-    def __init__(self,args):
+    def __init__(self,args=None):
         """
         constructor
         
