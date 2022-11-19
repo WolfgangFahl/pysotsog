@@ -3,11 +3,13 @@ Created on 2022-11-17
 
 @author: wf
 '''
-from lodstorage.sparql import SPARQL
+import datetime
+import json
 import rdflib
+from lodstorage.sparql import SPARQL
 from rdflib.namespace import OWL
 from skg.profiler import Profiler
-import json
+
 
 class Dblp:
     """
@@ -42,7 +44,7 @@ class Dblp:
             formats(str): if "triples" is in th format string show the results string
             profile(bool): if True show timing information for the query
         """
-        profiler=Profiler(f"query {query}")
+        profiler=Profiler(f"query {query}",profile=profile)
         result=self.schema.query(query)
         if "triples" in formats:
             self.show_triples(result)
@@ -92,19 +94,78 @@ class Dblp:
                 noprefix_key=self.unprefix_value(key)
                 row[noprefix_key] = row.pop(key)
             row[f"{key}_rdf"]=org_value
-    
-    def toPlantUml(self):
+            
+    def classesToPlantUml(self,classes:dict,indent:str="  "):
         """
-        get a plantuml version of the schema
+        convert the given classes dict to plantuml
+        
+        Args:
+            classes(dict): a dictionary of classes
+            indent(str): the indentation to apply
         """
-        classes=self.toClasses()
+        classes=classes["classes"]
         markup=""
         for cname,clazz in classes.items():
             class_markup=""
+            rel_markup="" # relations
             for pname,prop in clazz.items():
-                class_markup+=f"  {pname}\n"
-            class_markup=f"class {cname}{{\n{class_markup}\n}}"
+                if pname.startswith("@"):
+                    pass
+                else:
+                    prange=prop['range']
+                    if prange in classes:
+                        #  Class01 "1" *-- "many" Class02 : contains
+                        rel_markup+=f"{indent}{cname}--{prange}:{pname}\n"
+                    else:
+                        class_markup+=f"{indent}  {pname}:{prange}\n"
+            class_markup=f"{indent}class {cname}{{\n{class_markup}\n{indent}}}\n"
+            class_markup+=rel_markup
+            if "@subClassOf" in clazz:
+                general=clazz["@subClassOf"]
+                if general:
+                    class_markup+=f"{indent}{general} <|-- {cname}\n"
+            note=f"{indent}note top of {cname}\n"
+            if "@label" in clazz:
+                note+=f"""{indent}{clazz["@label"]}\n"""
+            if "@comment" in clazz:
+                note+=f"""{indent}{clazz["@comment"]}\n"""
+            note+=f"{indent}end note\n"
+            class_markup=note+class_markup
             markup+=class_markup
+        return markup
+    
+    def toPlantUml(self,header=None,footer=None):
+        """
+        get a plantuml version of the schema
+        
+        Args:
+            header(str): the header to apply
+            footer(str): the footer to apply
+        
+        Returns:
+            str: the plantuml markup
+        """
+        timestamp=datetime.datetime.utcnow().strftime('%Y-%m-%d')
+        if header is None:
+            header=f"""/'
+ Wolfgang Fahl 2022-11-19
+ updated {timestamp}
+  
+ dblp schema {self.schema_url}
+ converted from owl to plantuml
+'/
+title  dblp schema {self.schema_url} converted from owl to plantuml updated {timestamp}
+hide circle
+package foaf {{
+  class Document {{
+  }}
+}}
+package dblp {{
+ """
+        if footer is None:
+            footer="}\n"
+        classes=self.toClasses()
+        markup=header+self.classesToPlantUml(classes,indent="  ")+footer
         return markup
         
     def toClasses(self):
@@ -162,18 +223,22 @@ class Dblp:
         }
         return wrapped_classes
         
-    def loadSchema(self,formats:str="n3",profile:bool=True):
+    def loadSchema(self,formats:str="",profile:bool=False):
         """
         load the schema
+        
+        Args:
+            formats(str): the formats to dump
+            profile(bool): if True show timing
         """
         # https://stackoverflow.com/questions/56631109/how-to-parse-and-load-an-ontology-in-python
-        profiler=Profiler("reading dblp schema")
+        profiler=Profiler("reading dblp schema",profile=profile)
         self.schema = rdflib.Graph()
         self.schema.parse (self.schema_url, format='application/rdf+xml')
         if profile:
             profiler.time(f" for {len(self.schema)} triples")
         for t_format in formats.split(","):
-            if t_format!="triples":
+            if t_format and t_format!="triples":
                 print (self.schema.serialize(format=t_format))
         dblp = rdflib.Namespace('https://dblp.org/rdf/')
         self.schema.bind('dblp', dblp)

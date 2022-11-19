@@ -63,7 +63,15 @@ LIMIT 10
         entity=classes["Entity"]
         self.assertTrue("@subClassOf" in entity)
         self.assertEqual("Thing",entity["@subClassOf"])
-        #uml_markup=self.dblp.toPlantUml()
-        #print(uml_markup)
+        
+    def test_uml(self):
+        """
+        test getting uml markup
+        """
+        self.dblp.loadSchema()
+        uml_markup=self.dblp.toPlantUml()
+        debug=True
+        if debug:
+            print(uml_markup)
         
         
