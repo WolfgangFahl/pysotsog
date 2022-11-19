@@ -20,3 +20,6 @@ pysotsog is a python library for scholars to help navigate the conceptual knowle
 
 ## Docs and Tutorials
 [Wiki](https://wiki.bitplan.com/index.php/Pysotsog)
+
+## Demo
+[[Demo at https://sotsog.bitplan.com]](https://sotsog.bitplan.com)
