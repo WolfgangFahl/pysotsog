@@ -5,7 +5,8 @@ Created on 2022-11-17
 '''
 from tests.basetest import Basetest
 from skg.dblp import Dblp
-from skg.kg import SKG_Def,Paper
+from skg.kg import SKG_Def
+from skg.graph import Node
 import json
 
 class TestDblp(Basetest):
@@ -75,27 +76,38 @@ LIMIT 10
         if debug:
             print(uml_markup)
             
-    def test_paper(self):
+    def test_dblp_item_via_id_search(self):
         """
         test getting papers by id from dblp
         """
-        id_examples=[
-            {
-                "id_name": "doi",
-                "id_value": "10.1007/978-3-031-19433-7_21"
-            },
-        ]
         debug=self.debug
         debug=True
         skg_def=SKG_Def()
+        paper_concept=skg_def.concepts["Paper"]
+        author_concept=skg_def.concepts["Scholar"]
+        id_examples=[
+            {
+                "id_name": "orcid",
+                "id_value": "0000-0003-1279-3709",
+                "concept": author_concept
+            },
+            {
+                "id_name": "doi",
+                "id_value": "10.1007/978-3-031-19433-7_21",
+                "concept": paper_concept
+            }
+        ]
+       
         for id_example in id_examples:
             id_name=id_example["id_name"]
             id_value=id_example["id_value"]
-            papers=Paper.from_dblp_via_id(skg_def.concepts["Paper"],id_name,id_value)
+            id_concept=id_example["concept"]
+            items=Node.from_dblp_via_id(id_concept,id_name,id_value)
             if debug:
-                for paper in papers:
-                    print(paper)
-            self.assertEqual(1,len(papers))
-            paper=papers[0]
+                for item in items:
+                    print(item)
+            self.assertEqual(1,len(items))
+            item=items[0]
+            self.assertEqual(item.concept.name,id_concept.name)
             if id_name=="doi":
-                self.assertEqual(f"http://dx.doi.org/{id_value}",paper.doi)
+                self.assertEqual(f"http://dx.doi.org/{id_value}",item.doi)

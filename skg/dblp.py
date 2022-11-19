@@ -248,3 +248,54 @@ where { ?s ?p ?o}
 """
         self.query_schema(query,formats=formats,profile=profile)
         return self.schema
+    
+    def get_paper_records(self,regex:str,prop_name:str="title",limit:int=100)->list:
+        """
+        get papers fitting the given regex
+        
+        Args:
+            prop_name(str): the property to filter
+            regex(str): the regex to filter for
+            limit(int): the maximum number of records to return
+            
+        Returns:
+            list: a list of dict of paper records
+        """
+        sparql_query="""PREFIX dblp: <https://dblp.org/rdf/schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT
+  ?paper 
+  ?year
+  ?yearofevent
+  #?month
+  ?doi
+  ?isbn
+  ?title
+  (GROUP_CONCAT(?author_o) as ?authors)
+  ?publishedin
+WHERE {
+  ?paper dblp:title ?title .
+  ?paper dblp:doi ?doi .
+  OPTIONAL { ?paper dblp:yearOfEvent ?yearofevent } .
+  OPTIONAL { ?paper dblp:isbn ?isbn }.
+  ?paper dblp:authoredBy ?author_o.
+  ?paper dblp:publishedIn ?publishedin .
+  ?paper dblp:yearOfPublication ?year.
+  OPTIONAL { ?paper dblp:monthOfPublication ?month}.
+"""
+        sparql_query+=f"""FILTER regex(?{prop_name}, "{regex}").\n"""
+        sparql_query+=f"""
+}}
+GROUP BY 
+  ?paper 
+  ?title 
+  ?doi 
+  ?isbn
+  ?year 
+  ?yearofevent
+  ?month 
+  ?publishedin 
+ORDER BY DESC(?year)
+LIMIT {limit}"""
+        records=self.sparql.queryAsListOfDicts(sparql_query)
+        return records

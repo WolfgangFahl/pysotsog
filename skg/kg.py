@@ -8,7 +8,6 @@ from skg.paper import Paper
 from skg.event import Event,EventSeries,Proceedings
 from skg.graph import Concept
 
-
 class SKG_Def:
     """
     scholary knowledge graph
@@ -32,12 +31,17 @@ class SKG_Def:
             ("gndId","P227"),
             ("linkedInId","P6634"),
             ("homepage","P856"),
-            ("googleScholarUser","P1960"),("orcid","P496"),
+            ("googleScholarUser","P1960"),
+            ("orcid","P496"),
             ("givenName","P735"),
             ("familyName","P734"),
             ("gender","P21"),
             ("image","P18"),
             ("occupation","P106")
+        ]).map_dblp([
+            ("name","primaryCreatorName"),
+            ("homepage","primaryHomepage"),
+            ("orcid","orcid")
         ])
         self.concepts["Institution"].map_wikidata("Q4671277","organization",[
             ("short_name","P1813"), # 2.0 % 

@@ -6,6 +6,7 @@ Created on 18.11.2022
 from search_engine_parser.core.engines.bing import Search as BingSearch
 from search_engine_parser.core.engines.google import Search as GoogleSearch
 from search_engine_parser.core.engines.yahoo import Search as YahooSearch
+from search_engine_parser.core.engines.duckduckgo import Search as DuckDuckGoSearch
 import sys 
   
 class InternetSearch:
@@ -21,7 +22,8 @@ class InternetSearch:
         self.gsearch = GoogleSearch()
         self.ysearch = YahooSearch()
         self.bsearch = BingSearch()
-        self.engines=[self.ysearch,self.bsearch,self.gsearch]
+        self.dsearch = DuckDuckGoSearch()
+        self.engines=[self.ysearch,self.dsearch,self.bsearch]
         
     def handleException(self,ex):
         """
