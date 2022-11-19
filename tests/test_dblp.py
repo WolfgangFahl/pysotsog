@@ -5,6 +5,7 @@ Created on 2022-11-17
 '''
 from tests.basetest import Basetest
 from skg.dblp import Dblp
+import json
 
 class TestDblp(Basetest):
     """
@@ -47,10 +48,22 @@ LIMIT 10
             for row in paper_rows:
                 print(row)
         
-        
     def test_dblp_schema(self):
         """
         test loading the dblp schema
         """
-        self.dblp.loadSchema(formats="n3,xml")
+        self.dblp.loadSchema(formats="n3,json-ld") # xml
+        classes=self.dblp.toClasses()
+        debug=self.debug
+        debug=True
+        if debug:
+            print(json.dumps(classes,indent=2))
+        classes=classes["classes"]
+        self.assertTrue("Entity" in classes)
+        entity=classes["Entity"]
+        self.assertTrue("@subClassOf" in entity)
+        self.assertEqual("Thing",entity["@subClassOf"])
+        #uml_markup=self.dblp.toPlantUml()
+        #print(uml_markup)
+        
         
