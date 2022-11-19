@@ -17,6 +17,7 @@ from skg.kg import SKG_Def
 from skg.graph import Node
 from skg.crossref import Crossref
 from skg.skgbrowser import SkgBrowser
+from skg.search import SearchOptions, SearchResult
 from jpcore.justpy_app import JustpyServer
 
 class SotSog():
@@ -41,24 +42,41 @@ class SotSog():
         self.skg_def=SKG_Def()
         self.scholar_concept=self.skg_def.concepts["Scholar"]
     
-    def search(self,search_list,limit:int=9,lang='en',show:bool=True,
-               bibtex:bool=False,scite:bool=False,open_browser:bool=False)->list:
+    def getMarkups(self,item,options:SearchOptions)->dict:
+        """
+        get the markups for the given item and search options
+        
+        Args:
+            item(Node): the item to get the markup for
+            options(SearchOptions): the search options to apply
+        """
+        markups={}
+        if options.bibtex or options.scite and item.concept.name=="Paper":
+            doi=getattr(item, "DOI",None)
+            if doi is not None:
+                crossref=Crossref()
+                if options.bibtex:
+                    bibentry=crossref.doiBibEntry([doi])
+                    markups["bibtex"]=bibentry
+                if options.scite:
+                    meta_data=crossref.doiMetaData([doi])
+                    scite_entry=crossref.asScite(meta_data)
+                    markups["scite"]=scite_entry
+        return markups
+        
+    def search(self,search_list,options:SearchOptions)->SearchResult:
         """
         search with the given search list
         
         Args:
             search_list(list): a list of search terms
-            limit(int): limit for the maximum number of results
-            lang(str): the language code to use for the search
-            show(bool): if True print the search results
-            bibtex(bool): if True output bibtex for fitting search results
-            scite(bool): if True output #scite SMW Semantic Cite format
-            open_browser(bool): if True open a browser for the target page of the item e.g. scholia
+            options(SearchOptions): the search options to apply
         """
+        search_result=SearchResult(search_list,options)
         search_term=' '.join(search_list)
         wd=Wikidata(debug=self.debug)
-        wds=WikidataSearch(language=lang,debug=self.debug)
-        search_options=wds.searchOptions(search_term,limit=limit)
+        wds=WikidataSearch(language=options.lang,debug=self.debug)
+        search_options=wds.searchOptions(search_term,limit=options.limit)
         items=[]
         qids=[]
         for qid,itemLabel,desc in search_options:
@@ -71,29 +89,25 @@ class SotSog():
                     class_qid=class_row["class_qid"]
                     concept=self.skg_def.conceptForQid(class_qid)
                     if concept is not None:
-                        wd_items=concept.cls.from_wikidata_via_id(concept,"wikiDataId", qid, lang=lang)
+                        wd_items=concept.cls.from_wikidata_via_id(concept,"wikiDataId", qid, lang=options.lang)
                         if len(wd_items)>0:
                             item=wd_items[0]
                             items.append(item)
-                            if show:
+                            if options.show:
                                 print(f"{itemLabel}({qid}):{desc}✅")
                                 print(item)
-                                if bibtex or scite and item.concept.name=="Paper":
-                                    doi=getattr(item, "DOI",None)
-                                    if doi is not None:
-                                        crossref=Crossref()
-                                        if bibtex:
-                                            bibentry=crossref.doiBibEntry([doi])
-                                            print(bibentry)
-                                        if scite:
-                                            meta_data=crossref.doiMetaData([doi])
-                                            scite_entry=crossref.asScite(meta_data)
-                                            print(scite_entry)
-                            if open_browser:
+                            search_result.markups=self.getMarkups(item,options)
+                            if options.show:
+                                for markup_name,markup in search_result.markups:
+                                    print(f"{markup_name} markup:")
+                                    print(markup)
+                                pass
+                            if options.open_browser:
                                 scholia_url=item.scholia_url()
                                 print(f"opening {scholia_url} in browser")
                                 webbrowser.open(scholia_url)
-        return items
+        search_result.items=items
+        return search_result
 
 __version__ = Version.version
 __date__ = Version.date
@@ -158,10 +172,11 @@ USAGE
             skgBrowser.start(args.host, args.port,debug=args.debug)
             pass
         else:
-            sotsog.search(args.search,limit=args.limit,lang=args.lang,
+            options=SearchOptions(limit=args.limit,lang=args.lang,
                           bibtex=args.bibtex,
                           scite=args.scite,
                           open_browser=not args.nobrowser)
+            sotsog.search(args.search,options)
         pass
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###

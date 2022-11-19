@@ -18,7 +18,7 @@ class SkgBrowser(App):
     scholary knowledge graph browser
     """
   
-    def __init__(self,version,sotsog):
+    def __init__(self,version,sotsog,markup_names=["bibtex","scite"]):
         '''
         Constructor
         
@@ -32,6 +32,8 @@ class SkgBrowser(App):
         self.addMenuLink(text='Home',icon='home', href="/")
         self.addMenuLink(text='github',icon='github', href=version.cm_url)
         self.addMenuLink(text='Documentation',icon='file-document',href=version.doc_url)
+        self.markup_names=markup_names
+        
         
     def createItemLink(self,item,term:str,index:int)->str:
         """
@@ -68,17 +70,19 @@ class SkgBrowser(App):
                     self.messages.text+=msg
                     await self.wp.update()
                     items=self.sotsog.search([term],open_browser=self.sotsog.args.nobrowser)
-                    markup=""
+                    rmarkup=""
                     if len(items)==0:
                         # TODO check google search
                         # https://pypi.org/project/googlesearch-python/
                         params=parse.urlencode({'q':term})
                         search_url=f"https://www.google.com/search?{params}"
-                        markup=Link.create(search_url, term, "not found", target="_blank",style="color:red")
+                        rmarkup=Link.create(search_url, term, "not found", target="_blank",style="color:red")
                     else:
                         for i,item in enumerate(items):
-                            markup+=self.createItemLink(item,term,i)
-                    self.results.inner_html+=delim+markup  
+                            rmarkup+=self.createItemLink(item,term,i)
+                            if i==0 and item.concept.name=="Paper":
+                                break
+                    self.results.inner_html+=delim+rmarkup  
                     delim="<br>" 
                     await self.wp.update()
             
@@ -92,15 +96,28 @@ class SkgBrowser(App):
         head_html="""<link rel="stylesheet" href="/static/css/md_style_indigo.css">"""
         self.wp=self.getWp(head_html)
         button_classes = """btn btn-primary"""
+        # rows
         self.rowA=self.jp.Div(classes="row",a=self.contentbox)
         self.rowB=self.jp.Div(classes="row",a=self.contentbox)
         self.rowC=self.jp.Div(classes="row",a=self.contentbox)
+        # columns
         self.colA1=self.jp.Div(classes="col-12",a=self.rowA)
-        self.colB1=self.jp.Div(classes="col-3",a=self.rowB)
+        self.colB1=self.jp.Div(classes="col-6",a=self.rowB)
+        self.colB2=self.jp.Div(classes="col-6",a=self.rowB)
         self.colC1=self.jp.Div(classes="col-12",a=self.rowC,style='color:black')
+        # standard elements
         self.errors=self.jp.Div(a=self.colA1,style='color:red')
         self.messages=self.jp.Div(a=self.colC1,style='color:black')
         self.results=self.jp.Div(a=self.colC1)
+        self.markup=self.colB2
+        # sotsog search
+        self.fs_markup_select = self.createSelect("markup",
+            value=self.markup_names[0],
+            change=self.onChangeMarkup,
+            a=self.colB1)
+        for markup_name in self.markup_names:
+            self.fs_store_select.add(self.jp.Option(value=markup_name,text=markup_name))
+
         self.searchTerms=self.jp.Textarea(placeholder="enter search terms", a=self.colB1, rows=5,cols=160)
         self.searchButton=self.jp.Button(text="search",click=self.onSearchButton,a=self.colB1,classes=button_classes)
         return self.wp
