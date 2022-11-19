@@ -15,6 +15,7 @@ JpConfig.setup()
 from jpwidgets.bt5widgets import App,Link
 from urllib import parse
 from skg.search import SearchOptions
+from skg.orcid import ORCID
 
 class SkgBrowser(App):
     """
@@ -56,7 +57,12 @@ class SkgBrowser(App):
             style=""
             text=term
             delim=""
-        markup=delim+Link.create(item.scholia_url(),text,tooltip=item.label,target="_blank",style=style)
+        link=Link.create(item.scholia_url(),text,tooltip=item.label,target="_blank",style=style)
+        if item.concept.name=="Scholar":
+            if hasattr(item,"orcid"):
+                orcid=ORCID(item.orcid)
+                link+=orcid.asHtml()
+        markup=delim+link
         return markup      
         
     async def onSearchButton(self,_msg):
