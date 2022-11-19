@@ -12,9 +12,10 @@ class TestScholar(Basetest):
     test concerning the scholar/author concept
     """
     
-    def test_scholar_by_id(self):
+    def test_scholar_by_wikidata_id(self):
         """
-        test searching a scholar/author by ORCID
+        test searching a scholar/author by ORCID,dblpId or wikiDataId from
+        wikidata
         """
         id_examples=[
             {
@@ -44,3 +45,4 @@ class TestScholar(Basetest):
             scholar=scholars[0]
             self.assertEqual("Tim Berners-Lee",scholar.label)
             self.assertEqual("https://scholia.toolforge.org/author/Q80",scholar.scholia_url())
+            

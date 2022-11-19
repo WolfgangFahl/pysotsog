@@ -5,6 +5,7 @@ Created on 2022-11-17
 '''
 from tests.basetest import Basetest
 from skg.dblp import Dblp
+from skg.kg import SKG_Def,Paper
 import json
 
 class TestDblp(Basetest):
@@ -16,9 +17,9 @@ class TestDblp(Basetest):
         Basetest.setUp(self, debug=debug, profile=profile)
         self.dblp=Dblp()
     
-    def test_dblp(self):
+    def test_dblp_papers(self):
         """
-        test dblp access
+        test dblp paper access
         """
         sparql_query="""
 PREFIX dblp: <https://dblp.org/rdf/schema#>
@@ -73,5 +74,28 @@ LIMIT 10
         debug=True
         if debug:
             print(uml_markup)
-        
-        
+            
+    def test_paper(self):
+        """
+        test getting papers by id from dblp
+        """
+        id_examples=[
+            {
+                "id_name": "doi",
+                "id_value": "10.1007/978-3-031-19433-7_21"
+            },
+        ]
+        debug=self.debug
+        debug=True
+        skg_def=SKG_Def()
+        for id_example in id_examples:
+            id_name=id_example["id_name"]
+            id_value=id_example["id_value"]
+            papers=Paper.from_dblp_via_id(skg_def.concepts["Paper"],id_name,id_value)
+            if debug:
+                for paper in papers:
+                    print(paper)
+            self.assertEqual(1,len(papers))
+            paper=papers[0]
+            if id_name=="doi":
+                self.assertEqual(f"http://dx.doi.org/{id_value}",paper.doi)

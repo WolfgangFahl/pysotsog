@@ -50,9 +50,12 @@ class SKG_Def:
         ])  
         self.concepts["Paper"].map_wikidata("Q13442814","work",[
             ("title","label"),
-            ("DOI","P356"),
+            ("doi","P356"),
             ("DBLP_publication_ID","P8978"),
             ("publication_date","P577")
+        ]).map_dblp([
+            ("title","title"),
+            ("doi","doi")
         ])
         # scientific event
         self.concepts["Event"].map_wikidata("Q52260246","event",[
