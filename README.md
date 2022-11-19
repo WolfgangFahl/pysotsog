@@ -22,4 +22,4 @@ pysotsog is a python library for scholars to help navigate the conceptual knowle
 [Wiki](https://wiki.bitplan.com/index.php/Pysotsog)
 
 ## Demo
-[[Demo at https://sotsog.bitplan.com]](https://sotsog.bitplan.com)
+[Demo at https://sotsog.bitplan.com](http://sotsog.bitplan.com)
