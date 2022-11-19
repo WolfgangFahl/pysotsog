@@ -17,6 +17,7 @@ class Version(object):
     description='Scholarly Knowledge Graph Search with Commandline and Browser'
     authors='Wolfgang Fahl'
     doc_url="https://wiki.bitplan.com/index.php/Pysotsog"
+    chat_url="https://github.com/WolfgangFahl/pysotsog/discussions"
     cm_url="https://github.com/WolfgangFahl/pysotsog"
     license=f'''Copyright 2022 contributors. All rights reserved.
   Licensed under the Apache License 2.0

@@ -51,14 +51,15 @@ class SotSog():
             options(SearchOptions): the search options to apply
         """
         markups={}
-        if options.bibtex or options.scite and item.concept.name=="Paper":
+        do_markup=len(options.markup_names)>0
+        if do_markup and item.concept.name=="Paper":
             doi=getattr(item, "DOI",None)
             if doi is not None:
                 crossref=Crossref()
-                if options.bibtex:
+                if "bibtex" in options.markup_names:
                     bibentry=crossref.doiBibEntry([doi])
                     markups["bibtex"]=bibentry
-                if options.scite:
+                if "scite" in options.markup_names:
                     meta_data=crossref.doiMetaData([doi])
                     scite_entry=crossref.asScite(meta_data)
                     markups["scite"]=scite_entry
@@ -96,9 +97,9 @@ class SotSog():
                             if options.show:
                                 print(f"{itemLabel}({qid}):{desc}✅")
                                 print(item)
-                            search_result.markups=self.getMarkups(item,options)
+                            item.markups=self.getMarkups(item,options)
                             if options.show:
-                                for markup_name,markup in search_result.markups:
+                                for markup_name,markup in item.markups.items():
                                     print(f"{markup_name} markup:")
                                     print(markup)
                                 pass
@@ -161,21 +162,23 @@ USAGE
             parser.print_usage()
             sys.exit(1)
         sotsog=SotSog(args)
+        markup_names=[]
+        if args.bibtex: markup_names.append("bibtex")
+        if args.scite: markup_names.append("scite")
+        options=SearchOptions(limit=args.limit,lang=args.lang,
+                      markup_names=markup_names,
+                      open_browser=not args.nobrowser)
         if args.about:
             print(program_version_message)
             print(f"see {Version.doc_url}")
             webbrowser.open(Version.doc_url)
         elif args.serve:
-            skgBrowser=SkgBrowser(version=Version,sotsog=sotsog)
+            skgBrowser=SkgBrowser(version=Version,sotsog=sotsog,options=options)
             url=f"http://{args.host}:{args.port}"
             webbrowser.open(url)
             skgBrowser.start(args.host, args.port,debug=args.debug)
             pass
         else:
-            options=SearchOptions(limit=args.limit,lang=args.lang,
-                          bibtex=args.bibtex,
-                          scite=args.scite,
-                          open_browser=not args.nobrowser)
             sotsog.search(args.search,options)
         pass
     except KeyboardInterrupt:

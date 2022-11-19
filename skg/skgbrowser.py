@@ -9,16 +9,19 @@ from jpcore.justpy_config import JpConfig
 script_dir = os.path.dirname(os.path.abspath(__file__))
 static_dir = script_dir+"/resources/static"
 JpConfig.set("STATIC_DIRECTORY",static_dir)
+# shut up justpy
+JpConfig.set("VERBOSE","False")
 JpConfig.setup()
 from jpwidgets.bt5widgets import App,Link
 from urllib import parse
+from skg.search import SearchOptions
 
 class SkgBrowser(App):
     """
     scholary knowledge graph browser
     """
   
-    def __init__(self,version,sotsog,markup_names=["bibtex","scite"]):
+    def __init__(self,version,sotsog,options:SearchOptions):
         '''
         Constructor
         
@@ -31,9 +34,11 @@ class SkgBrowser(App):
         App.__init__(self, version)
         self.addMenuLink(text='Home',icon='home', href="/")
         self.addMenuLink(text='github',icon='github', href=version.cm_url)
+        self.addMenuLink(text='Chat',icon='chat',href=version.chat_url)
         self.addMenuLink(text='Documentation',icon='file-document',href=version.doc_url)
-        self.markup_names=markup_names
-        
+        self.options=options
+        self.markup_names=["-","bibtex","scite"]
+        self.markup_name=self.markup_names[1]
         
     def createItemLink(self,item,term:str,index:int)->str:
         """
@@ -60,6 +65,7 @@ class SkgBrowser(App):
         """
         try:
             self.results.inner_html=""
+            self.markup.inner_html=""
             terms=self.searchTerms.value.split("\n")
             self.messages.text="Searching"
             await self.wp.update()
@@ -69,7 +75,12 @@ class SkgBrowser(App):
                     msg=f"... {term}\n"
                     self.messages.text+=msg
                     await self.wp.update()
-                    items=self.sotsog.search([term],open_browser=self.sotsog.args.nobrowser)
+                    if self.markup_name=="-":
+                        self.options.markup_names=[]
+                    else:
+                        self.options.markup_names=[self.markup_name]
+                    search_result=self.sotsog.search([term],self.options)
+                    items=search_result.items
                     rmarkup=""
                     if len(items)==0:
                         # TODO check google search
@@ -81,11 +92,24 @@ class SkgBrowser(App):
                         for i,item in enumerate(items):
                             rmarkup+=self.createItemLink(item,term,i)
                             if i==0 and item.concept.name=="Paper":
+                                markups=""
+                                for _markup_name,markup in item.markups.items():
+                                    markups+=markup
+                                    self.markup.inner_html+=f"<pre>{markups}</pre>"
                                 break
                     self.results.inner_html+=delim+rmarkup  
                     delim="<br>" 
                     await self.wp.update()
             
+        except Exception as ex:
+            self.handleException(ex)
+            
+    async def onChangeMarkup(self,msg):
+        """
+        handle button to search for terms
+        """
+        try:
+            self.markup_name=msg.value
         except Exception as ex:
             self.handleException(ex)
         
@@ -103,6 +127,10 @@ class SkgBrowser(App):
         # columns
         self.colA1=self.jp.Div(classes="col-12",a=self.rowA)
         self.colB1=self.jp.Div(classes="col-6",a=self.rowB)
+        self.rowB1r1=self.jp.Div(classes="row",a=self.colB1)
+        self.colB11=self.jp.Div(classes="col-3",a=self.rowB1r1)
+        self.rowB1r2=self.jp.Div(classes="row",a=self.colB1)
+        self.colB12=self.jp.Div(classes="col-6",a=self.rowB1r2)
         self.colB2=self.jp.Div(classes="col-6",a=self.rowB)
         self.colC1=self.jp.Div(classes="col-12",a=self.rowC,style='color:black')
         # standard elements
@@ -111,15 +139,15 @@ class SkgBrowser(App):
         self.results=self.jp.Div(a=self.colC1)
         self.markup=self.colB2
         # sotsog search
-        self.fs_markup_select = self.createSelect("markup",
-            value=self.markup_names[0],
+        self.markup_select = self.createSelect("markup",
+            value=self.markup_name,
             change=self.onChangeMarkup,
-            a=self.colB1)
+            a=self.colB11)
         for markup_name in self.markup_names:
-            self.fs_store_select.add(self.jp.Option(value=markup_name,text=markup_name))
+            self.markup_select.add(self.jp.Option(value=markup_name,text=markup_name))
 
-        self.searchTerms=self.jp.Textarea(placeholder="enter search terms", a=self.colB1, rows=5,cols=160)
-        self.searchButton=self.jp.Button(text="search",click=self.onSearchButton,a=self.colB1,classes=button_classes)
+        self.searchTerms=self.jp.Textarea(placeholder="enter search terms", a=self.colB12, rows=5,cols=120)
+        self.searchButton=self.jp.Button(text="search",click=self.onSearchButton,a=self.colB12,classes=button_classes)
         return self.wp
     
     def start(self,host,port,debug):
