@@ -1,5 +1,5 @@
 # pysotsog
-python Library for Scholars to achieve "Standing on the shoulders of giants"
+python Library for Scholars to achieve "Standing on the shoulders of giants - with direct access to the clouds"
 
 [![Join the discussion at https://github.com/WolfgangFahl/pysotsog/discussions](https://badges.gitter.im/pysotsog/community.svg)](https://gitter.im/play-chess-with-a-webcam/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![pypi](https://img.shields.io/pypi/pyversions/pysotsog)](https://pypi.org/project/pysotsog/)

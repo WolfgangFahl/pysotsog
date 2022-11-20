@@ -24,7 +24,7 @@ dependencies = [
         # https://pypi.org/project/habanero/
         'habanero~=1.2.2',
         # https://pypi.org/project/pyJustpyWidgets/
-        'pyJustpyWidgets~=0.1.1',
+        'pyJustpyWidgets~=0.1.2',
         # https://pypi.org/project/search-engine-parser/
         'search-engine-parser~=0.6.7',
         # https://github.com/fake-useragent/fake-useragent

@@ -53,7 +53,7 @@ class SotSog():
         markups={}
         do_markup=len(options.markup_names)>0
         if do_markup and item.concept.name=="Paper":
-            doi=getattr(item, "DOI",None)
+            doi=getattr(item, "doi",None)
             if doi is not None:
                 crossref=Crossref()
                 if "bibtex" in options.markup_names:

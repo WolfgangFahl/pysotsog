@@ -3,6 +3,7 @@ Created on 2022-11-18
 
 @author: wf
 '''    
+import html
 import os
 from jpcore.compat import Compatibility;Compatibility(0,11,1)
 from jpcore.justpy_config import JpConfig
@@ -37,9 +38,11 @@ class SkgBrowser(App):
         self.addMenuLink(text='github',icon='github', href=version.cm_url)
         self.addMenuLink(text='Chat',icon='chat',href=version.chat_url)
         self.addMenuLink(text='Documentation',icon='file-document',href=version.doc_url)
+        self.addMenuLink(text='Settings',icon='cog',href="/settings")
         self.options=options
         self.markup_names=["-","bibtex","scite"]
         self.markup_name=self.markup_names[1]
+        jp.Route('/settings',self.settings)
         
     def createItemLink(self,item,term:str,index:int)->str:
         """
@@ -118,14 +121,14 @@ class SkgBrowser(App):
             self.markup_name=msg.value
         except Exception as ex:
             self.handleException(ex)
-        
-    async def content(self):
-        '''
-        show the content
-        '''
+            
+    def setupRowsAndCols(self):
+        """
+        setup the general layout
+        """
         head_html="""<link rel="stylesheet" href="/static/css/md_style_indigo.css">"""
         self.wp=self.getWp(head_html)
-        button_classes = """btn btn-primary"""
+        self.button_classes = """btn btn-primary"""
         # rows
         self.rowA=self.jp.Div(classes="row",a=self.contentbox)
         self.rowB=self.jp.Div(classes="row",a=self.contentbox)
@@ -141,7 +144,44 @@ class SkgBrowser(App):
         self.colC1=self.jp.Div(classes="col-12",a=self.rowC,style='color:black')
         # standard elements
         self.errors=self.jp.Div(a=self.colA1,style='color:red')
-        self.messages=self.jp.Div(a=self.colC1,style='color:black')
+        self.messages=self.jp.Div(a=self.colC1,style='color:black')    
+        
+    async def onChangeLanguage(self,msg):
+        '''
+        react on language being changed via Select control
+        '''
+        self.language=msg.value  
+  
+    def addLanguageSelect(self):
+        """
+        add a language selector
+        """
+        self.languageSelect=self.createSelect("Language","en",a=self.colC1,change=self.onChangeLanguage)
+        for language in self.getLanguages():
+            lang=language[0]
+            desc=language[1]
+            desc=html.unescape(desc)
+            self.languageSelect.add(self.jp.Option(value=lang,text=desc))
+      
+    async def settings(self)->"jp.WebPage":
+        '''
+        settings
+        
+        Returns:
+            jp.WebPage: a justpy webpage renderer
+        '''
+        self.setupRowsAndCols()
+        self.addLanguageSelect()
+        return self.wp
+        
+    async def content(self)->"jp.WebPage":
+        '''
+        provide the main content page
+        
+        Returns:
+            jp.WebPage: a justpy webpage renderer
+        '''
+        self.setupRowsAndCols()
         self.results=self.jp.Div(a=self.colC1)
         self.markup=self.colB2
         # sotsog search
@@ -153,7 +193,7 @@ class SkgBrowser(App):
             self.markup_select.add(self.jp.Option(value=markup_name,text=markup_name))
 
         self.searchTerms=self.jp.Textarea(placeholder="enter search terms", a=self.colB12, rows=5,cols=120)
-        self.searchButton=self.jp.Button(text="search",click=self.onSearchButton,a=self.colB12,classes=button_classes)
+        self.searchButton=self.jp.Button(text="search",click=self.onSearchButton,a=self.colB12,classes=self.button_classes)
         return self.wp
     
     def start(self,host,port,debug):

@@ -40,3 +40,9 @@ class TestCrossref(Basetest):
         import requests
         session = requests.Session()
         print(session.cookies.get_dict())
+        
+    def test_get_markups(self):
+        """
+        get markups for a given DOI
+        """
+        dois=[""]
