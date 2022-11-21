@@ -3,19 +3,18 @@ Created on 2022-11-17
 
 @author: wf
 '''
-from tests.basetest import Basetest
+from tests.base_skg_test import BaseSkgTest
 from skg.dblp import Dblp
-from skg.kg import SKG_Def
 from skg.graph import Node
 import json
 
-class TestDblp(Basetest):
+class TestDblp(BaseSkgTest):
     """
     test dblp access
     """
     
     def setUp(self, debug=False, profile=True):
-        Basetest.setUp(self, debug=debug, profile=profile)
+        BaseSkgTest.setUp(self, debug=debug, profile=profile)
         self.dblp=Dblp()
     
     def test_dblp_papers(self):
@@ -82,9 +81,8 @@ LIMIT 10
         """
         debug=self.debug
         debug=True
-        skg_def=SKG_Def()
-        paper_concept=skg_def.concepts["Paper"]
-        author_concept=skg_def.concepts["Scholar"]
+        paper_concept=self.skg_def.concepts["Paper"]
+        author_concept=self.skg_def.concepts["Scholar"]
         id_examples=[
             {
                 "id_name": "orcid",
@@ -97,17 +95,18 @@ LIMIT 10
                 "concept": paper_concept
             }
         ]
-       
-        for id_example in id_examples:
-            id_name=id_example["id_name"]
-            id_value=id_example["id_value"]
-            id_concept=id_example["concept"]
-            items=Node.from_dblp_via_id(id_concept,id_name,id_value)
-            if debug:
-                for item in items:
-                    print(item)
-            self.assertEqual(1,len(items))
-            item=items[0]
-            self.assertEqual(item.concept.name,id_concept.name)
+        
+        def checkItem(item:Node,id_name:str,id_value:str,debug:bool=False):
+            """
+            check the given item
+            
+            Args:
+                item(Node): the item to check
+                id_name(str): the name of the id used to retrieve the item
+                id_value(str) the value that has been used to retriebe the item
+                debug(bool): if True show debug information
+            """
             if id_name=="doi":
                 self.assertEqual(f"http://dx.doi.org/{id_value}",item.doi)
+        
+        self.check_id_examples(id_examples, createFunc=Node.from_dblp_via_id,checkItem=checkItem,debug=debug)

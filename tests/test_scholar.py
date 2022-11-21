@@ -3,11 +3,11 @@ Created on 2022-11-16
 
 @author: wf
 '''
-from tests.basetest import Basetest
+from tests.base_skg_test import BaseSkgTest
 from skg.scholar import Scholar
-from skg.kg import SKG_Def
+from skg.graph import Node
 
-class TestScholar(Basetest):
+class TestScholar(BaseSkgTest):
     """
     test concerning the scholar/author concept
     """
@@ -17,32 +17,38 @@ class TestScholar(Basetest):
         test searching a scholar/author by ORCID,dblpId or wikiDataId from
         wikidata
         """
+        author_concept=self.skg_def.concepts["Scholar"]
         id_examples=[
             {
                 "id_name": "orcid",
-                "id_value": "0000-0003-1279-3709"
+                "id_value": "0000-0003-1279-3709",
+                "concept": author_concept
             },
             {
                 "id_name": "dblpId",
-                "id_value": "b/TimBernersLee"
+                "id_value": "b/TimBernersLee",
+                "concept": author_concept
             },
             {
                 "id_name": "wikiDataId",
-                "id_value": "Q80"
+                "id_value": "Q80",
+                "concept": author_concept
             },           
         ]
-        debug=self.debug
-        debug=True
-        skg_def=SKG_Def()
-        for id_example in id_examples:
-            id_name=id_example["id_name"]
-            id_value=id_example["id_value"]
-            scholars=Scholar.from_wikidata_via_id(skg_def.concepts["Scholar"],id_name,id_value)
-            if debug:
-                for scholar in scholars:
-                    print(scholar)
-            self.assertEqual(1,len(scholars))
-            scholar=scholars[0]
+        
+        def checkItem(scholar:Scholar,id_name:str,id_value:str,debug:bool=False):
+            """
+            check the given item
+            
+            Args:
+                item(Node): the item to check
+                id_name(str): the name of the id used to retrieve the item
+                id_value(str) the value that has been used to retriebe the item
+                debug(bool): if True show debug information
+            """
             self.assertEqual("Tim Berners-Lee",scholar.label)
             self.assertEqual("https://scholia.toolforge.org/author/Q80",scholar.scholia_url())
             
+        debug=self.debug
+        debug=True
+        self.check_id_examples(id_examples, createFunc=Node.from_wikidata_via_id,checkItem=checkItem,debug=debug)            

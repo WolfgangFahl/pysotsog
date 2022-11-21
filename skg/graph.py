@@ -156,7 +156,7 @@ class Node:
 PREFIX wd: <http://www.wikidata.org/entity/>
 PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-SELECT ?{concept.name} ?qId"""
+SELECT DISTINCT ?{concept.name} ?qId"""
         for prop in concept.props.values():
             sparql_query+=f" ?{prop.name}"
         sparql_query+=f"""

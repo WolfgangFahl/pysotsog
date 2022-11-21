@@ -6,6 +6,7 @@ Created on 2022-11-16
 from skg.scholar import Scholar,Institution
 from skg.paper import Paper
 from skg.event import Event,EventSeries,Proceedings
+from skg.location import Country
 from skg.graph import Concept
 
 class SKG_Def:
@@ -18,12 +19,15 @@ class SKG_Def:
         constructor
         """
         self.concepts={
+            # main concepts
             "Scholar": Concept(name="Scholar",cls=Scholar),
             "Institution": Concept(name="Institution",cls=Institution),
             "Paper": Concept(name="Paper",cls=Paper),
             "Event": Concept(name="Event",cls=Event),
             "EventSeries": Concept(name="EventSeries",cls=EventSeries),
-            "Proceedings": Concept(name="Proceedings",cls=Proceedings)
+            "Proceedings": Concept(name="Proceedings",cls=Proceedings),
+            # neighbour concepts
+            "Country": Concept(name="Country",cls=Country)
         }
         self.concepts["Scholar"].map_wikidata("Q5","author",[
             ("name","label"),
@@ -85,6 +89,16 @@ class SKG_Def:
             ("short_name","P1813"),
             ("full_work_available_at_URL","P953"),
             ("publication_date","P577")
+        ])
+        # country
+        self.concepts["Country"].map_wikidata("Q6256","topic",[
+            ("name","label"), # 100% ?
+            ("homepage","P856"), # 49.4%
+            ("population","P1082"), # 57.4%
+            ("capital","P36"), #59.8%
+            ("coordinate_location","P625"), #58.6%
+            ("iso_code","P297") # 53.3%
+            
         ])
                       
         self.concepts_by_qid={}
