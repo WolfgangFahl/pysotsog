@@ -20,6 +20,7 @@ jobs:
     - name: Install lxml preqrequisites
       run: |
         sudo apt-get install python3-lxml
+        sudo apt-get install libxml2-dev libxslt-dev python-dev
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
