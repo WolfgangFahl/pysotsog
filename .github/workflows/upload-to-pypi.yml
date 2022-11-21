@@ -31,7 +31,7 @@ jobs:
         pip install hatch
     - name: Build and publish
       run: |
-        STATIC_DEPS=true pip install lxml
+        STATIC_DEPS=true pip install lxml==4.6.5
         pip install .
         hatch build
     - name: Publish distribution to PyPI

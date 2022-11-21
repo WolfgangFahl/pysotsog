@@ -1,0 +1,4 @@
+#!/bin/bash
+# WF 2022-11-21
+hatchling build
+twine upload dist/*
