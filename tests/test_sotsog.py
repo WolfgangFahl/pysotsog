@@ -58,3 +58,12 @@ class TestSotsog(Basetest):
                 self.assertEqual(concept_name,item.concept.name)
                 self.assertTrue(qid in item.wikiDataId)
                 # @TODO compare properties against samples
+                
+    def test_get_markups(self):
+        """
+        get markups for a given DOI
+        """
+        sotsog=SotSog()
+        options=SearchOptions(show=False, open_browser=False)
+        dois=["10.7287/peerj.preprints.27466v1"]
+        #@TODO test search via DOI, ORCID and so on

@@ -69,15 +69,20 @@ class Crossref:
         
         timestamp=datetime.datetime.utcnow().strftime('%Y-%m-%d')
         ref_type="journal-article"
-        title_2=meta_data["title"][0].lower()[:2]
-        author_lower=meta_data["author"][0]["family"].lower()
-        year=meta_data["published-print"]["date-parts"][0][0]
+        title=meta_data["title"][0].lower()
+        title_2=title[:2]
+        author_lower=""
+        if "author" in meta_data:
+            author_lower=meta_data["author"][0]["family"].lower()
+        year=""
+        if "published-print" in meta_data:
+            year=meta_data["published-print"]["date-parts"][0][0]
         reference=f"{author_lower}{year}{title_2}"
         markup=""
         for skey,mkey,func in [
             ("title","title",unlist),
             ("subtitle","subtitle",unlist),
-            ("author","author",get_author),
+            ("authors","author",get_author),
             ("journal","container-title",unlist),
             ("publisher","publisher",str),
             ("issn","ISSN",unlist),
@@ -98,4 +103,5 @@ class Crossref:
 |retrieved-from=https://dx.doi.org/
 |retrieved-on={timestamp}
 }}}}"""
-        return markup
+        full_markup=f"{title}\n[[CiteRef::{reference}]]\n{markup}"
+        return full_markup

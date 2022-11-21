@@ -12,6 +12,9 @@ class TestCrossref(Basetest):
     test crossref access
     """
     
+    def setUp(self, debug=False, profile=True):
+        Basetest.setUp(self, debug=debug, profile=profile)
+        self.crossref=Crossref()
     
     def test_crossref(self):
         """
@@ -23,17 +26,16 @@ class TestCrossref(Basetest):
         debug=self.debug
         debug=True
         dois=["10.1016/J.ARTMED.2017.07.002"]
-        crossref=Crossref()
-        bib_entry=crossref.doiBibEntry(dois)
+        bib_entry=self.crossref.doiBibEntry(dois)
         if debug:
             print(bib_entry)
         self.assertTrue("author = {Jean-Baptiste Lamy}," in bib_entry)
-        meta_data=crossref.doiMetaData(dois)
+        meta_data=self.crossref.doiMetaData(dois)
         if debug:
             print(json.dumps(meta_data,indent=2))
         self.assertTrue("DOI" in meta_data)
         self.assertEqual(dois[0].lower(),meta_data["DOI"])
-        scite_entry=crossref.asScite(meta_data)
+        scite_entry=self.crossref.asScite(meta_data)
         if debug:
             print(scite_entry)
 
@@ -44,8 +46,3 @@ class TestCrossref(Basetest):
         session = requests.Session()
         print(session.cookies.get_dict())
         
-    def test_get_markups(self):
-        """
-        get markups for a given DOI
-        """
-        dois=[""]
