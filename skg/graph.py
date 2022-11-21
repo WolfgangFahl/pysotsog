@@ -164,6 +164,7 @@ WHERE {{
   VALUES ?{id_name} {{
     {value_clause}
   }}
+  # classification!
   ?wikiDataId wdt:P31/wdt:P279* wd:{concept.wd_class}.
   ?wikiDataId rdfs:label ?{concept.name} .
   FILTER(LANG(?{concept.name})="{lang}").
