@@ -28,7 +28,9 @@ dependencies = [
         # https://pypi.org/project/search-engine-parser/
         'search-engine-parser~=0.6.7',
         # https://github.com/fake-useragent/fake-useragent
-        'fake-useragent>=0.1.11'
+        'fake-useragent>=0.1.11',
+        # lxml dependency
+        'lxml>=4.6.5'
      ]
 
 requires-python = ">=3.7"

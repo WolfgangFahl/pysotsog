@@ -64,7 +64,7 @@ class SKG_Def:
         # scientific event
         self.concepts["Event"].map_wikidata("Q52260246","event",[
             ("title","P1476"),
-            ("country","P17"), # 93.9%
+            ("country","P17"), # 93.9% -> Human Settlement
             ("location","P276"), # 94.6%
             ("point_in_time","P585"),
             ("official_website","P856")
