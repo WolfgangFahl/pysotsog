@@ -15,9 +15,11 @@ jobs:
   # using How to apt-get install in a GitHub Actions workflow?
   # (70 k views 2022-11)
   # https://stackoverflow.com/a/58002908/1497139
+  # sudo apt-get install libxml2-dev libxslt-dev python-dev
+  # does not work
     - name: Install lxml preqrequisites
       run: |
-          sudo apt-get install libxml2-dev libxslt-dev python-dev
+          sudo apt-get install build-dep python3-lxml
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
