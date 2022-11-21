@@ -9,6 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+  # work around libxml install error using pip see
+  # (360k views 2022-11)
+  # https://stackoverflow.com/a/5178444/1497139
+  # using How to apt-get install in a GitHub Actions workflow?
+  # (70 k views 2022-11)
+  # https://stackoverflow.com/a/58002908/1497139
+    - name: Install lxml preqrequisites
+      run: |
+          sudo apt-get install libxml2-dev libxslt-dev python-dev
     - name: Set up Python
       uses: actions/setup-python@v3
       with:

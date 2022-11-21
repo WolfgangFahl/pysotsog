@@ -1,13 +1,6 @@
 # This workflow will install Python dependencies, run tests and lint with a variety of Python versions
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-# work around libxml install error using pip see
-# (360k views 2022-11)
-# https://stackoverflow.com/a/5178444/1497139
-# using How to apt-get install in a GitHub Actions workflow?
-# (70 k views 2022-11)
-# https://stackoverflow.com/a/58002908/1497139
-
 name: Build
 
 on:
@@ -30,14 +23,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Install lxml preqrequisites
-      run: |
-        sudo apt-get install libxml2-dev libxslt-dev python-dev
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
+    - name: Install python dependencies
       run: |
         python -m pip install --upgrade pip
         scripts/install
