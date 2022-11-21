@@ -17,6 +17,9 @@ class TestCrossref(Basetest):
         """
         test crossref
         """
+        from fake_useragent import UserAgent
+        ua = UserAgent()
+        ua.random
         debug=self.debug
         debug=True
         dois=["10.1016/J.ARTMED.2017.07.002"]
