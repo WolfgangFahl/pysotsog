@@ -17,6 +17,7 @@ from jpwidgets.bt5widgets import App,Link
 from urllib import parse
 from skg.search import SearchOptions
 from skg.orcid import ORCID
+from wikibot.wikiuser import WikiUser
 
 class SkgBrowser(App):
     """
@@ -42,6 +43,9 @@ class SkgBrowser(App):
         self.options=options
         self.markup_names=["-","bibtex","scite"]
         self.markup_name=self.markup_names[1]
+        # wiki users
+        self.wikiUsers=WikiUser.getWikiUsers()
+        self.wikiId="ceur-ws"
         jp.Route('/settings',self.settings)
         
     def createItemLink(self,item,term:str,index:int)->str:
@@ -147,21 +151,36 @@ class SkgBrowser(App):
         self.messages=self.jp.Div(a=self.colC1,style='color:black')    
         
     async def onChangeLanguage(self,msg):
-        '''
+        """
         react on language being changed via Select control
-        '''
+        """
         self.language=msg.value  
+        
+    async def onChangeWikiUser(self,msg):
+        """
+        react on a the wikiuser being changed via a Select control
+        """
+        self.wikiId=msg.value
   
     def addLanguageSelect(self):
         """
         add a language selector
         """
-        self.languageSelect=self.createSelect("Language","en",a=self.colC1,change=self.onChangeLanguage)
+        self.languageSelect=self.createSelect("Language","en",a=self.colB11,change=self.onChangeLanguage)
         for language in self.getLanguages():
             lang=language[0]
             desc=language[1]
             desc=html.unescape(desc)
             self.languageSelect.add(self.jp.Option(value=lang,text=desc))
+            
+    def addWikiUserSelect(self):
+        """
+        add a wiki user selector
+        """
+        if len(self.wikiUsers)>0:
+            self.wikiuser_select=self.createSelect("wikiId", value=self.wikiId, change=self.onChangeWikiUser, a=self.colB11)
+            for wikiUser in sorted(self.wikiUsers):
+                self.wikiuser_select.add(self.jp.Option(value=wikiUser,text=wikiUser)) 
       
     async def settings(self)->"jp.WebPage":
         '''
@@ -172,6 +191,7 @@ class SkgBrowser(App):
         '''
         self.setupRowsAndCols()
         self.addLanguageSelect()
+        self.addWikiUserSelect()
         return self.wp
         
     async def content(self)->"jp.WebPage":
