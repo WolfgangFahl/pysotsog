@@ -7,8 +7,6 @@ from tests.basetest import Basetest
 from skg.doi import DOI
 from skg.smw import SemWiki
 from wikibot.wikiuser import WikiUser
-from skg.wikidata import Wikidata
-from skg.graph import Node
 import json
 from collections import Counter
 
@@ -33,6 +31,7 @@ class TestSMW(Basetest):
             debug(bool): if True show debugging information
         """
         doiCounter=Counter()
+        records=None
         for wikiId,withLogin in wikis:
             if wikiId in self.wikiUsers:
                 wikiUser=self.wikiUsers[wikiId]
