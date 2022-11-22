@@ -53,8 +53,9 @@ LIMIT 10
         """
         test loading the dblp schema
         """
-        self.dblp.loadSchema(formats="n3,json-ld") # xml
-        classes=self.dblp.toClasses()
+        schema=self.dblp.schema
+        schema.loadSchema(formats="n3,json-ld") # xml
+        classes=schema.toClasses()
         debug=self.debug
         debug=True
         if debug:
@@ -69,8 +70,9 @@ LIMIT 10
         """
         test getting uml markup
         """
-        self.dblp.loadSchema()
-        uml_markup=self.dblp.toPlantUml()
+        schema=self.dblp.schema
+        schema.loadSchema()
+        uml_markup=schema.toPlantUml()
         debug=True
         if debug:
             print(uml_markup)
