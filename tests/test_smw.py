@@ -7,6 +7,8 @@ from tests.basetest import Basetest
 from skg.doi import DOI
 from skg.smw import SemWiki
 from wikibot.wikiuser import WikiUser
+from skg.wikidata import Wikidata
+from skg.graph import Node
 import json
 from collections import Counter
 
@@ -73,8 +75,7 @@ class TestSMW(Basetest):
         debug=self.debug
         #debug=True
         wikis=[("media",True)]
-        self.checkWikis(wikis,accessor=SemWiki.scholars,debug=debug)
-        
+        self.checkWikis(wikis,accessor=SemWiki.scholars,debug=debug)  
             
         
     

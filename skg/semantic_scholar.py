@@ -3,6 +3,7 @@ Created on 2022-11-22
 
 @author: wf
 '''
+# see https://pypi.org/project/semanticscholar/
 from semanticscholar import SemanticScholar as SemScholar
 
 class SemanticScholar:
@@ -22,4 +23,10 @@ class SemanticScholar:
         """
         paper=self.sch.get_paper(doi)
         return paper
+    
+    def get_author(self):
+        """
+        https://api.semanticscholar.org/api-docs/graph#tag/Author-Data/operation/get_graph_get_author_search
+        """
+        pass
         

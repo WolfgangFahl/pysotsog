@@ -3,11 +3,10 @@ Created on 22.11.2022
 
 @author: wf
 '''
-from wikibot.smw import SMW
 from wikibot.wikiuser import WikiUser
 from wikibot.wikiclient import WikiClient
 from wikibot.smw import SMWClient
-
+from skg.wikidata import Wikidata
 class SemWiki:
     """
     access to Semantic mediawiki
@@ -72,4 +71,33 @@ class SemWiki:
 """       
         scholars=self.id_refs(mainlabel, condition, "scholars", askExtra, "Scholar wikiDataId", "wikiDataId")
         return scholars
+    
+    @classmethod
+    def asMarkup(self,scholar)->str:
+        """
+        return the markup for the given scholar
+        
+        Args:
+            scholar(Node): the scholar
+        Returns:
+            str: the semantic mediawiki markup
+        """
+        markup="{{Scholar"
+        
+        for prop_name,prop in scholar.concept.props.items():
+            if prop.hasmap("smw"):
+                smw_prop=prop.getmap("smw")
+                if hasattr(scholar,prop_name):
+                    value=getattr(scholar,prop_name)
+                    # @TODO refactor
+                    qid=Wikidata.getQid(value)
+                    if value!=qid:
+                        # potential lookup need
+                        if prop_name!="wikiDataId":
+                            value=Wikidata.getLabelForQid(qid)
+                        else:
+                            value=qid
+                    markup+=f"\n|{smw_prop}={value}"
+        markup+="\n}}"
+        return markup
         

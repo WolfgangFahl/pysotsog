@@ -9,6 +9,7 @@ class Wikidata:
     """
     Wikidata access wrapper
     """
+    instance=None
     def __init__(self,endpoint:str="https://query.wikidata.org/sparql",debug:bool=False):
         """
         constructor
@@ -16,8 +17,42 @@ class Wikidata:
         self.endpoint=endpoint
         self.sparql = SPARQL(endpoint)
         self.debug=debug
+        Wikidata.instance=self
         
+    @classmethod
+    def getInstance(cls):
+        if cls.instance is None:
+            Wikidata()
+        return cls.instance
+            
+    @classmethod
+    def getQid(self,wd_url:str):
+        qid=wd_url.replace("http://www.wikidata.org/entity/","")
+        return qid
+    
+    @classmethod
+    def getLabelForQid(self,qid:str,lang:str="en")->str:
+        """
+        get a label for the given Wikidata QID
         
+        Args:
+            qid(str): the Wikidata ID
+            lang(str): the language
+        """
+        sparql_query=f"""SELECT ?itemLabel WHERE {{
+  VALUES ?item {{
+    wd:{qid}
+  }}
+  ?item rdfs:label ?itemLabel.
+  FILTER(LANG(?itemLabel)="{lang}").
+}}"""
+        wd=Wikidata.getInstance()
+        lod=wd.sparql.queryAsListOfDicts(sparql_query)
+        label=None
+        if len(lod)==1:
+            label=lod[0]["itemLabel"]
+        return label
+    
     def getClassQids(self,qids:list)->dict:
         """
         get the Wikidata Q-Identifiers 

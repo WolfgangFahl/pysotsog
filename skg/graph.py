@@ -26,7 +26,21 @@ class Concept:
         for sample in cls.getSamples():
             for key in sample.keys():
                 if not key in self.props:
-                    self.props[key]=Property(key)
+                    self.props[key]=Property(self,key)
+                    
+    def map(self,map_name:str,map_list:list):
+        """
+        map the given list of property mappings under the given map_name
+        
+        Args:
+            map_name(str): the name of the mapping e.g. "wikidata"
+            map_list(list): a list of mapping tuples
+        """
+        for prop_name,mapped_prop in map_list:
+            if prop_name in self.props:
+                prop=self.props[prop_name]
+                prop.setmap(map_name,mapped_prop)
+        return self
                     
     def map_wikidata(self,wd_class:str,scholia_suffix,map_list:list):
         """
@@ -38,27 +52,47 @@ class Concept:
         """
         self.wd_class=wd_class
         self.scholia_suffix=scholia_suffix
-        for prop_name,wd_prop in map_list:
-            if prop_name in self.props:
-                self.props[prop_name].wd_prop=wd_prop
-        return self
-            
-    def map_dblp(self,map_list:list):
-        """
-        map dblp entries
-        """
-        for prop_name,dblp_prop in map_list:
-            if prop_name in self.props:
-                # @TODO separate mapping concern
-                self.props[prop_name].dblp_prop=dblp_prop
-        return self
+        self.map("wikidata",map_list)
+        return self    
+    
             
 class Property:
     """
     a Property
     """
-    def __init__(self,name):
+    def __init__(self,concept:Concept,name:str):
+        """
+        constructor
+        
+        Args:
+            concept(Concept): the concept this property belongs to
+            name(str): the name of the property
+            
+        """
+        self.concept=concept
         self.name=name
+        self.maps={}
+        
+    def setmap(self,map_name,mapped_prop):
+        """
+        map the given property
+        """
+        self.maps[map_name]=mapped_prop
+        
+    def getmap(self,map_name):
+        return self.maps[map_name]
+        
+    def hasmap(self,map_name:str)->bool:
+        """
+        check whether ther is a mapping for the given map_name
+        
+        Args:
+            map_name(str): the map name to check
+            
+        Returns:
+            bool: True if there is mapping
+        """
+        return map_name in self.maps
     
 class Node:
     """
@@ -173,9 +207,10 @@ WHERE {{
         for prop in concept.props.values():
             if prop.name=="wikiDataId":
                 continue
-            if not hasattr(prop, "wd_prop"):
+            if not (prop.hasmap("wikidata")):
                 raise Exception(f"Property {prop.name} of {concept.name} has no wikidata mapping")
-            clause=f"?wikiDataId wdt:{prop.wd_prop} ?{prop.name}."
+            wd_prop=prop.getmap("wikidata")
+            clause=f"?wikiDataId wdt:{wd_prop} ?{prop.name}."
             if prop.name!=id_name:
                 clause=f"OPTIONAL {{ {clause} }}"
             sparql_query+="\n  "+clause
@@ -201,7 +236,7 @@ PREFIX dblp: <https://dblp.org/rdf/schema#>
 SELECT 
   ?{concept.name}"""
         for prop in concept.props.values():
-            if hasattr(prop, "dblp_prop"):
+            if prop.hasmap("dblp"):
                 sparql_query+=f" ?{prop.name}"
         if id_name=="doi":
             value_clause=f"<http://dx.doi.org/{id_value}>"
@@ -216,8 +251,9 @@ WHERE {{
   }}
 """
         for prop in concept.props.values():
-            if hasattr(prop, "dblp_prop"):
-                sparql_query+=f"""?{concept.name} dblp:{prop.dblp_prop} ?{prop.dblp_prop}.\n"""
+            if prop.hasmap("dblp"):
+                dblp_prop=prop.getmap("dblp")
+                sparql_query+=f"""?{concept.name} dblp:{dblp_prop} ?{dblp_prop}.\n"""
         sparql_query+="}\n"
         instances=cls.from_sparql(dblp.sparql,sparql_query,concept)
         return instances

@@ -43,10 +43,19 @@ class SKG_Def:
             ("image","P18"),
             ("occupation","P106"),
             ("Semantic_Scholar_author_ID","P4012")
-        ]).map_dblp([
+        ]).map("dblp",[
             ("name","primaryCreatorName"),
             ("homepage","primaryHomepage"),
             ("orcid","orcid")
+        ]).map("smw",[
+            ("wikiDataId","wikiDataId"),
+            ("familyName","name"),
+            ("givenName","firstName"),
+            ("googleScholarUser","googleScholarUser"),
+            ("homepage","homepage"),
+            ("dblpId","dblpId"),
+            ("orcid","orcid"),
+            ("linkedInId","linkedInId")
         ])
         self.concepts["Institution"].map_wikidata("Q4671277","organization",[
             ("short_name","P1813"), # 2.0 % 
@@ -62,7 +71,7 @@ class SKG_Def:
             ("doi","P356"),
             ("DBLP_publication_ID","P8978"),
             ("publication_date","P577")
-        ]).map_dblp([
+        ]).map("dblp",[
             ("title","title"),
             ("doi","doi")
         ])

@@ -6,6 +6,7 @@ Created on 2022-11-16
 from tests.base_skg_test import BaseSkgTest
 from skg.scholar import Scholar
 from skg.graph import Node
+from skg.smw import SemWiki
 
 class TestScholar(BaseSkgTest):
     """
@@ -52,3 +53,16 @@ class TestScholar(BaseSkgTest):
         debug=self.debug
         debug=True
         self.check_id_examples(id_examples, createFunc=Node.from_wikidata_via_id,checkItem=checkItem,debug=debug)            
+
+    def test_smw_markup(self):
+        """
+        test Semantic MediaWiki markup for a scholar
+        """
+        orcids=["0000-0002-4030-0978"]
+        author_concept=self.skg_def.concepts["Scholar"]
+        for orcid in orcids:
+            scholars=Node.from_wikidata_via_id(author_concept, "orcid", orcid)
+            scholar=scholars[0]
+            markup=SemWiki.asMarkup(scholar)
+            print (markup)
+            

@@ -13,6 +13,7 @@ from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 from skg.wdsearch import WikidataSearch
 from skg.wikidata import Wikidata
+from skg.smw import SemWiki
 from skg.kg import SKG_Def
 from skg.graph import Node
 from skg.crossref import Crossref
@@ -52,17 +53,21 @@ class SotSog():
         """
         markups={}
         do_markup=len(options.markup_names)>0
-        if do_markup and item.concept.name=="Paper":
-            doi=getattr(item, "doi",None)
-            if doi is not None:
-                crossref=Crossref()
-                if "bibtex" in options.markup_names:
-                    bibentry=crossref.doiBibEntry([doi])
-                    markups["bibtex"]=bibentry
-                if "scite" in options.markup_names:
-                    meta_data=crossref.doiMetaData([doi])
-                    scite_entry=crossref.asScite(meta_data)
-                    markups["scite"]=scite_entry
+        if do_markup:
+            if item.concept.name=="Paper":
+                doi=getattr(item, "doi",None)
+                if doi is not None:
+                    crossref=Crossref()
+                    if "bibtex" in options.markup_names:
+                        bibentry=crossref.doiBibEntry([doi])
+                        markups["bibtex"]=bibentry
+                    if "scite" in options.markup_names:
+                        meta_data=crossref.doiMetaData([doi])
+                        scite_entry=crossref.asScite(meta_data)
+                        markups["scite"]=scite_entry
+            if item.concept.name=="Scholar":
+                if "smw" in options.markup_names:
+                    markups["smw"]=SemWiki.asMarkup(item)
         return markups
         
     def search(self,search_list,options:SearchOptions)->SearchResult:
@@ -155,6 +160,7 @@ USAGE
         parser.add_argument("-nb","--nobrowser",help="do not open browser",action="store_true")
         parser.add_argument('--port',type=int,default=8765)
         parser.add_argument("--scite",help="output #scite format",action="store_true")
+        parser.add_argument("--smw",help="output Semantic MediaWiki (SMW) format",action="store_true")   
         parser.add_argument("--serve",help="start webserver",action="store_true")
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
         args = parser.parse_args(argv)
@@ -165,6 +171,7 @@ USAGE
         markup_names=[]
         if args.bibtex: markup_names.append("bibtex")
         if args.scite: markup_names.append("scite")
+        if args.smw: markup_names.append("smw")
         options=SearchOptions(limit=args.limit,lang=args.lang,
                       markup_names=markup_names,
                       open_browser=not args.nobrowser)

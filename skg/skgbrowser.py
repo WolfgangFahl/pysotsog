@@ -41,7 +41,7 @@ class SkgBrowser(App):
         self.addMenuLink(text='Documentation',icon='file-document',href=version.doc_url)
         self.addMenuLink(text='Settings',icon='cog',href="/settings")
         self.options=options
-        self.markup_names=["-","bibtex","scite"]
+        self.markup_names=["-","bibtex","scite","smw"]
         self.markup_name=self.markup_names[1]
         # wiki users
         self.wikiUsers=WikiUser.getWikiUsers()
