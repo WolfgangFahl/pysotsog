@@ -18,6 +18,11 @@ class TestSotsog(Basetest):
         sotsog=SotSog()
         search_examples=[
             {
+                "search": ["10.1145/1963405.1963408"],
+                "qid": "Q55693406", 
+                "concept": "Paper"
+            },
+            {
                 "search": ["RWTH"],
                 "qid": "Q273263",
                 "concept": "Institution"

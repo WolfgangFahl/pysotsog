@@ -16,6 +16,7 @@ from skg.wikidata import Wikidata
 from skg.smw import SemWiki
 from skg.kg import SKG_Def
 from skg.graph import Node
+from skg.doi import DOI
 from skg.crossref import Crossref
 from skg.skgbrowser import SkgBrowser
 from skg.search import SearchOptions, SearchResult
@@ -69,21 +70,14 @@ class SotSog():
                 if "smw" in options.markup_names:
                     markups["smw"]=SemWiki.asMarkup(item)
         return markups
-        
-    def search(self,search_list,options:SearchOptions)->SearchResult:
+    
+    def wd_search(self,wd:Wikidata,search_term:str,options)->list:
         """
-        search with the given search list
-        
-        Args:
-            search_list(list): a list of search terms
-            options(SearchOptions): the search options to apply
+        do a wikidata search
         """
-        search_result=SearchResult(search_list,options)
-        search_term=' '.join(search_list)
-        wd=Wikidata(debug=self.debug)
+        items=[]
         wds=WikidataSearch(language=options.lang,debug=self.debug)
         search_options=wds.searchOptions(search_term,limit=options.limit)
-        items=[]
         qids=[]
         for qid,itemLabel,desc in search_options:
             qids.append(qid)
@@ -99,19 +93,48 @@ class SotSog():
                         if len(wd_items)>0:
                             item=wd_items[0]
                             items.append(item)
-                            if options.show:
-                                print(f"{itemLabel}({qid}):{desc}✅")
-                                print(item)
-                            item.markups=self.getMarkups(item,options)
-                            if options.show:
-                                for markup_name,markup in item.markups.items():
-                                    print(f"{markup_name} markup:")
-                                    print(markup)
-                                pass
-                            if options.open_browser:
-                                scholia_url=item.scholia_url()
-                                print(f"opening {scholia_url} in browser")
-                                webbrowser.open(scholia_url)
+                            self.handleItem(item,qid,itemLabel,desc,options)
+                            
+    def handleItem(self,item,qid,itemLabel,desc,options):
+        """
+        handle the given item as a search result
+        """
+        if options.show:
+            print(f"{itemLabel}({qid}):{desc}✅")
+            print(item)
+        item.markups=self.getMarkups(item,options)
+        if options.show:
+            for markup_name,markup in item.markups.items():
+                print(f"{markup_name} markup:")
+                print(markup)
+            pass
+        if options.open_browser:
+            scholia_url=item.scholia_url()
+            print(f"opening {scholia_url} in browser")
+            webbrowser.open(scholia_url)
+
+    def search(self,search_list,options:SearchOptions)->SearchResult:
+        """
+        search with the given search list
+        
+        Args:
+            search_list(list): a list of search terms
+            options(SearchOptions): the search options to apply
+        """
+        search_result=SearchResult(search_list,options)
+        search_term=' '.join(search_list)
+        wd=Wikidata(debug=self.debug)
+        if DOI.isDOI(search_term):
+            # DOI may not be referencing paper but something else
+            paper_concept=self.skg_def.concepts["Paper"]
+            items=Node.from_wikidata_via_id(paper_concept, "doi", search_term, options.lang)
+            for item in items:
+                qid=item.wikiDataId
+                itemLabel=item.label
+                desc="?"
+                self.handleItem(item, qid, itemLabel, desc, options)
+        else:
+            items=self.wd_search(wd,search_term,options)               
         search_result.items=items
         return search_result
 
