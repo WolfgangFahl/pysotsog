@@ -30,7 +30,9 @@ dependencies = [
         # https://github.com/fake-useragent/fake-useragent
         'fake-useragent>=0.1.11',
         # https://pypi.org/project/py-3rdparty-mediawiki/
-        'py-3rdparty-mediawiki~=0.7.1'
+        'py-3rdparty-mediawiki~=0.7.1',
+        # https://pypi.org/project/semanticscholar/
+        'semanticscholar~=0.3.0'
      ]
 
 requires-python = ">=3.7"

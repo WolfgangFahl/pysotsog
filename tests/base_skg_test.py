@@ -28,6 +28,7 @@ class BaseSkgTest(Basetest):
             id_name=id_example["id_name"]
             id_value=id_example["id_value"]
             id_concept=id_example["concept"]
+            # use createFunc as a factory
             items=createFunc(id_concept,id_name,id_value)
             if debug:
                 for item in items:

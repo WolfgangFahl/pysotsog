@@ -32,6 +32,11 @@ class Scholar(skg.graph.Node):
                 "gender": "male",
                 "image": "https://commons.wikimedia.org/wiki/File:Sir_Tim_Berners-Lee_(cropped).jpg",
                 # "occupation": "computer scientist" truly tabular issue
+            },
+            {
+                "name": "Anna Lisa Gentile",
+                "wikiDataId": "Q54832532",
+                "Semantic_Scholar_author_ID": "Anna Lisa Gentile"
             }
         ]
         return samples

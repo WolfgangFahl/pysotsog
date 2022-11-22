@@ -49,6 +49,7 @@ class Concept:
         """
         for prop_name,dblp_prop in map_list:
             if prop_name in self.props:
+                # @TODO separate mapping concern
                 self.props[prop_name].dblp_prop=dblp_prop
         return self
             

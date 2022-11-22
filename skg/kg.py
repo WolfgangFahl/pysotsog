@@ -41,7 +41,8 @@ class SKG_Def:
             ("familyName","P734"),
             ("gender","P21"),
             ("image","P18"),
-            ("occupation","P106")
+            ("occupation","P106"),
+            ("Semantic_Scholar_author_ID","P4012")
         ]).map_dblp([
             ("name","primaryCreatorName"),
             ("homepage","primaryHomepage"),
