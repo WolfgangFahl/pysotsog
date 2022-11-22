@@ -23,7 +23,7 @@ class Dblp:
         self.sparql=SPARQL(self.endpoint)
         
     
-    def get_paper_records(self,regex:str,prop_name:str="title",limit:int=100)->list:
+    def get_paper_records(self,regex:str,prop_name:str="title",limit:int=100,debug:bool=False)->list:
         """
         get papers fitting the given regex
         
@@ -31,6 +31,7 @@ class Dblp:
             prop_name(str): the property to filter
             regex(str): the regex to filter for
             limit(int): the maximum number of records to return
+            debug(bool): if True show debug information
             
         Returns:
             list: a list of dict of paper records
@@ -71,5 +72,32 @@ GROUP BY
   ?publishedin 
 ORDER BY DESC(?year)
 LIMIT {limit}"""
+        if debug:
+            print(sparql_query)
         records=self.sparql.queryAsListOfDicts(sparql_query)
         return records
+    
+    def get_random_papers(self,year:int=2020,limit:int=10):
+        sparql_query=f"""PREFIX dblp: <https://dblp.org/rdf/schema#>
+SELECT 
+  ?paper 
+  (SAMPLE(?doi_o) as ?doi)
+  (SAMPLE(?title_o) as ?title)
+  (MIN(?year_o) as ?year)
+  (GROUP_CONCAT(?author_o) as ?authors)
+  (SAMPLE(?publishedin_o) as ?publishedin)
+  (SAMPLE(?sortKey) as ?sortKey)
+WHERE {{
+  VALUES ?year_o {{ "{year}" }}
+  ?paper dblp:title ?title_o .
+  ?paper dblp:doi ?doi_o .
+  ?paper dblp:authoredBy ?author_o.
+  ?paper dblp:publishedIn ?publishedin_o .
+  ?paper dblp:yearOfPublication ?year_o.
+  BIND(RAND() AS ?sortKey)
+}}
+GROUP BY ?paper
+ORDER BY ?sortKey 
+LIMIT {limit}
+        """
+        
