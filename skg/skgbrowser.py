@@ -104,7 +104,7 @@ class SkgBrowser(App):
                     else:
                         for i,item in enumerate(items):
                             rmarkup+=self.createItemLink(item,term,i)
-                            if i==0 and item.concept.name=="Paper":
+                            if i==0 and len(item.markups)>0:
                                 markups=""
                                 for _markup_name,markup in item.markups.items():
                                     markups+=markup
