@@ -94,6 +94,7 @@ class SotSog():
                             item=wd_items[0]
                             items.append(item)
                             self.handleItem(item,qid,itemLabel,desc,options)
+        return items                    
                             
     def handleItem(self,item,qid,itemLabel,desc,options):
         """
