@@ -1,7 +1,7 @@
 # pysotsog
 python Library for Scholars to achieve "Standing on the shoulders of giants - with direct access to the clouds"
 
-[![Join the discussion at https://github.com/WolfgangFahl/pysotsog/discussions](https://badges.gitter.im/pysotsog/community.svg)](https://gitter.im/play-chess-with-a-webcam/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the discussion at https://github.com/WolfgangFahl/pysotsog/discussions](https://badges.gitter.im/pysotsog/community.svg)](https://github.com/WolfgangFahl/pysotsog/discussions)
 [![pypi](https://img.shields.io/pypi/pyversions/pysotsog)](https://pypi.org/project/pysotsog/)
 [![Github Actions Build](https://github.com/WolfgangFahl/pysotsog/workflows/Build/badge.svg?branch=main)](https://github.com/WolfgangFahl/pysotsog/actions?query=workflow%3ABuild+branch%3Amain)
 [![PyPI Status](https://img.shields.io/pypi/v/pysotsog.svg)](https://pypi.python.org/pypi/pysotsog/)
@@ -22,4 +22,15 @@ pysotsog is a python library for scholars to help navigate the conceptual knowle
 [Wiki](https://wiki.bitplan.com/index.php/Pysotsog)
 
 ## Demo
+```bash
+UCLA
+Tim Berners-Lee
+We Need a Magna Carta for the Internet
+Wikidata Workshop 2022
+VNC 2019
+Proceedings of the 35th International Workshop on Description Logics (DL 2022)
+COVID-19
+```
+![Search Demo](https://user-images.githubusercontent.com/95085996/203155213-8e12cbb0-942a-49fc-9b77-2977bb5ddeaa.gif)
+
 [Demo at https://sotsog.bitplan.com](http://sotsog.bitplan.com)
