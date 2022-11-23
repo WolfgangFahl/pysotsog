@@ -22,6 +22,9 @@ pysotsog is a python library for scholars to help navigate the conceptual knowle
 [Wiki](https://wiki.bitplan.com/index.php/Pysotsog)
 
 ## Demo
+[sotsog Demo at https://sotsog.bitplan.com](http://sotsog.bitplan.com)
+
+### Example search
 ```bash
 UCLA
 Tim Berners-Lee
@@ -32,5 +35,3 @@ Proceedings of the 35th International Workshop on Description Logics (DL 2022)
 COVID-19
 ```
 ![Search Demo](https://user-images.githubusercontent.com/95085996/203155213-8e12cbb0-942a-49fc-9b77-2977bb5ddeaa.gif)
-
-[Demo at https://sotsog.bitplan.com](http://sotsog.bitplan.com)
