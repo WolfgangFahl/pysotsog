@@ -40,6 +40,7 @@ class SkgBrowser(App):
         self.addMenuLink(text='Chat',icon='chat',href=version.chat_url)
         self.addMenuLink(text='Documentation',icon='file-document',href=version.doc_url)
         self.addMenuLink(text='Settings',icon='cog',href="/settings")
+        self.addMenuLink(text='About',icon='information',href="/about")
         self.options=options
         self.markup_names=["-","bibtex","scite","smw"]
         self.markup_name=self.markup_names[1]
@@ -47,6 +48,7 @@ class SkgBrowser(App):
         self.wikiUsers=WikiUser.getWikiUsers()
         self.wikiId="ceur-ws"
         jp.Route('/settings',self.settings)
+        jp.Route('/about',self.about)
         
     def createItemLink(self,item,term:str,index:int)->str:
         """
@@ -192,6 +194,26 @@ class SkgBrowser(App):
         self.setupRowsAndCols()
         self.addLanguageSelect()
         self.addWikiUserSelect()
+        return self.wp
+    
+    async def about(self)->"jp.WebPage":
+        '''
+        show about dialog
+        
+        Returns:
+            jp.WebPage: a justpy webpage renderer
+        '''
+        self.setupRowsAndCols()
+        self.aboutDiv=self.colB1
+        # @TODO Refactor to pyJustpyWidgets
+        self.jp.Div(text=f"{self.version.description}",a=self.aboutDiv)
+        self.jp.Div(text=f"version: {self.version.version}",a=self.aboutDiv)
+        self.jp.Div(text=f"updated: {self.version.updated}",a=self.aboutDiv)
+        self.jp.Div(text=f"authors: {self.version.authors}",a=self.aboutDiv)
+        # url,text,tooltip=None,target=None,style:str=None
+        self.jp.Div(inner_html=Link.create(url=self.version.doc_url,text="documentation",target="_blank"),a=self.aboutDiv)
+        self.jp.Div(inner_html=Link.create(url=self.version.chat_url,text="discussion",target="_blank"),a=self.aboutDiv)
+        self.jp.Div(inner_html=Link.create(url=self.version.cm_url,text="source",target="_blank"),a=self.aboutDiv)
         return self.wp
         
     async def content(self)->"jp.WebPage":

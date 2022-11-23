@@ -10,11 +10,10 @@ class Version(object):
     Version handling for pysotsog
     '''
     name="pysotsog"
-    description='''python Library for Scholars to achieve "Standing on the shoulders of giants"'''
+    description='sotsog: Standing on the shoulders of giants - with direct access to the clouds'
     version=skg.__version__
     date = '2022-11-16'
     updated = '2022-11-18'
-    description='Scholarly Knowledge Graph Search with Commandline and Browser'
     authors='Wolfgang Fahl'
     doc_url="https://wiki.bitplan.com/index.php/Pysotsog"
     chat_url="https://github.com/WolfgangFahl/pysotsog/discussions"
