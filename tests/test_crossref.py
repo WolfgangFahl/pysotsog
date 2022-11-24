@@ -6,7 +6,13 @@ Created on 2022-11-17
 from tests.basetest import Basetest
 from skg.crossref import Crossref
 import json
+from dataclasses import dataclass
 
+@dataclass
+class Example:
+    doi:str
+    author:str
+        
 class TestCrossref(Basetest):
     """
     test crossref access
@@ -15,6 +21,7 @@ class TestCrossref(Basetest):
     def setUp(self, debug=False, profile=True):
         Basetest.setUp(self, debug=debug, profile=profile)
         self.crossref=Crossref()
+        
     
     def test_crossref(self):
         """
@@ -25,22 +32,28 @@ class TestCrossref(Basetest):
         ua.random
         debug=self.debug
         debug=True
-        dois=["10.1145/2882903.2899389","10.1016/J.ARTMED.2017.07.002"]
-        bib_entry=self.crossref.doiBibEntry(dois)
-        if debug:
-            print(bib_entry)
-        self.assertTrue("author = {Jean-Baptiste Lamy}," in bib_entry)
-        meta_data=self.crossref.doiMetaData(dois)
-        if debug:
-            print(json.dumps(meta_data,indent=2))
-        self.assertTrue("DOI" in meta_data)
-        self.assertEqual(dois[0].lower(),meta_data["DOI"])
-        scite_entry=self.crossref.asScite(meta_data)
-        if debug:
-            print(scite_entry)
+        doi_examples=[
+            Example("10.1145/2882903.2899389","Jean-Baptiste Lamy"),
+            Example("10.1016/J.ARTMED.2017.07.002","Rihan Hai")
+        ]
+        for example in doi_examples:
+            doi=example.doi
+            bib_entry=self.crossref.doiBibEntry(doi)
+            if debug:
+                print(bib_entry)
+            self.assertTrue(f"author = {example.author}," in bib_entry)
+            meta_data=self.crossref.doiMetaData(doi)
+            if debug:
+                print(json.dumps(meta_data,indent=2))
+                self.assertTrue("DOI" in meta_data)
+                self.assertEqual(doi,meta_data["DOI"])
+                scite_entry=self.crossref.asScite(meta_data)
+            if debug:
+                print(scite_entry)
 
     def test_cookies(self):
         """
+        test session cookies default
         """
         import requests
         session = requests.Session()
