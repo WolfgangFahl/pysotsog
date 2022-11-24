@@ -46,23 +46,37 @@ class TestSearchEngine(Basetest):
                 self.counters["types"][rtype]+=1
             pass
         pass
+    
+    def check_search(self,search_term:str):
+        i_search=InternetSearch()
+        for engine_name,results in i_search.search(search_term):
+            print (engine_name)
+            self.analyse_isearch_result(results)
+            pprint.pprint(results)
+        for name,counter in self.counters.items():
+            print(name)
+            print(counter.most_common(10))
         
     def test_dblp_titles(self):
         """
         test DBLP titles
         """
         dblp=Dblp()
-        i_search=InternetSearch()
         limit=5
         paper_records=dblp.get_paper_records("ARCS","publishedin",limit=limit)
         for paper_record in paper_records:
             print(paper_record)
             title=paper_record["title"]
-            for engine_name,results in i_search.search(title):
-                print (engine_name)
-                self.analyse_isearch_result(results)
-                pprint.pprint(results)
-        for name,counter in self.counters.items():
-            print(name)
-            print(counter.most_common(10))
+            self.check_search(title)
+        
+            
+    def test_paper_search(self):
+        """
+        test the search for papers
+        """
+        titles=["Constance: an intelligent data lake system"]
+        for title in titles:
+            self.check_search(title)
+        
+        
             

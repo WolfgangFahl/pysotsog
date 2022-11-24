@@ -22,11 +22,11 @@ class Concept:
         self.name=name
         self.props={}
         self.cls=cls
-        # @TODO check that getSamples exists
-        for sample in cls.getSamples():
-            for key in sample.keys():
-                if not key in self.props:
-                    self.props[key]=Property(self,key)
+        if hasattr(cls,"getSamples"):
+            for sample in cls.getSamples():
+                for key in sample.keys():
+                    if not key in self.props:
+                        self.props[key]=Property(self,key)
                     
     def map(self,map_name:str,map_list:list):
         """
@@ -84,7 +84,7 @@ class Property:
         
     def hasmap(self,map_name:str)->bool:
         """
-        check whether ther is a mapping for the given map_name
+        check whether there is a mapping for the given map_name
         
         Args:
             map_name(str): the map name to check

@@ -25,7 +25,7 @@ class TestCrossref(Basetest):
         ua.random
         debug=self.debug
         debug=True
-        dois=["10.1016/J.ARTMED.2017.07.002"]
+        dois=["10.1145/2882903.2899389","10.1016/J.ARTMED.2017.07.002"]
         bib_entry=self.crossref.doiBibEntry(dois)
         if debug:
             print(bib_entry)
