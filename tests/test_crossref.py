@@ -33,8 +33,8 @@ class TestCrossref(Basetest):
         debug=self.debug
         debug=True
         doi_examples=[
-            Example("10.1145/2882903.2899389","Jean-Baptiste Lamy"),
-            Example("10.1016/J.ARTMED.2017.07.002","Rihan Hai")
+            Example("10.1016/J.ARTMED.2017.07.002","Jean-Baptiste Lamy"),
+            Example("10.1145/2882903.2899389","Rihan Hai")
         ]
         for example in doi_examples:
             doi=example.doi
