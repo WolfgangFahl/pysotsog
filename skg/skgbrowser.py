@@ -13,7 +13,7 @@ JpConfig.set("STATIC_DIRECTORY",static_dir)
 # shut up justpy
 JpConfig.set("VERBOSE","False")
 JpConfig.setup()
-from jpwidgets.bt5widgets import App,Link
+from jpwidgets.bt5widgets import App,Link,About
 from urllib import parse
 from skg.search import SearchOptions
 from skg.orcid import ORCID
@@ -204,16 +204,8 @@ class SkgBrowser(App):
             jp.WebPage: a justpy webpage renderer
         '''
         self.setupRowsAndCols()
-        self.aboutDiv=self.colB1
+        self.aboutDiv=About(a=self.colB1,version=self.version)
         # @TODO Refactor to pyJustpyWidgets
-        self.jp.Div(text=f"{self.version.description}",a=self.aboutDiv)
-        self.jp.Div(text=f"version: {self.version.version}",a=self.aboutDiv)
-        self.jp.Div(text=f"updated: {self.version.updated}",a=self.aboutDiv)
-        self.jp.Div(text=f"authors: {self.version.authors}",a=self.aboutDiv)
-        # url,text,tooltip=None,target=None,style:str=None
-        self.jp.Div(inner_html=Link.create(url=self.version.doc_url,text="documentation",target="_blank"),a=self.aboutDiv)
-        self.jp.Div(inner_html=Link.create(url=self.version.chat_url,text="discussion",target="_blank"),a=self.aboutDiv)
-        self.jp.Div(inner_html=Link.create(url=self.version.cm_url,text="source",target="_blank"),a=self.aboutDiv)
         return self.wp
         
     async def content(self)->"jp.WebPage":
