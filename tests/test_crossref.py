@@ -47,7 +47,7 @@ class TestCrossref(Basetest):
             if debug:
                 print(json.dumps(meta_data,indent=2))
                 self.assertTrue("DOI" in meta_data)
-                self.assertEqual(doi,meta_data["DOI"])
+                self.assertEqual(doi.lower(),meta_data["DOI"])
                 scite_entry=self.crossref.asScite(meta_data)
             if debug:
                 print(scite_entry)
