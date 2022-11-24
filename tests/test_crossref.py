@@ -41,7 +41,8 @@ class TestCrossref(Basetest):
             bib_entry=self.crossref.doiBibEntry(doi)
             if debug:
                 print(bib_entry)
-            self.assertTrue(f"author = {{{example.author}" in bib_entry)
+            expected=f"author = {{{example.author}"
+            self.assertTrue(expected in bib_entry,expected)
             meta_data=self.crossref.doiMetaData(doi)
             if debug:
                 print(json.dumps(meta_data,indent=2))
