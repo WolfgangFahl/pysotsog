@@ -68,6 +68,13 @@ class TestSearchEngine(Basetest):
             print(paper_record)
             title=paper_record["title"]
             self.check_search(title)
+            
+    def test_google_scholar(self):
+        """
+        """
+        scholars=["Suchetha N. Kunnath"]
+        for scholar in scholars:
+            self.check_search(scholar)
         
             
     def test_paper_search(self):

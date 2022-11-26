@@ -7,6 +7,7 @@ from search_engine_parser.core.engines.bing import Search as BingSearch
 from search_engine_parser.core.engines.google import Search as GoogleSearch
 from search_engine_parser.core.engines.yahoo import Search as YahooSearch
 from search_engine_parser.core.engines.duckduckgo import Search as DuckDuckGoSearch
+from search_engine_parser.core.engines.googlescholar import Search as GoogleScholarSearch
 import sys 
   
 class InternetSearch:
@@ -23,7 +24,8 @@ class InternetSearch:
         self.ysearch = YahooSearch()
         self.bsearch = BingSearch()
         self.dsearch = DuckDuckGoSearch()
-        self.engines=[self.ysearch,self.dsearch,self.bsearch]
+        self.gs_search=GoogleScholarSearch()
+        self.engines=[self.gs_search,self.ysearch,self.dsearch,self.bsearch]
         
     def handleException(self,ex):
         """
