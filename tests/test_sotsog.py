@@ -61,7 +61,8 @@ class TestSotsog(Basetest):
                     print(item)
             for item in s_result.items:
                 self.assertEqual(concept_name,item.concept.name)
-                self.assertTrue(qid in item.wikiDataId)
+                if hasattr("item", "wikiDataId")
+                    self.assertTrue(qid in item.wikiDataId)
                 # @TODO compare properties against samples
                 
     def test_get_markups(self):
