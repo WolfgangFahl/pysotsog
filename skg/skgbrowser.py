@@ -66,7 +66,7 @@ class SkgBrowser(App):
             style=""
             text=term
             delim=""
-        link=Link.create(item.scholia_url(),text,tooltip=item.label,target="_blank",style=style)
+        link=Link.create(item.browser_url(),text,tooltip=item.label,target="_blank",style=style)
         if item.concept.name=="Scholar":
             if hasattr(item,"orcid"):
                 orcid=ORCID(item.orcid)
