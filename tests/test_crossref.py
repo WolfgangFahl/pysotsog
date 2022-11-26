@@ -26,13 +26,11 @@ class TestCrossref(Basetest):
     def test_crossref(self):
         """
         test crossref
-        """
-        from fake_useragent import UserAgent
-        ua = UserAgent()
-        ua.random
+        """  
         debug=self.debug
         debug=True
         doi_examples=[
+            Example("10.1007/11581116_19","Atanas Kiryakov"),
             Example("10.1016/J.ARTMED.2017.07.002","Jean-Baptiste Lamy"),
             Example("10.1145/2882903.2899389","Rihan Hai")
         ]

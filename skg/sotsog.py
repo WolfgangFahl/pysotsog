@@ -96,12 +96,12 @@ class SotSog():
                             self.handleItem(item,qid,itemLabel,desc,options)
         return items                    
                             
-    def handleItem(self,item,qid,itemLabel,desc,options):
+    def handleItem(self,item,item_id,itemLabel,desc,options):
         """
         handle the given item as a search result
         """
         if options.show:
-            print(f"{itemLabel}({qid}):{desc}✅")
+            print(f"{itemLabel}({item_id}):{desc}✅")
             print(item)
         item.markups=self.getMarkups(item,options)
         if options.show:
@@ -110,9 +110,10 @@ class SotSog():
                 print(markup)
             pass
         if options.open_browser:
-            scholia_url=item.scholia_url()
-            print(f"opening {scholia_url} in browser")
-            webbrowser.open(scholia_url)
+            browser_url=item.browser_url()
+            if browser_url is not None:
+                print(f"opening {browser_url} in browser")
+                webbrowser.open(browser_url)
 
     def search(self,search_list,options:SearchOptions)->SearchResult:
         """
@@ -130,10 +131,17 @@ class SotSog():
             paper_concept=self.skg_def.concepts["Paper"]
             items=Node.from_wikidata_via_id(paper_concept, "doi", search_term, options.lang)
             for item in items:
-                qid=item.wikiDataId
+                item_id=item.wikiDataId
                 itemLabel=item.label
                 desc="?"
-                self.handleItem(item, qid, itemLabel, desc, options)
+                self.handleItem(item, item_id, itemLabel, desc, options)
+            dblp_items=Node.from_dblp_via_id(paper_concept, "doi", search_term)
+            for item in dblp_items:
+                item_id=item.doi
+                itemLabel=item.title
+                desc=item.title
+                self.handleItem(item, item_id, itemLabel, desc, options)
+            items.extend(dblp_items)
         else:
             items=self.wd_search(wd,search_term,options)               
         search_result.items=items

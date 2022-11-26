@@ -126,6 +126,16 @@ class Node:
             if key in record:
                 setattr(self, key, record[key])
                 
+    def browser_url(self):
+        """
+        get my browser url
+        """
+        if self.provenance=="wikidata":
+            url=self.scholia_url()
+        else:
+            url=self.label
+        return url
+                
     def scholia_url(self):
         """
         get my scholia url
@@ -133,10 +143,18 @@ class Node:
         prefix=f"https://scholia.toolforge.org/{self.concept.scholia_suffix}"
         wd_url=getattr(self, "wikiDataId",None)
         if wd_url is None:
-            return prefix
+            return None
         else:
             qid=wd_url.replace("http://www.wikidata.org/entity/","")
             return f"{prefix}/{qid}"
+        
+    @classmethod
+    def setProvenance(cls,instances:list,provenance:str):
+        """
+        set the provenance of the given instances
+        """
+        for instance in instances:
+            instance.provenance=provenance    
         
     @classmethod
     def from_sparql(cls,sparql:SPARQL,sparql_query:str,concept:Concept):
@@ -216,6 +234,7 @@ WHERE {{
             sparql_query+="\n  "+clause
         sparql_query+="\n}"
         instances=cls.from_sparql(wikidata.sparql,sparql_query,concept)
+        cls.setProvenance(instances, "wikidata")
         return instances
     
     
@@ -256,5 +275,6 @@ WHERE {{
                 sparql_query+=f"""?{concept.name} dblp:{dblp_prop} ?{dblp_prop}.\n"""
         sparql_query+="}\n"
         instances=cls.from_sparql(dblp.sparql,sparql_query,concept)
+        cls.setProvenance(instances, "dblp")
         return instances
         

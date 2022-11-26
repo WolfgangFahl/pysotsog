@@ -35,4 +35,4 @@ class DOI:
         if not isinstance(doi,str):
             return False
         match=re.match(cls.pattern,doi)
-        return match
+        return bool(match)
