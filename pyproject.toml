@@ -15,7 +15,7 @@ maintainers = [
 ]
 readme = "README.md"
 # flit_core.config.ConfigError: license field should be <class 'dict'>, not <class 'str'>
-license = { file="LICENSE" }
+license=Apache-2.0
 dependencies = [
 		# https://github.com/justpy-org/justpy
         'justpy~=0.11.3',
