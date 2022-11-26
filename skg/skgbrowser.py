@@ -106,12 +106,12 @@ class SkgBrowser(App):
                     else:
                         for i,item in enumerate(items):
                             rmarkup+=self.createItemLink(item,term,i)
-                            if i==0 and len(item.markups)>0:
+                            if len(item.markups)>0:
                                 markups=""
                                 for _markup_name,markup in item.markups.items():
                                     markups+=markup
                                     self.markup.inner_html+=f"<pre>{markups}</pre>"
-                                break
+                                    #break
                     self.results.inner_html+=delim+rmarkup  
                     delim="<br>" 
                     await self.wp.update()
