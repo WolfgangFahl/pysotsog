@@ -15,7 +15,7 @@ maintainers = [
 ]
 readme = "README.md"
 # flit_core.config.ConfigError: license field should be <class 'dict'>, not <class 'str'>
-license=Apache-2.0
+license= "Apache-2.0"
 dependencies = [
 		# https://github.com/justpy-org/justpy
         'justpy~=0.11.3',
@@ -24,13 +24,13 @@ dependencies = [
         # https://pypi.org/project/habanero/
         'habanero~=1.2.2',
         # https://pypi.org/project/pyJustpyWidgets/
-        'pyJustpyWidgets~=0.1.5',
+        'pyJustpyWidgets~=0.1.8',
         # https://pypi.org/project/search-engine-parser/
         'search-engine-parser~=0.6.8',
         # https://github.com/fake-useragent/fake-useragent
         'fake-useragent>=0.1.11',
         # https://pypi.org/project/py-3rdparty-mediawiki/
-        'py-3rdparty-mediawiki~=0.7.1',
+        'py-3rdparty-mediawiki~=0.7.3',
         # https://pypi.org/project/semanticscholar/
         'semanticscholar~=0.3.0'
      ]
