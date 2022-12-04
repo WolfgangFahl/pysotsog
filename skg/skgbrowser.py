@@ -17,7 +17,7 @@ from jpwidgets.bt5widgets import App,Link,About
 from urllib import parse
 from skg.search import SearchOptions
 from skg.orcid import ORCID
-from wikibot.wikiuser import WikiUser
+from wikibot3rd.wikiuser import WikiUser
 
 class SkgBrowser(App):
     """

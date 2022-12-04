@@ -6,7 +6,7 @@ Created on 2022-11-22
 from tests.basetest import Basetest
 from skg.doi import DOI
 from skg.smw import SemWiki
-from wikibot.wikiuser import WikiUser
+from wikibot3rd.wikiuser import WikiUser
 import json
 from collections import Counter
 
