@@ -8,6 +8,7 @@ from skg.doi import DOI
 from skg.dblp import Dblp
 from dataclasses import dataclass
 from unittest import IsolatedAsyncioTestCase
+import json
 
 @dataclass
 class DOIExample:
@@ -49,7 +50,7 @@ class TestDOILookup(IsolatedAsyncioTestCase):
         """
         test DOI lookup 
         """
-        debug=False
+        debug=True
         dois=["10.1109/TBDATA.2022.3224749"]
         for doi in dois:
             doi_obj=DOI(doi)
@@ -57,6 +58,23 @@ class TestDOILookup(IsolatedAsyncioTestCase):
             if debug:
                 print(result)
             self.assertTrue(result.startswith("@article{Li_2022,"))
+            
+        
+    async def testDataCiteLookup(self):
+        """
+        test the dataCite Lookup api
+        """
+        debug=True
+        dois=["10.5438/0012"]
+        for doi in dois:
+            doi_obj=DOI(doi)
+            json_data=await doi_obj.dataCiteLookup()
+            if debug:
+                print(json.dumps(json_data,indent=2))
+            self.assertTrue("data" in json_data)
+            data=json_data["data"]
+            self.assertTrue("id" in data)
+            self.assertEquals(doi,data["id"])
             pass
                             
    
