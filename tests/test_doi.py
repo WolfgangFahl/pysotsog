@@ -52,13 +52,27 @@ class TestDOILookup(IsolatedAsyncioTestCase):
         """
         debug=True
         dois=["10.1109/TBDATA.2022.3224749"]
-        for doi in dois:
+        expected=["@article{Li_2022,","@inproceedings{Faruqui_2015,"]
+        for i,doi in enumerate(dois):
             doi_obj=DOI(doi)
             result=await doi_obj.doi2bibTex()
             if debug:
                 print(result)
-            self.assertTrue(result.startswith("@article{Li_2022,"))
+            self.assertTrue(result.startswith(expected[i]))
             
+    async def testCiteproc(self):
+        """
+        cite proc lookup
+        """ 
+        dois=["10.3115/v1/N15-1184"]
+        debug=True
+        for doi in dois:
+            doi_obj=DOI(doi)
+            json_data=await doi_obj.doi2Citeproc()
+            if debug:
+                print(json.dumps(json_data,indent=2))
+            self.assertTrue("DOI" in json_data)
+            self.assertEqual(doi.lower(),json_data["DOI"])
         
     async def testDataCiteLookup(self):
         """

@@ -13,6 +13,7 @@ class DOI:
     see e.g. https://www.wikidata.org/wiki/Property:P356
     see https://www.doi.org/doi_handbook/2_Numbering.html#2.2
     see https://github.com/davidagraf/doi2bib2/blob/master/server/doi2bib.js
+    see https://citation.crosscite.org/docs.html
     
     """
     pattern=re.compile(r"((?P<directory_indicator>10)\.(?P<registrant_code>[0-9]{4,})(?:\.[0-9]+)*(?:\/|%2F)(?:(?![\"&\'])\S)+)")
@@ -72,6 +73,17 @@ class DOI:
             'Accept': 'application/x-bibtex; charset=utf-8'
         }
         return await self.fetch_text(url,headers)     
+    
+    async def doi2Citeproc(self):
+        """
+        get the Citeproc JSON result for my doi
+        see https://citeproc-js.readthedocs.io/en/latest/csl-json/markup.html
+        """
+        url=f"https://doi.org/{self.doi}"
+        headers= {
+            'Accept': 'application/vnd.citationstyles.csl+json; charset=utf-8'
+        }
+        return await self.fetch_json(url, headers)
     
     async def dataCiteLookup(self):
         """
