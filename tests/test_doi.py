@@ -64,7 +64,7 @@ class TestDOILookup(IsolatedAsyncioTestCase):
         """
         cite proc lookup
         """ 
-        dois=["10.3115/v1/N15-1184"]
+        dois=["10.3115/v1/N15-1184","10.1007/s13042-022-01686-5","10.3390/info13120562"]
         debug=True
         for doi in dois:
             doi_obj=DOI(doi)

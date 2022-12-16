@@ -21,7 +21,8 @@ class Crossref:
             mailto="wf@bitplan.com"
         if ua_string is None:
             ua_string=f"pysotsog/{skg.__version__} (https://pypi.org/project/pysotsog/; mailto:{mailto})"
-        self.cr = habanero.Crossref(mailto=mailto,ua_string=ua_string)  
+        #self.cr = habanero.Crossref(mailto=mailto,ua_string=ua_string)  
+        self.cr = habanero.Crossref(ua_string="")  
     
     def doiMetaData(self, dois:list):
         """ 
