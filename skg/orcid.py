@@ -3,10 +3,14 @@ Created on 2022-11-19
 
 @author: wf
 '''
+import requests
 class ORCID:
     """
     ORCID handling
-    see e.g. https://info.orcid.org/brand-guidelines/#h-orcid-logos-and-icons
+    
+    see e.g. 
+        https://info.orcid.org/brand-guidelines/#h-orcid-logos-and-icons
+        https://pub.orcid.org/v3.0/
     """
     def __init__(self,orcid:str):
         """
@@ -16,6 +20,25 @@ class ORCID:
             orcid(str): the orcid
         """
         self.orcid=orcid
+        
+    def getMetadata(self,op:str=None)->dict:
+        """
+        get the ORCID metadata data
+        
+        Args:
+            op(str): the https://pub.orcid.org/v3.0/ API 
+            operation to apply - default is "Fetch record details"
+            
+        Returns:
+            dict: the dictionary derived from the JSON response
+            
+        """
+        op="" if op is None else f"/{op}"
+        url=f'https://pub.orcid.org/v3.0/{self.orcid}{op}'
+        r = requests.get(url,
+                            headers = {'User-Agent':'Mozilla/5.0', 'accept' : 'application/json'})
+        json_data=r.json()
+        return json_data
         
     def asHtml(self,mode:str="full",inline:str="")->str:
         """
