@@ -17,6 +17,7 @@ from skg.smw import SemWiki
 from skg.kg import SKG_Def
 from skg.graph import Node
 from skg.doi import DOI
+from skg.orcid import ORCID
 from skg.crossref import Crossref
 from skg.skgbrowser import SkgBrowser
 from skg.search import SearchOptions, SearchResult
@@ -115,6 +116,15 @@ class SotSog():
                 print(f"opening {browser_url} in browser")
                 webbrowser.open(browser_url)
 
+    def handleItems(self,items,options):
+        """
+        """
+        for item in items:
+            item_id=item.wikiDataId
+            itemLabel=item.label
+            desc="?"
+            self.handleItem(item, item_id, itemLabel, desc, options)
+    
     def search(self,search_list,options:SearchOptions)->SearchResult:
         """
         search with the given search list
@@ -126,15 +136,15 @@ class SotSog():
         search_result=SearchResult(search_list,options)
         search_term=' '.join(search_list)
         wd=Wikidata(debug=self.debug)
-        if DOI.isDOI(search_term):
+        if ORCID.isORCID(search_term):
+            scholar_concept=self.skg_def.concepts["Scholar"]
+            items=Node.from_wikidata_via_id(scholar_concept, "orcid", search_term, options.lang)
+            self.handleItems(items,options)
+        elif DOI.isDOI(search_term):
             # DOI may not be referencing paper but something else
             paper_concept=self.skg_def.concepts["Paper"]
             items=Node.from_wikidata_via_id(paper_concept, "doi", search_term, options.lang)
-            for item in items:
-                item_id=item.wikiDataId
-                itemLabel=item.label
-                desc="?"
-                self.handleItem(item, item_id, itemLabel, desc, options)
+            self.handleItems(items,options)
             dblp_items=Node.from_dblp_via_id(paper_concept, "doi", search_term)
             for item in dblp_items:
                 item_id=item.doi

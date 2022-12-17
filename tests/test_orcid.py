@@ -17,9 +17,10 @@ class TestORCID(Basetest):
         test ORCID access
         """
         debug=self.debug
-        debug=True
+        #debug=True
         for orcid_str in ["0000-0002-5071-1658"]:
             orcid=ORCID(orcid_str)
+            self.assertTrue(orcid.ok)
             for op in ["","external-identifiers","works"]:
                 md=orcid.getMetadata(op=op)
                 if debug:
