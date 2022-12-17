@@ -28,7 +28,7 @@ class TestCrossref(Basetest):
         test crossref
         """  
         debug=self.debug
-        debug=True
+        #debug=True
         doi_examples=[
             Example("10.1007/11581116_19","Atanas Kiryakov"),
             Example("10.1016/J.ARTMED.2017.07.002","Jean-Baptiste Lamy"),
@@ -56,5 +56,8 @@ class TestCrossref(Basetest):
         """
         import requests
         session = requests.Session()
-        print(session.cookies.get_dict())
+        cookie_dict=session.cookies.get_dict()
+        if self.debug:
+            print(session.cookies.get_dict())
+        self.assertEqual({},cookie_dict)
         
