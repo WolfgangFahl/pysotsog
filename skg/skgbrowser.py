@@ -225,7 +225,7 @@ class SkgBrowser(App):
             a=self.colB11)
         for markup_name in self.markup_names:
             self.markup_select.add(self.jp.Option(value=markup_name,text=markup_name))
-
+        #self.conceptSelection=
         self.searchTerms=self.jp.Textarea(placeholder="enter search terms", a=self.colB12, rows=5,cols=120)
         self.searchButton=self.jp.Button(text="search",click=self.onSearchButton,a=self.colB12,classes=self.button_classes)
         return self.wp

@@ -64,7 +64,10 @@ class TestDOILookup(IsolatedAsyncioTestCase):
         """
         cite proc lookup
         """ 
-        dois=["10.3115/v1/N15-1184","10.1007/s13042-022-01686-5","10.3390/info13120562"]
+        dois=["10.3115/v1/N15-1184",
+              "10.1007/s13042-022-01686-5",
+              "10.3390/info13120562",
+              "10.48550/arXiv.2211.16865"]
         debug=True
         for doi in dois:
             doi_obj=DOI(doi)
@@ -72,7 +75,7 @@ class TestDOILookup(IsolatedAsyncioTestCase):
             if debug:
                 print(json.dumps(json_data,indent=2))
             self.assertTrue("DOI" in json_data)
-            self.assertEqual(doi.lower(),json_data["DOI"])
+            self.assertEqual(doi.lower(),json_data["DOI"].lower())
         
     async def testDataCiteLookup(self):
         """
