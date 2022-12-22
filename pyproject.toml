@@ -37,7 +37,7 @@ dependencies = [
         'python-stdnum>=1.18'
      ]
 
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 classifiers=[
     "Development Status :: 4 - Beta",
     "Environment :: Web Environment",

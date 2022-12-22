@@ -76,6 +76,19 @@ class TestDOILookup(IsolatedAsyncioTestCase):
                 print(json.dumps(json_data,indent=2))
             self.assertTrue("DOI" in json_data)
             self.assertEqual(doi.lower(),json_data["DOI"].lower())
+            
+    async def testScite(self):
+        """
+        test Semantic Cite conversion
+        """
+        dois=["10.48550/ARXIV.2211.16865"]
+        debug=self.debug
+        for doi in dois:
+            doi_obj=DOI(doi)
+            markup=await doi_obj.asScite()
+            if debug:
+                print(markup)
+            self.assertTrue(f"|doi={doi}" in markup)
         
     async def testDataCiteLookup(self):
         """

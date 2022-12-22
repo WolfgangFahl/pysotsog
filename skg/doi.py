@@ -3,8 +3,10 @@ Created on 2022-11-22
 
 @author: wf
 '''
-import re
 import aiohttp
+import datetime
+import re
+from skg.citeproc import Citeproc
 
 class DOI:
     """
@@ -94,3 +96,16 @@ class DOI:
             'Accept': 'application/vnd.api+json; charset=utf-8'
         }
         return await self.fetch_json(url, headers)
+    
+    async def asScite(self)->str:
+        """
+        get DOI metadata and convert to Semantic Cite markup
+        
+           see https://github.com/SemanticMediaWiki/SemanticCite/blob/master/src/FilteredMetadata/BibliographicFilteredRecord.php
+        
+        Returns:
+            str: Semantic Mediawiki markup
+        """
+        meta_data=await self.doi2Citeproc()
+        markup=Citeproc.asScite(meta_data,retrieved_from="https://doi.org/")
+        return markup

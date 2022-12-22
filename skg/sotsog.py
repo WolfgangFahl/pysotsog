@@ -64,8 +64,10 @@ class SotSog():
                         bibentry=crossref.doiBibEntry([doi])
                         markups["bibtex"]=bibentry
                     if "scite" in options.markup_names:
-                        meta_data=crossref.doiMetaData([doi])
-                        scite_entry=crossref.asScite(meta_data)
+                        #meta_data=crossref.doiMetaData([doi])
+                        #scite_entry=crossref.asScite(meta_data)
+                        doi_obj=DOI(doi)
+                        scite_entry=doi_obj.asScite()
                         markups["scite"]=scite_entry
             if item.concept.name=="Scholar":
                 if "smw" in options.markup_names:
