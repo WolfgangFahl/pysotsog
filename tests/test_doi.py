@@ -81,7 +81,7 @@ class TestDOILookup(IsolatedAsyncioTestCase):
         """
         test Semantic Cite conversion
         """
-        dois=["10.48550/ARXIV.2211.16865"]
+        dois=["10.1007/978-3-031-21595-7_17","10.48550/ARXIV.2211.16865"]
         debug=self.debug
         for doi in dois:
             doi_obj=DOI(doi)

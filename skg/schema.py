@@ -64,7 +64,7 @@ class Schema():
             markup+=class_markup
         return markup
         
-    def toPlantUml(self,header=None,footer=None):
+    def toPlantUml(self,header=None,footer=None)->str:
             """
             get a plantuml version of the schema
             

@@ -8,6 +8,8 @@ from skg.paper import Paper
 from skg.event import Event,EventSeries,Proceedings
 from skg.location import Country
 from skg.graph import Concept
+import datetime
+from skg.version import Version
 
 class SKG_Def:
     """
@@ -129,4 +131,39 @@ class SKG_Def:
         """
         concept=self.concepts_by_qid.get(qid,None)
         return concept
+    
+    def toPlantuml(self,header:str=None, footer:str=None)->str:
+        """
+        get a plantuml version of this knowledge graph
+        
+        Args:
+            header(str): the header to apply
+            footer(str): the footer to apply
+        
+        Returns:
+            str: the plantuml markup
+    
+        """
+        timestamp=datetime.datetime.utcnow().strftime('%Y-%m-%d')
+        if header is None:
+            header=f"""/'{Version.name}:{Version.description}
+updated {timestamp}
+      
+authors:{Version.authors} 
+'/
+title  {Version.name}:{Version.description} see {Version.doc_url} updated {timestamp}
+hide circle
+package skg {{
+"""
+        if footer is None:
+            footer="}\n"
+        markup=f"{header}"
+        indent="  "
+        for concept_name,concept in self.concepts.items():
+            markup+=f"""{indent}class {concept_name} {{\n"""
+            for prop_name,prop in concept.props.items():
+                markup+=f"""{indent}  {prop_name}\n"""
+            markup+=f"""\n{indent}}}\n"""
+        markup+=f"{footer}"
+        return markup
         

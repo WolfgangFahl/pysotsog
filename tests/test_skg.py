@@ -17,3 +17,13 @@ class TestSkg(Basetest):
         skg_def=SKG_Def()
         concept=skg_def.conceptForQid("Q5")
         self.assertEqual("Scholar",concept.name)
+        
+    def test_plantuml(self):
+        """
+        test converting the knowledge graph definition to plantuml
+        """
+        skg_def=SKG_Def()
+        debug=True
+        plantuml=skg_def.toPlantuml()
+        if debug:
+            print(plantuml)
