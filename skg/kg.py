@@ -166,4 +166,18 @@ package skg {{
             markup+=f"""\n{indent}}}\n"""
         markup+=f"{footer}"
         return markup
+    
+    def toSiDiF(self)->str:
+        """
+        convert me to SiDiF format
+        """
+        sidif=""
+        for concept_name,concept in self.concepts.items():
+            sidif+=f"""#
+# {concept_name}
+#
+{concept_name} isA Topic
+"{concept_name} is name of it
+"""
+        return sidif
         

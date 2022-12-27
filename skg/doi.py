@@ -3,8 +3,9 @@ Created on 2022-11-22
 
 @author: wf
 '''
-import aiohttp
-import datetime
+#import aiohttp
+import urllib.request
+import json
 import re
 from skg.citeproc import Citeproc
 
@@ -50,23 +51,57 @@ class DOI:
         doi_obj=DOI(doi)
         return doi_obj.ok
     
-    async def fetch_json(self,url,headers):
+    def fetch_response(self,url:str,headers:dict):
+        """
+        fetch reponse for the given url with the given headers
+        
+        Args:
+            url(str): the url to fetch the data for
+            headers(dict): the headers to use
+        """
+        req=urllib.request.Request(url,headers=headers)
+        response=urllib.request.urlopen(req)
+        return response
+    
+    def fetch_json(self,url:str,headers:dict):
+        """
+        fetch json for the given url with the given headers
+        
+        Args:
+            url(str): the url to fetch the data for
+            headers(dict): the headers to use
+            
+        Returns:
+            json: json data
+        """
+        #async with aiohttp.ClientSession(headers=headers) as session:
+        #    async with session.get(url) as response:
+        #        return await response.json()
+        text=self.fetch_text(url, headers)
+        json_data=json.loads(text)
+        return json_data
+    
+    def fetch_text(self,url,headers)->str:
         """
         fetch text for the given url with the given headers
+        
+        Args:
+            url(str): the url to fetch the data for
+            headers(dict): the headers to use
+            
+        Returns:
+            str: the text
         """
-        async with aiohttp.ClientSession(headers=headers) as session:
-            async with session.get(url) as response:
-                return await response.json()
+        #async with aiohttp.ClientSession(headers=headers) as session:
+        #    async with session.get(url) as response:
+        #        return await response.text()
+        response=self.fetch_response(url, headers)
+        encoding = response.headers.get_content_charset('utf-8')
+        content = response.read()
+        text = content.decode(encoding)
+        return text
     
-    async def fetch_text(self,url,headers):
-        """
-        fetch text for the given url with the given headers
-        """
-        async with aiohttp.ClientSession(headers=headers) as session:
-            async with session.get(url) as response:
-                return await response.text()
-    
-    async def doi2bibTex(self):
+    def doi2bibTex(self):
         """
         get the bibtex result for my doi
         """
@@ -74,9 +109,9 @@ class DOI:
         headers= {
             'Accept': 'application/x-bibtex; charset=utf-8'
         }
-        return await self.fetch_text(url,headers)     
+        return self.fetch_text(url,headers)     
     
-    async def doi2Citeproc(self):
+    def doi2Citeproc(self):
         """
         get the Citeproc JSON result for my doi
         see https://citeproc-js.readthedocs.io/en/latest/csl-json/markup.html
@@ -85,9 +120,9 @@ class DOI:
         headers= {
             'Accept': 'application/vnd.citationstyles.csl+json; charset=utf-8'
         }
-        return await self.fetch_json(url, headers)
+        return self.fetch_json(url, headers)
     
-    async def dataCiteLookup(self):
+    def dataCiteLookup(self):
         """
         get the dataCite json result for my doi
         """
@@ -95,9 +130,9 @@ class DOI:
         headers= {
             'Accept': 'application/vnd.api+json; charset=utf-8'
         }
-        return await self.fetch_json(url, headers)
+        return self.fetch_json(url, headers)
     
-    async def asScite(self)->str:
+    def asScite(self)->str:
         """
         get DOI metadata and convert to Semantic Cite markup
         
@@ -106,6 +141,6 @@ class DOI:
         Returns:
             str: Semantic Mediawiki markup
         """
-        meta_data=await self.doi2Citeproc()
+        meta_data=self.doi2Citeproc()
         markup=Citeproc.asScite(meta_data,retrieved_from="https://doi.org/")
         return markup

@@ -22,6 +22,7 @@ from skg.crossref import Crossref
 from skg.skgbrowser import SkgBrowser
 from skg.search import SearchOptions, SearchResult
 from jpcore.justpy_app import JustpyServer
+from asgiref.sync import async_to_sync
 
 class SotSog():
     """
@@ -120,6 +121,7 @@ class SotSog():
 
     def handleItems(self,items,options):
         """
+        handle the given items
         """
         for item in items:
             item_id=item.wikiDataId
@@ -137,6 +139,9 @@ class SotSog():
         """
         search_result=SearchResult(search_list,options)
         search_term=' '.join(search_list)
+        for prefix in ["https://doi.org"]:
+            if search_term.startswith(prefix):
+                search_term=search_term.replace(prefix,"")
         wd=Wikidata(debug=self.debug)
         if ORCID.isORCID(search_term):
             scholar_concept=self.skg_def.concepts["Scholar"]
