@@ -22,7 +22,6 @@ from skg.crossref import Crossref
 from skg.skgbrowser import SkgBrowser
 from skg.search import SearchOptions, SearchResult
 from jpcore.justpy_app import JustpyServer
-from asgiref.sync import async_to_sync
 
 class SotSog():
     """
