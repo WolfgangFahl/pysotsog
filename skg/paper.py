@@ -4,6 +4,7 @@ Created on 2022-11-16
 @author: wf
 '''
 import skg.graph
+from skg.doi import DOI
 
 class Paper(skg.graph.Node):
     '''
@@ -32,3 +33,12 @@ class Paper(skg.graph.Node):
         Constructor
         '''
         
+    def fromDOI(self,doi:str):
+        """
+        construct me from the given doi
+        """
+        self.doi=doi
+        self.doi_obj=DOI(doi)
+        self.doi_obj.meta_data=self.doi_obj.doi2Citeproc()
+        self.title=self.doi_obj.meta_data["title"]
+        self.label=self.title

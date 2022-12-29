@@ -53,8 +53,10 @@ class Citeproc:
         
         timestamp=datetime.datetime.utcnow().strftime('%Y-%m-%d')
         ref_type="journal-article"
-        title=meta_data["title"][0].lower()
-        title_2=title[:2]
+        title=meta_data["title"]
+        if type(title) is list:
+            title=title[0]
+        title_2=title.lower()[:2]
         author_lower=""
         if "author" in meta_data:
             author_lower=meta_data["author"][0]["family"].lower()

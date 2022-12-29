@@ -141,6 +141,7 @@ class DOI:
         Returns:
             str: Semantic Mediawiki markup
         """
-        meta_data=self.doi2Citeproc()
-        markup=Citeproc.asScite(meta_data,retrieved_from="https://doi.org/")
+        if not hasattr(self, "meta_data"):
+            self.meta_data=self.doi2Citeproc()
+        markup=Citeproc.asScite(self.meta_data,retrieved_from="https://doi.org/")
         return markup

@@ -16,6 +16,7 @@ from skg.wikidata import Wikidata
 from skg.smw import SemWiki
 from skg.kg import SKG_Def
 from skg.graph import Node
+from skg.paper import Paper
 from skg.doi import DOI
 from skg.orcid import ORCID
 from skg.crossref import Crossref
@@ -66,8 +67,9 @@ class SotSog():
                     if "scite" in options.markup_names:
                         #meta_data=crossref.doiMetaData([doi])
                         #scite_entry=crossref.asScite(meta_data)
-                        doi_obj=DOI(doi)
-                        scite_entry=doi_obj.asScite()
+                        if not hasattr(item, "doi_obj"):
+                            item.fromDOI()
+                        scite_entry=item.doi_obj.asScite()
                         markups["scite"]=scite_entry
             if item.concept.name=="Scholar":
                 if "smw" in options.markup_names:
@@ -127,6 +129,12 @@ class SotSog():
             itemLabel=item.label
             desc="?"
             self.handleItem(item, item_id, itemLabel, desc, options)
+            
+    def handleDoiItem(self,item,options:SearchOptions):
+        item_id=item.doi
+        itemLabel=item.title
+        desc=item.title
+        self.handleItem(item, item_id, itemLabel, desc, options)
     
     def search(self,search_list,options:SearchOptions)->SearchResult:
         """
@@ -152,11 +160,14 @@ class SotSog():
             items=Node.from_wikidata_via_id(paper_concept, "doi", search_term, options.lang)
             self.handleItems(items,options)
             dblp_items=Node.from_dblp_via_id(paper_concept, "doi", search_term)
+            if len(dblp_items)==0:
+                paper=Paper()
+                paper.concept=paper_concept
+                paper.fromDOI(search_term)
+                paper.provenance="doi"
+                dblp_items=[paper]
             for item in dblp_items:
-                item_id=item.doi
-                itemLabel=item.title
-                desc=item.title
-                self.handleItem(item, item_id, itemLabel, desc, options)
+                self.handleDoiItem(item,options)
             items.extend(dblp_items)
         else:
             items=self.wd_search(wd,search_term,options)               
