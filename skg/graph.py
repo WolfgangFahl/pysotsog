@@ -132,7 +132,7 @@ class Node:
         """
         if self.provenance=="wikidata":
             url=self.scholia_url()
-        if self.provenance=="doi":
+        elif self.provenance=="doi":
             url=f"https://doi.org/{self.doi}"
         else:
             url=self.label
