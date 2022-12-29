@@ -132,8 +132,6 @@ class Node:
         """
         if self.provenance=="wikidata":
             url=self.scholia_url()
-        elif self.provenance=="doi":
-            url=f"https://doi.org/{self.doi}"
         else:
             url=self.label
         return url
@@ -186,6 +184,7 @@ class Node:
         """
         instances=[]
         for record in records:
+            # call my constructor
             instance=cls()
             instance.from_dict(concept,record)
             instances.append(instance)

@@ -68,7 +68,7 @@ class SotSog():
                         #meta_data=crossref.doiMetaData([doi])
                         #scite_entry=crossref.asScite(meta_data)
                         if not hasattr(item, "doi_obj"):
-                            item.fromDOI()
+                            item.fromDOI(doi)
                         scite_entry=item.doi_obj.asScite()
                         markups["scite"]=scite_entry
             if item.concept.name=="Scholar":
@@ -157,9 +157,9 @@ class SotSog():
         elif DOI.isDOI(search_term):
             # DOI may not be referencing paper but something else
             paper_concept=self.skg_def.concepts["Paper"]
-            items=Node.from_wikidata_via_id(paper_concept, "doi", search_term, options.lang)
+            items=Paper.from_wikidata_via_id(paper_concept, "doi", search_term, options.lang)
             self.handleItems(items,options)
-            dblp_items=Node.from_dblp_via_id(paper_concept, "doi", search_term)
+            dblp_items=Paper.from_dblp_via_id(paper_concept, "doi", search_term.lower())
             if len(dblp_items)==0:
                 paper=Paper()
                 paper.concept=paper_concept

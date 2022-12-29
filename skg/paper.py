@@ -40,5 +40,7 @@ class Paper(skg.graph.Node):
         self.doi=doi
         self.doi_obj=DOI(doi)
         self.doi_obj.meta_data=self.doi_obj.doi2Citeproc()
-        self.title=self.doi_obj.meta_data["title"]
-        self.label=self.title
+        if not hasattr(self, "title"):
+            self.title=self.doi_obj.meta_data["title"]
+        if not hasattr(self,"label"):
+            self.label=f"https://doi.org/{self.doi}"
