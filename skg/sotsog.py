@@ -221,6 +221,7 @@ USAGE
         parser.add_argument("--scite",help="output #scite format",action="store_true")
         parser.add_argument("--smw",help="output Semantic MediaWiki (SMW) format",action="store_true")   
         parser.add_argument("--serve",help="start webserver",action="store_true")
+        parser.add_argument("--wikiId",help="the id of the SMW wiki to connect with",default="ceur-ws")
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
         args = parser.parse_args(argv)
         if len(argv) < 1:

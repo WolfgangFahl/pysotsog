@@ -17,6 +17,7 @@ from jpwidgets.bt5widgets import App,Link,About
 from urllib import parse
 from skg.search import SearchOptions
 from skg.orcid import ORCID
+from skg.scholargrid import ScholarGrid
 from wikibot3rd.wikiuser import WikiUser
 
 class SkgBrowser(App):
@@ -36,6 +37,7 @@ class SkgBrowser(App):
         self.jp=jp
         App.__init__(self, version)
         self.addMenuLink(text='Home',icon='home', href="/")
+        self.addMenuLink(text='Scholars',icon='account-school',href='/scholars')
         self.addMenuLink(text='github',icon='github', href=version.cm_url)
         self.addMenuLink(text='Chat',icon='chat',href=version.chat_url)
         self.addMenuLink(text='Documentation',icon='file-document',href=version.doc_url)
@@ -46,7 +48,8 @@ class SkgBrowser(App):
         self.markup_name=self.markup_names[1]
         # wiki users
         self.wikiUsers=WikiUser.getWikiUsers()
-        self.wikiId="ceur-ws"
+        self.wikiId=sotsog.args.wikiId
+        jp.Route('/scholars',self.scholars)
         jp.Route('/settings',self.settings)
         jp.Route('/about',self.about)
         
@@ -184,6 +187,17 @@ class SkgBrowser(App):
             for wikiUser in sorted(self.wikiUsers):
                 self.wikiuser_select.add(self.jp.Option(value=wikiUser,text=wikiUser)) 
       
+    async def scholars(self)->"jp.WebPage":
+        '''
+        scholar display
+        
+        Returns:
+            jp.Webpage: a justpy webpage rendered with a grid of scholars
+        '''
+        self.setupRowsAndCols()
+        self.scholarsGrid=ScholarGrid(self,self.wikiUsers,self.wikiId)
+        return self.wp
+         
     async def settings(self)->"jp.WebPage":
         '''
         settings

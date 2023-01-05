@@ -12,7 +12,7 @@ class SemWiki:
     access to Semantic mediawiki
     """
     
-    def __init__(self,wikiUser:WikiUser,withLogin:bool=False):
+    def __init__(self,wikiUser:WikiUser,withLogin:bool=None):
         """
         
         constructor
@@ -22,14 +22,20 @@ class SemWiki:
         """
         self.wikiUser=wikiUser
         self.wikiClient=WikiClient.ofWikiId(wikiUser.wikiId)
+        if withLogin is None:
+            withLogin=self.wikiClient.needsLogin()
         if withLogin:
             self.wikiClient.login()
         self.smw=SMWClient(self.wikiClient.getSite())
-    
         
     def id_refs(self,mainlabel="pageTitle",condition="DOI::+",title:str="DOI references",askExtra:str="",id_prop="DOI",id_name="doi")->list:
         """
-        get a list of DOI references from the given wiki
+        get a list of id references from the given wiki
+        
+        Args:
+            mainlabel(str): the mainlabel to use
+            condition(str): the condition to apply
+            title(str): the title of the query
         """
         ask = f"""{{{{#ask:[[{condition}]]{askExtra}
 |?{id_prop}={id_name}
