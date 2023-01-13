@@ -18,12 +18,20 @@ class TestWikidataSearch(Basetest):
         """
         test the wikidata serarch API
         """
-        search="Tim Berners-Lee"
+        searches=[
+            ("Tim Berners-Lee","Q80"),
+            ("Q950635","Q950635")
+        ]
         wd=WikidataSearch()
-        search_options=wd.searchOptions(search)
-        self.assertTrue(len(search_options)>0)
-        qid,_itemLabel,_desc=search_options[0]
-        self.assertEqual("Q80",qid)
+        debug=self.debug
+        debug=True
+        for search,expected in searches:
+            search_options=wd.searchOptions(search)
+            self.assertTrue(len(search_options)>0)
+            qid,itemLabel,_desc=search_options[0]
+            if debug:
+                print(f"{qid}:{itemLabel}")
+            self.assertEqual(expected,qid)
         pass
     
     def test_item_instanceof(self):
