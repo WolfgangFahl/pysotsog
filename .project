@@ -5,6 +5,7 @@
 	<projects>
 		<project>justpy</project>
 		<project>pyJustpyWidgets</project>
+		<project>pyOnlineSpreadSheetEditing</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -19,6 +19,7 @@ from skg.search import SearchOptions
 from skg.orcid import ORCID
 from skg.scholargrid import ScholarGrid
 from wikibot3rd.wikiuser import WikiUser
+from skg.wikidata import Wikidata
 
 class SkgBrowser(App):
     """
@@ -52,6 +53,8 @@ class SkgBrowser(App):
         jp.Route('/scholars',self.scholars)
         jp.Route('/settings',self.settings)
         jp.Route('/about',self.about)
+        wikidata=Wikidata()
+        self.sparql=wikidata.sparql
         
     def createItemLink(self,item,term:str,index:int)->str:
         """
@@ -195,7 +198,10 @@ class SkgBrowser(App):
             jp.Webpage: a justpy webpage rendered with a grid of scholars
         '''
         self.setupRowsAndCols()
-        self.scholarsGrid=ScholarGrid(self,self.wikiUsers,self.wikiId)
+        self.scholarsGrid=ScholarGrid(self,self.wikiUsers,self.wikiId,sparql=self.sparql)
+        # @TODO refactor the two setup calls to one to hide wdgrid details
+        self.scholarsGrid.setup(a=self.rowB, header=self.rowA)
+        self.scholarsGrid.wdgrid.setup(a=self.rowC)
         return self.wp
          
     async def settings(self)->"jp.WebPage":

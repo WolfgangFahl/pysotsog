@@ -18,7 +18,7 @@ readme = "README.md"
 license= "Apache-2.0"
 dependencies = [
 		# https://github.com/justpy-org/justpy
-        'justpy>=0.11.3',
+        'justpy>=0.12.1',
         # https://pypi.org/project/pylodstorage/
         'pyLodStorage>=0.4.7',
         # https://pypi.org/project/habanero/
@@ -34,7 +34,9 @@ dependencies = [
         # https://pypi.org/project/semanticscholar/
         'semanticscholar>=0.3.0',
         # https://arthurdejong.org/python-stdnum/
-        'python-stdnum>=1.18'
+        'python-stdnum>=1.18',
+        # https://pypi.org/project/pyOnlineSpreadsheetEditing/
+        'pyOnlineSpreadsheetEditing>=0.1.0'
      ]
 
 requires-python = ">=3.8"

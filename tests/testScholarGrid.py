@@ -5,13 +5,25 @@ Created on 2023-01-04
 '''
 from tests.basetest import Basetest
 from skg.skgbrowser import SkgBrowser
-from skg.scholargrid import ScholarGrid
+from skg.scholargrid import ScholarGrid, ScholarQuery
 from wikibot3rd.wikiuser import WikiUser
+from build.lib.spreadsheet.wbquery import WikibaseQuery
 
 class TestScholarGrid(Basetest):
     """
     test Scholar Grid behavior
     """
+    
+    def testScholarQuery(self):
+        """
+        test the Wikibase Query for Scholars
+        """
+        debug=True
+        sq=ScholarQuery.get()
+        self.assertIsNotNone(sq)
+        self.assertTrue(isinstance(sq,WikibaseQuery))
+        if debug:
+            print(sq)
     
     def testGetScholars(self):
         """

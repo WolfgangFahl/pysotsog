@@ -47,8 +47,15 @@ class Citeproc:
             author=""
             delim=""
             for arec in value:
-                author+= f"""{delim}{arec["given"]} {arec["family"]}"""
-                delim=";"
+                if "given" in arec and "family" in arec:
+                    author+= f"""{delim}{arec["given"]} {arec["family"]}"""
+                    delim=";"
+                elif "family" in arec:
+                    author+= f"""{delim}{arec["family"]}"""
+                    delim=";"
+                else:
+                    # incomplete author record ignored
+                    pass
             return author
         
         timestamp=datetime.datetime.utcnow().strftime('%Y-%m-%d')

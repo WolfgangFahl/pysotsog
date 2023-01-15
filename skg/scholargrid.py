@@ -3,135 +3,113 @@ Created on 2023-01-04
 
 @author: wf
 '''
-from jpwidgets.bt5widgets import Alert,IconButton
-
 from skg.smw import SemWiki
+from wd.wdgrid import  WikidataGrid,GridSync    
+from spreadsheet.wbquery import WikibaseQuery
+from lodstorage.sparql import SPARQL
 
-import asyncio
-import copy
-import datetime
-import json
-import re
-from typing import Callable
+class ScholarQuery():
+    @classmethod 
+    def get(cls)->WikibaseQuery:
+        """
+        get the WikiBaseQuery for scholars
+        
+        Returns:
+            WikibaseQuery: the wikibase query
+        """
+        scholar_mapping=[{'Column': '',
+  'Entity': 'Scholar',
+  'Lookup': '',
+  'PropVarname': 'instanceof',
+  'PropertyId': 'P31',
+  'PropertyName': 'instanceof',
+  'Qualifier': '',
+  'Type': '',
+  'Value': 'Q5'},
+ {'Column': 'name',
+  'Entity': 'Scholar',
+  'Lookup': 'Q101352',
+  'PropVarname': 'family_name',
+  'PropertyId': 'P734',
+  'PropertyName': 'family name',
+  'Qualifier': '',
+  'Type': '',
+  'Value': ''},
+ {'Column': 'firstName',
+  'Entity': 'Scholar',
+  'Lookup': 'Q202444',
+  'PropVarname': 'given_name',
+  'PropertyId': 'P735',
+  'PropertyName': 'given name',
+  'Qualifier': '',
+  'Type': '',
+  'Value': ''},
+ {'Column': 'homepage',
+  'Entity': 'Scholar',
+  'Lookup': '',
+  'PropVarname': 'official_website',
+  'PropertyId': 'P856',
+  'PropertyName': 'official website',
+  'Qualifier': '',
+  'Type': 'url',
+  'Value': ''},
+ {'Column': 'linkedInId',
+  'Entity': 'Scholar',
+  'Lookup': '',
+  'PropVarname': 'LinkedIn_personal_profile_ID',
+  'PropertyId': 'P6634',
+  'PropertyName': 'LinkedIn personal profile ID',
+  'Qualifier': '',
+  'Type': 'extid',
+  'Value': ''},
+ {'Column': 'orcid',
+  'Entity': 'Scholar',
+  'Lookup': '',
+  'PropVarname': 'ORCID_iD',
+  'PropertyId': 'P496',
+  'PropertyName': 'ORCID iD',
+  'Qualifier': '',
+  'Type': 'extid',
+  'Value': ''},
+ {'Column': 'googleScholarUser',
+  'Entity': 'Scholar',
+  'Lookup': '',
+  'PropVarname': 'Google_Scholar_author_ID',
+  'PropertyId': 'P1960',
+  'PropertyName': 'Google Scholar author ID',
+  'Qualifier': '',
+  'Type': 'extid',
+  'Value': ''},
+ {'Column': 'gndId',
+  'Entity': 'Scholar',
+  'Lookup': '',
+  'PropVarname': 'GND_ID',
+  'PropertyId': 'P227',
+  'PropertyName': 'GND ID',
+  'Qualifier': '',
+  'Type': 'extid',
+  'Value': ''},
+ {'Column': 'dblpId',
+  'Entity': 'Scholar',
+  'Lookup': '',
+  'PropVarname': 'DBLP_author_ID',
+  'PropertyId': 'P2456',
+  'PropertyName': 'DBLP author ID',
+  'Qualifier': '',
+  'Type': 'extid',
+  'Value': ''}]
+        wbQuery=WikibaseQuery("scholar")
+        for row in scholar_mapping:
+            wbQuery.addPropertyFromDescriptionRow(row)
+        return wbQuery
 
-class WikiDataGrid:
-    """
-    show a grid of wiki data items
-    """
-    
-    def __init__(self,source:str,entityName:str, entityPluralName:str,getLod:Callable,debug:bool=False):
-        """
-        constructor
-        
-        source(str): the name of my source (where the data for this grid comes from)
-        entityName(str): the name of the entity type of items displayed in this grid
-        entityPluralNam(str): the plural name of the entity type of items displayed in this grid
-        getLod(Callable): the function to get my list of dicts
-        debug(bool): if True show debugging information
-        
-        """
-        self.debug=debug
-        self.source=source
-        self.entityName=entityName
-        self.entityPluralName=entityPluralName
-        self.getLod=getLod
-        self.agGrid=None
-        
-    def setDefaultColDef(self, agGrid):
-        """
-        set the default column definitions
-        """
-        defaultColDef=agGrid.options.defaultColDef
-        defaultColDef.resizable=True
-        defaultColDef.sortable=True
-        # https://www.ag-grid.com/javascript-data-grid/grid-size/
-        defaultColDef.wrapText=True
-        defaultColDef.autoHeight=True
-        
-    def setLod(self,lod:list):
-        '''
-        set my list of dicts
-        
-        Args:
-            lod(list): a list of dicts to work with
-        '''
-        self.lod=lod
-        if len(lod)<1:
-            raise Exception("Empty List of dicts is not valid")
-        self.columns=self.lod[0].keys()
-        for index,row in enumerate(self.lod):
-            row["lodRowIndex"]=index
-        self.viewLod=copy.deepcopy(self.lod)
-        
-        # fix non values
-        for record in self.viewLod:
-            for key in list(record):
-                value=record[key]
-                if value is None:
-                    record[key]="-"
-                vtype=type(value)
-                # fix datetime entries
-                if vtype is datetime.datetime:
-                    value=str(value)
-                    record[key]=value
-        
-    def linkWikidataItems(self,viewLod,itemColumn:str="item"):
-        '''
-        link the wikidata entries in the given item column if containing Q values
-        
-        Args:
-            viewLod(list): the list of dicts for the view
-            itemColumn(str): the name of the column to handle
-        '''
-        for row in viewLod:
-            if itemColumn in row:
-                item=row[itemColumn]
-                if re.match(r"Q[0-9]+",item):
-                    itemLink=self.createLink(f"https://www.wikidata.org/wiki/{item}", item)
-                    row[itemColumn]=itemLink
-                    
-    async def reload(self,_msg=None,clearErrors=True):
-        '''
-        reload the table content via my getLod function
-        
-        Args:
-            clearErrors(bool): if True clear Errors before reloading
-        '''
-        try:
-            if clearErrors:
-                self.app.clearErrors()
-            
-            msg=f"reload called ... fetching scholars from {self.source}"
-            print(msg)
-            _alert=Alert(a=self.app.colB1,text=msg)
-            await self.app.wp.update()
-            items=self.getLod()
-            self.setLod(items)
- 
-            _alert.delete_alert({})
-            msg=f"found {len(items)} {self.entityPluralName}"
-            _alert=Alert(a=self.app.colB1,text=msg)
-            await self.app.wp.update()
-            print(json.dumps(self.viewLod,indent=2,default=str))
-            self.agGrid.load_lod(self.viewLod)
-            self.setDefaultColDef(self.agGrid)
-            self.agGrid.options.columnDefs[0].checkboxSelection = True
-            # @FIXME
-            self.agGrid.html_columns = [0, 1, 2,3]
-            #self.agGrid.on('rowSelected', self.onRowSelected)
-            await self.app.wp.update()
-            await asyncio.sleep(0.2)
-            await self.agGrid.run_api('sizeColumnsToFit()', self.app.wp)
-        except Exception as ex:
-            _error=self.app.jp.Span(a=_alert,text=f"Error: {str(ex)}",style="color:red")
-            self.app.handleException(ex)           
 
-class ScholarGrid(WikiDataGrid):
+class ScholarGrid(GridSync):
     """
     show a grid of scholars
     """
     
-    def __init__(self,app,wikiUsers,wikiId:str,debug: bool = False):
+    def __init__(self,app,wikiUsers,wikiId:str,sparql:SPARQL,debug: bool = False):
         """
         constructor
         
@@ -139,19 +117,20 @@ class ScholarGrid(WikiDataGrid):
             app(App): the app that i am part of
             wikiUsers(list): the wikiUsers
             wikiId(str): the wikiId to use
+            sparql(SPARQL): the SPARQL endpoint to use
             debug(bool): if True show debugging information
         """
-        WikiDataGrid.__init__(self,source=wikiId,entityName="scholar",entityPluralName="scholars",getLod=self.getScholars,debug=debug)
         self.app=app
         self.wikiUsers=wikiUsers
         self.wikiId=wikiId
         wikiUser=self.wikiUsers[wikiId]
         self.semwiki=SemWiki(wikiUser)
-        if app is not None:
-            #self.app.wp.on("page_ready", self.pageReady)
-            self.toolbar=self.app.jp.QToolbar(a=self.app.rowA)
-            self.reloadButton=IconButton(a=self.toolbar,text='',iconName="refresh-circle",click=self.reload,classes="btn btn-primary btn-sm col-1")
-            self.agGrid = self.app.jp.AgGrid(a=self.app.colC1)
+        wdGrid=WikidataGrid(app=app,source=wikiId,entityName="scholar",entityPluralName="scholars",getLod=self.getScholars,debug=debug)
+        # we'd rather lazy load
+        wdGrid.lod=wdGrid.getLod()
+        sheetName="Scholar"
+        pk="item"
+        GridSync.__init__(self, wdGrid, sheetName, pk, sparql=sparql,debug=debug)
         
     def getScholars(self)->list:
         """
@@ -164,4 +143,5 @@ class ScholarGrid(WikiDataGrid):
         scholars_dod=self.semwiki.scholars()
         # get a list of dicts
         scholars_lod=list(scholars_dod.values())
+        self.wbQuery=ScholarQuery.get()
         return scholars_lod
