@@ -36,7 +36,7 @@ dependencies = [
         # https://arthurdejong.org/python-stdnum/
         'python-stdnum>=1.18',
         # https://pypi.org/project/pyOnlineSpreadsheetEditing/
-        'pyOnlineSpreadsheetEditing>=0.1.0'
+        'pyOnlineSpreadsheetEditing>=0.1.1'
      ]
 
 requires-python = ">=3.8"

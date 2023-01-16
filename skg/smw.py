@@ -62,16 +62,16 @@ class SemWiki:
         """
         condition="Concept:Scholar"
         mainlabel="Scholar"
-        askExtra="""
-| ?Scholar name = name
-| ?Scholar firstName = firstName
-| ?Scholar homepage = homepage
-| ?Scholar orcid = orcid
-| ?Scholar dblpId = dblpId
-| ?Scholar googleScholarUser = googleScholarUser
-| ?Scholar linkedInId = linkedInId
-| ?Scholar gndId = gndId
-| ?Scholar smartCRMId = smartCRMId
+        askExtra="""|?Scholar wikiDataId = wikiDataId
+|?Scholar name = name
+|?Scholar firstName = firstName
+|?Scholar description = description
+|?Scholar homepage = homepage
+|?Scholar orcid = orcid
+|?Scholar dblpId = dblpId
+|?Scholar linkedInId = linkedInId
+|?Scholar gndId = gndId
+|?Scholar smartCRMId = smartCRMId
 |sort=Scholar name,Scholar firstName
 |order=ascending,ascending
 """       
