@@ -7,7 +7,7 @@ from tests.basetest import Basetest
 from skg.skgbrowser import SkgBrowser
 from skg.scholargrid import ScholarGrid, ScholarQuery
 from wikibot3rd.wikiuser import WikiUser
-from build.lib.spreadsheet.wbquery import WikibaseQuery
+from spreadsheet.wbquery import WikibaseQuery
 
 class TestScholarGrid(Basetest):
     """
