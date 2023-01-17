@@ -146,5 +146,8 @@ class ScholarGrid(GridSync):
         scholars_dod=self.semwiki.scholars()
         # get a list of dicts
         scholars_lod=list(scholars_dod.values())
+        # @TODO - shouldn't this be better specified in the mapping?
+        for row in scholars_lod:
+            row["label"]=row["Scholar"]
         self.wbQuery=ScholarQuery.get()
         return scholars_lod
