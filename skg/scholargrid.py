@@ -7,6 +7,7 @@ from skg.smw import SemWiki
 from wd.wdgrid import  WikidataGrid,GridSync    
 from spreadsheet.wbquery import WikibaseQuery
 from lodstorage.sparql import SPARQL
+from typing import Callable
 
 class ScholarQuery():
     @classmethod 
@@ -106,7 +107,36 @@ class ScholarQuery():
             wbQuery.addPropertyFromDescriptionRow(row)
         return wbQuery
 
-
+class SmwGrid(GridSync):
+    """
+    a semantic mediawiki based grid synchable with WikiData
+    
+    """ 
+    def __init__(self,app,entityName:str,entityPluralName:str,pk:str,getLod:Callable,wikiUsers:list,wikiId:str,sparql:SPARQL,debug: bool = False):
+        """
+        constructor
+        
+        Args:
+            app(App): the app that i am part of
+            entityName(str): the name of the entity type of items to be shown in the grid
+            entityPluralName(str): the plural name of the entities to be shown
+            pk(str): the name of the primary key
+            getLod(Callable): the callback to load the grid rows list of dicts
+            wikiUsers(list): the wikiUsers
+            wikiId(str): the wikiId to use
+            sparql(SPARQL): the SPARQL endpoint to use
+            debug(bool): if True show debugging information
+        """
+        self.app=app
+        self.wikiUsers=wikiUsers
+        self.wikiId=wikiId
+        wikiUser=self.wikiUsers[wikiId]
+        self.semwiki=SemWiki(wikiUser)
+        wdGrid=WikidataGrid(app=app,source=wikiId,entityName=entityName,entityPluralName=entityPluralName,getLod=getLod,debug=debug)
+        # we'd rather lazy load
+        #wdGrid.lod=wdGrid.getLod()
+        GridSync.__init__(self, wdGrid, entityName, pk, sparql=sparql,debug=debug)
+ 
 class ScholarGrid(GridSync):
     """
     show a grid of scholars
@@ -123,17 +153,10 @@ class ScholarGrid(GridSync):
             sparql(SPARQL): the SPARQL endpoint to use
             debug(bool): if True show debugging information
         """
-        self.app=app
-        self.wikiUsers=wikiUsers
-        self.wikiId=wikiId
-        wikiUser=self.wikiUsers[wikiId]
-        self.semwiki=SemWiki(wikiUser)
-        wdGrid=WikidataGrid(app=app,source=wikiId,entityName="scholar",entityPluralName="scholars",getLod=self.getScholars,debug=debug)
-        # we'd rather lazy load
-        wdGrid.lod=wdGrid.getLod()
-        sheetName="Scholar"
+        entityName="Scholar"
+        entityPluralName="Scholars"
         pk="item"
-        GridSync.__init__(self, wdGrid, sheetName, pk, sparql=sparql,debug=debug)
+        SmwGrid.__init__(self,app=app,wikiUsers=wikiUsers,wikiId=wikiId,entityName=entityName, entityPluralName=entityPluralName,pk=pk, getLod=self.getScholars,sparql=sparql,debug=debug)
         
     def getScholars(self)->list:
         """
