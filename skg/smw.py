@@ -70,6 +70,7 @@ class SemWiki:
 |?Scholar orcid = orcid
 |?Scholar dblpId = dblpId
 |?Scholar linkedInId = linkedInId
+|?Scholar researchGate = researchGate
 |?Scholar gndId = gndId
 |?Scholar smartCRMId = smartCRMId
 |sort=Scholar name,Scholar firstName

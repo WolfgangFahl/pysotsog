@@ -83,7 +83,7 @@ class ScholarQuery():
               'Qualifier': '',
               'Type': 'extid',
               'Value': ''},
-             {'Column': 'ResearchGate',
+             {'Column': 'researchGate',
               'Entity': 'Scholar',
               'Lookup': '',
               'PropVarname': 'ResearchGate_profile_ID',
