@@ -20,6 +20,7 @@ from skg.orcid import ORCID
 from skg.scholargrid import ScholarGrid
 from wikibot3rd.wikiuser import WikiUser
 from skg.wikidata import Wikidata
+from starlette.responses import JSONResponse
 
 class SkgBrowser(App):
     """
@@ -53,8 +54,25 @@ class SkgBrowser(App):
         jp.Route('/scholars',self.scholars)
         jp.Route('/settings',self.settings)
         jp.Route('/about',self.about)
+        jp.Route('/hello2',self.hello)
         wikidata=Wikidata()
         self.sparql=wikidata.sparql
+        
+        @self.jp.app.route("/hello/{name}", methods=['GET'])
+        async def say_hello_handler(request):
+            name = request.path_params['name']
+            if name=="jp":
+                return self.wp
+            msg=self.get_hello(name)
+            r=JSONResponse({'message': msg})
+            return r
+    
+    def hello(self):
+        return self.wp
+    
+    def get_hello(self,name:str):
+        msg='Hello,' + name
+        return msg
         
     def createItemLink(self,item,term:str,index:int)->str:
         """
