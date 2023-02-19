@@ -66,7 +66,12 @@ class Citeproc:
         title_2=title.lower()[:2]
         author_lower=""
         if "author" in meta_data:
-            author_lower=meta_data["author"][0]["family"].lower()
+            first_author=meta_data["author"][0]
+            if "family" in first_author:
+                author_lower=["family"].lower()
+            else:
+                # debug break point
+                pass
         year=""
         if "published-print" in meta_data:
             year=meta_data["published-print"]["date-parts"][0][0]
