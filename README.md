@@ -1,7 +1,6 @@
 # pysotsog
 python Library for Scholars to achieve "Standing on the shoulders of giants - with direct access to the clouds"
-
-[![Join the discussion at https://github.com/WolfgangFahl/pysotsog/discussions](https://badges.gitter.im/pysotsog/community.svg)](https://github.com/WolfgangFahl/pysotsog/discussions)
+[![Join the discussion at https://github.com/WolfgangFahl/pysotsog/discussions](https://img.shields.io/github/discussions/WolfgangFahl/pysotsog)](https://github.com/WolfgangFahl/pysotsog/discussions) 
 [![pypi](https://img.shields.io/pypi/pyversions/pysotsog)](https://pypi.org/project/pysotsog/)
 [![Github Actions Build](https://github.com/WolfgangFahl/pysotsog/workflows/Build/badge.svg?branch=main)](https://github.com/WolfgangFahl/pysotsog/actions?query=workflow%3ABuild+branch%3Amain)
 [![PyPI Status](https://img.shields.io/pypi/v/pysotsog.svg)](https://pypi.python.org/pypi/pysotsog/)
