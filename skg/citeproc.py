@@ -34,6 +34,12 @@ class Citeproc:
                 text+="|+sep=;"
             return text
         
+        def firstValue(value):
+            if type(value)!=list:
+                return value
+            else:
+                return value[0]
+        
         def get_author(value)->str:
             """
             get the author markup
@@ -66,9 +72,10 @@ class Citeproc:
         title_2=title.lower()[:2]
         author_lower=""
         if "author" in meta_data:
-            first_author=meta_data["author"][0]
+            first_author=firstValue(meta_data["author"])
             if "family" in first_author:
-                author_lower=["family"].lower()
+                family=firstValue(first_author["family"])
+                author_lower=family.lower()
             else:
                 # debug break point
                 pass
