@@ -4,10 +4,10 @@ Created on 2023-01-04
 @author: wf
 '''
 from tests.basetest import Basetest
-from skg.skgbrowser import SkgBrowser
 from skg.scholargrid import ScholarGrid, ScholarQuery
 from wikibot3rd.wikiuser import WikiUser
 from spreadsheet.wbquery import WikibaseQuery
+from skg.wikidata import Wikidata
 
 class TestScholarGrid(Basetest):
     """
@@ -30,9 +30,11 @@ class TestScholarGrid(Basetest):
         test getting scholars
         """
         wikiUsers=WikiUser.getWikiUsers()
+        wikidata=Wikidata()
+        sparql=wikidata.sparql
         for wikiId,expected in [("ceur-ws",10),("media",500)]:
             if wikiId in wikiUsers:
-                scholarGrid=ScholarGrid(app=None,wikiUsers=wikiUsers,wikiId=wikiId)
+                scholarGrid=ScholarGrid(app=None,wikiUsers=wikiUsers,wikiId=wikiId,sparql=sparql)
                 scholars=scholarGrid.getScholars()
                 debug=self.debug
                 debug=True
