@@ -34,6 +34,7 @@ class SkgBrowser(InputWebserver):
         InputWebserver.__init__(self,config=config)
         self.language="en"
         self.wikiId="or"
+        self.markup_name=None
         
     def configure_run(self):
         self.markup_names=["-","bibtex","scite","smw"]
@@ -123,15 +124,6 @@ class SkgBrowser(InputWebserver):
             
         except Exception as ex:
             self.handleException(ex)
-            
-    async def onChangeMarkup(self,msg):
-        """
-        handle button to search for terms
-        """
-        try:
-            self.markup_name=msg.value
-        except Exception as ex:
-            self.handleException(ex)
   
     def addLanguageSelect(self):
         """
@@ -181,9 +173,7 @@ class SkgBrowser(InputWebserver):
         self.setup_menu()
         with ui.element("div").classes("w-full h-full"):
             self.results=ui.element("div")
-            #self.markup=self.colB2
-            # sotsog search
-            self.markup_select = ui.select(options=self.markup_names)
+            self.add_select("markup", self.markup_names).bind_value(self,"markup_name")
             #value=self.markup_name,
             #change=self.onChangeMarkup,
             #a=self.colB11)
