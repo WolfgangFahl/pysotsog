@@ -18,7 +18,7 @@ readme = "README.md"
 license= "Apache-2.0"
 dependencies = [
 	"nicegui",
-    	"ngwidgets>=0.0.23",
+    	"ngwidgets>=0.0.24",
         # https://pypi.org/project/pylodstorage/
         'pyLodStorage>=0.4.7',
         # https://pypi.org/project/habanero/
