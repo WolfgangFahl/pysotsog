@@ -3,7 +3,7 @@
 	<name>pysotsog</name>
 	<comment></comment>
 	<projects>
-		<project>justpy</project>
+		<project>nicegui_widgets</project>
 		<project>pyJustpyWidgets</project>
 		<project>pyOnlineSpreadSheetEditing</project>
 	</projects>

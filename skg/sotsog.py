@@ -3,14 +3,9 @@ Created on 2022-11-16
 
 @author: wf
 '''
-
-import os
-import webbrowser
 import sys
-import traceback
-from skg.version import Version
+import webbrowser
 from argparse import ArgumentParser
-from argparse import RawDescriptionHelpFormatter
 from skg.wdsearch import WikidataSearch
 from skg.wikidata import Wikidata
 from skg.smw import SemWiki
@@ -22,26 +17,22 @@ from skg.orcid import ORCID
 from skg.crossref import Crossref
 from skg.skgbrowser import SkgBrowser
 from skg.search import SearchOptions, SearchResult
-from jpcore.justpy_app import JustpyServer
+from ngwidgets.ngwidgets_cmd import WebserverCmd
 
-class SotSog():
+class SotSog(WebserverCmd):
     """
-    Standing on the shoulders of giants
+    Standing on the shoulders of giants 
     """
     
-    def __init__(self,args=None):
+    def __init__(self):
         """
         constructor
         
-        Args:
-            args(): command line Arguments(optional)
         """
-        self.args=args
-        debug=False
-        if args:
-            debug=args.debug
-        self.debug=debug
-        Node.debug=debug
+        self.config=SkgBrowser.get_config()
+        self.config.sotsog=self
+        WebserverCmd.__init__(self, self.config, SkgBrowser, DEBUG)
+        Node.debug=self.debug
         self.wikipedia_url="https://en.wikipedia.org/wiki/Standing_on_the_shoulders_of_giants"
         self.skg_def=SKG_Def()
         self.scholar_concept=self.skg_def.concepts["Scholar"]
@@ -173,95 +164,47 @@ class SotSog():
             items=self.wd_search(wd,search_term,options)               
         search_result.items=items
         return search_result
-
-__version__ = Version.version
-__date__ = Version.date
-__updated__ = Version.updated
-
-
-def main(argv=None): # IGNORE:C0111
-    '''main program.'''
-
-    if argv is None:
-        argv=sys.argv[1:]
     
-    program_name = os.path.basename(__file__)
-    program_shortdesc = Version.description
-    
-    program_version =f"v{__version__}" 
-    program_build_date = str(__updated__)
-    program_version_message = f'{program_name} ({program_version},{program_build_date})'
-
-    user_name="Wolfgang Fahl"
-    program_license = '''%s
-
-  Created by %s on %s.
-  Copyright 2022 Wolfgang Fahl. All rights reserved.
-
-  Licensed under the Apache License 2.0
-  http://www.apache.org/licenses/LICENSE-2.0
-
-  Distributed on an "AS IS" basis without warranties
-  or conditions of any kind, either express or implied.
-
-USAGE
-''' % (program_shortdesc, user_name,str(__date__))
-    try:
-        # Setup argument parser
-        parser = ArgumentParser(description=program_license, formatter_class=RawDescriptionHelpFormatter)
+    def getArgParser(self,description:str,version_msg)->ArgumentParser:
+        """
+        override the default argparser call
+        """        
+        parser=super().getArgParser(description, version_msg)
         parser.add_argument('search', action='store', nargs='*', help="search terms")
-        parser.add_argument("--about",help="show about info",action="store_true")
         parser.add_argument("--bibtex",help="output bibtex format",action="store_true")
-        parser.add_argument("-d", "--debug", dest="debug", action="store_true", help="show debug info")
-        parser.add_argument('--host',default=JustpyServer.getDefaultHost())
         parser.add_argument("-la", "--lang",help="language code to use",default="en")
         parser.add_argument("-li", "--limit",help="limit the number of search results",type=int,default=9)
         parser.add_argument("-nb","--nobrowser",help="do not open browser",action="store_true")
-        parser.add_argument('--port',type=int,default=8765)
         parser.add_argument("--scite",help="output #scite format",action="store_true")
         parser.add_argument("--smw",help="output Semantic MediaWiki (SMW) format",action="store_true")   
-        parser.add_argument("--serve",help="start webserver",action="store_true")
         parser.add_argument("--wikiId",help="the id of the SMW wiki to connect with",default="ceur-ws")
-        parser.add_argument('-V', '--version', action='version', version=program_version_message)
-        args = parser.parse_args(argv)
-        if len(argv) < 1:
-            parser.print_usage()
-            sys.exit(1)
-        sotsog=SotSog(args)
+        return parser
+    
+    def handle_args(self)->bool:
         markup_names=[]
+        args=self.args
         if args.bibtex: markup_names.append("bibtex")
         if args.scite: markup_names.append("scite")
         if args.smw: markup_names.append("smw")
-        options=SearchOptions(limit=args.limit,lang=args.lang,
+        self.config.options=SearchOptions(limit=args.limit,lang=args.lang,
                       markup_names=markup_names,
                       open_browser=not args.nobrowser)
-        if args.about:
-            print(program_version_message)
-            print(f"see {Version.doc_url}")
-            webbrowser.open(Version.doc_url)
-        elif args.serve:
-            skgBrowser=SkgBrowser(version=Version,sotsog=sotsog,options=options)
-            url=f"http://{args.host}:{args.port}"
-            webbrowser.open(url)
-            skgBrowser.start(args.host, args.port,debug=args.debug)
-            pass
-        else:
-            sotsog.search(args.search,options)
-        pass
-    except KeyboardInterrupt:
-        ### handle keyboard interrupt ###
-        return 1
-    except Exception as e:
-        if DEBUG:
-            raise(e)
-        indent = len(program_name) * " "
-        sys.stderr.write(program_name + ": " + repr(e) + "\n")
-        sys.stderr.write(indent + "  for help use --help")
-        if args.debug:
-            print(traceback.format_exc())
-        return 2       
+        handled=super().handle_args()
+        if not handled:
+            self.search(args.search,self.config.options)  
+            handled=True
+        return handled    
+    
         
-DEBUG = 1
+def main(argv:list=None):
+    """
+    main call
+    """
+    cmd=SotSog()
+    exit_code=cmd.cmd_main(argv)
+    return exit_code
+        
+DEBUG = 0
 if __name__ == "__main__":
     if DEBUG:
         sys.argv.append("-d")
