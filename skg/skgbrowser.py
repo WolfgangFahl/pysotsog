@@ -85,17 +85,15 @@ class SkgBrowser(InputWebserver):
         handle button to search for terms
         """
         try:
-            self.results.inner_html=""
-            self.markup.inner_html=""
+            self.results.content=""
+            self.markup.content=""
             terms=self.searchTerms.value.split("\n")
-            self.messages.text="Searching"
-            await self.wp.update()
+            self.messages.content="Searching"
             delim=""
             for term in terms:
                 if term:
                     msg=f"... {term}\n"
-                    self.messages.text+=msg
-                    await self.wp.update()
+                    self.messages.content+=msg
                     if self.markup_name=="-":
                         self.options.markup_names=[]
                     else:
@@ -116,14 +114,13 @@ class SkgBrowser(InputWebserver):
                                 markups=""
                                 for _markup_name,markup in item.markups.items():
                                     markups+=markup
-                                    self.markup.inner_html+=f"<pre>{markups}</pre>"
+                                    self.markup.content+=f"<pre>{markups}</pre>"
                                     #break
-                    self.results.inner_html+=delim+rmarkup  
+                    self.results.content+=delim+rmarkup  
                     delim="<br>" 
-                    await self.wp.update()
             
-        except Exception as ex:
-            self.handleException(ex)
+        except BaseException as ex:
+            self.handle_exception(ex)
   
     def addLanguageSelect(self):
         """
@@ -172,12 +169,13 @@ class SkgBrowser(InputWebserver):
         '''
         self.setup_menu()
         with ui.element("div").classes("w-full h-full"):
-            self.results=ui.element("div")
-            self.add_select("markup", self.markup_names).bind_value(self,"markup_name")
-            #value=self.markup_name,
-            #change=self.onChangeMarkup,
-            #a=self.colB11)
-            #self.conceptSelection=
-            self.searchTerms=ui.textarea(placeholder="enter search terms")
-            self.searchButton=ui.button("search",on_click=self.onSearchButton)
+            with ui.splitter() as splitter:
+                with splitter.before:
+                    self.add_select("markup", self.markup_names).bind_value(self,"markup_name")
+                    self.searchTerms=ui.textarea(placeholder="enter search terms")
+                    self.searchButton=ui.button("search",on_click=self.onSearchButton)
+                with splitter.after:
+                    self.markup=ui.html()
+            self.messages=ui.html()
+            self.results=ui.html()
         await self.setup_footer()
