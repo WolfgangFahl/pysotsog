@@ -48,7 +48,7 @@ class TestDOI(Basetest):
         """
         debug=True
         dois=["10.1109/TBDATA.2022.3224749"]
-        expected=["@article{Li_2022,","@inproceedings{Faruqui_2015,"]
+        expected=["@article{Li_2023,","@inproceedings{Faruqui_2015,"]
         for i,doi in enumerate(dois):
             doi_obj=DOI(doi)
             result=doi_obj.doi2bibTex()
