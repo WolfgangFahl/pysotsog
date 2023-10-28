@@ -32,6 +32,7 @@ class TestSMW(Basetest):
         """
         doiCounter=Counter()
         records=None
+        invalid_dois=[]
         for wikiId,withLogin in wikis:
             if wikiId in self.wikiUsers:
                 wikiUser=self.wikiUsers[wikiId]
@@ -45,10 +46,15 @@ class TestSMW(Basetest):
                     if "doi" in record:
                         doi=record["doi"]
                         if doi:
-                            self.assertTrue(DOI.isDOI(doi),f"{key}:doi={doi}")
+                            is_doi=DOI.isDOI(doi)
+                            if not is_doi:
+                                invalid_dois.append(f"{wikiId}:{key}:doi={doi}")
                             doiCounter[wikiId]+=1
         if verbose:
             print(doiCounter.most_common())
+        for index,invalid_doi_msg in enumerate(invalid_dois):
+            print(f"{index:3} {invalid_doi_msg}")
+        self.assertEqual(0,len(invalid_dois))
         return records
     
     def test_dois(self):
