@@ -3,6 +3,7 @@ Created on 2022-11-16
 
 @author: wf
 '''
+import unittest
 from tests.basetest import Basetest
 from skg.wdsearch import WikidataSearch
 from skg.wikidata import Wikidata
@@ -14,6 +15,7 @@ class TestWikidataSearch(Basetest):
     test the wikidata search
     """
     
+    @unittest.skipIf(Basetest.inPublicCI(), "unreliable in public CI")
     def test_wikidata_search(self):
         """
         test the wikidata serarch API
