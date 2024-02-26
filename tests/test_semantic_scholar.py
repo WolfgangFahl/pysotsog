@@ -3,9 +3,11 @@ Created on 2022-11-22
 
 @author: wf
 """
-from ngwidgets.basetest import Basetest
-from skg.semantic_scholar import SemanticScholar
 import json
+
+from ngwidgets.basetest import Basetest
+
+from skg.semantic_scholar import SemanticScholar
 
 
 class TestSemanticScholar(Basetest):

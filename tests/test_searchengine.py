@@ -3,11 +3,13 @@ Created on 2022-18-11
 
 @author: wf
 """
-from ngwidgets.basetest import Basetest
-from skg.searchengine import InternetSearch
-from skg.dblp import Dblp
 import pprint
 from collections import Counter
+
+from ngwidgets.basetest import Basetest
+
+from skg.dblp import Dblp
+from skg.searchengine import InternetSearch
 
 
 class TestSearchEngine(Basetest):

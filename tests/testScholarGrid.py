@@ -4,9 +4,10 @@ Created on 2023-01-04
 @author: wf
 """
 from ngwidgets.basetest import Basetest
-from skg.scholargrid import ScholarGrid, ScholarQuery
-from wikibot3rd.wikiuser import WikiUser
 from spreadsheet.wbquery import WikibaseQuery
+from wikibot3rd.wikiuser import WikiUser
+
+from skg.scholargrid import ScholarGrid, ScholarQuery
 from skg.wikidata import Wikidata
 
 

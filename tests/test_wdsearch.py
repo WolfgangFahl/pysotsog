@@ -3,12 +3,14 @@ Created on 2022-11-16
 
 @author: wf
 """
+import json
 import unittest
+
+from lodstorage.lod import LOD
 from ngwidgets.basetest import Basetest
+
 from skg.wdsearch import WikidataSearch
 from skg.wikidata import Wikidata
-import json
-from lodstorage.lod import LOD
 
 
 class TestWikidataSearch(Basetest):

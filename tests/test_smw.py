@@ -3,12 +3,14 @@ Created on 2022-11-22
 
 @author: wf
 """
-from ngwidgets.basetest import Basetest
-from skg.doi import DOI
-from skg.smw import SemWiki
-from wikibot3rd.wikiuser import WikiUser
 import json
 from collections import Counter
+
+from ngwidgets.basetest import Basetest
+from wikibot3rd.wikiuser import WikiUser
+
+from skg.doi import DOI
+from skg.smw import SemWiki
 
 
 class TestSMW(Basetest):

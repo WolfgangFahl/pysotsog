@@ -3,12 +3,14 @@ Created on 2022-11-22
 
 @author: wf
 """
-from ngwidgets.basetest import Basetest
-from skg.doi import DOI
-from skg.dblp import Dblp
+import json
 from dataclasses import dataclass
 from unittest import IsolatedAsyncioTestCase
-import json
+
+from ngwidgets.basetest import Basetest
+
+from skg.dblp import Dblp
+from skg.doi import DOI
 
 
 @dataclass
