@@ -73,13 +73,3 @@ class WikidataSearch(object):
             return searchResult["search"]
         except Exception as _error:
             return None
-
-    def getProperties(self):
-        """
-        get the Wikidata Properties
-        """
-        scriptdir = os.path.dirname(__file__)
-        jsonPath = f"{scriptdir}/resources/wdprops.json"
-        with open(jsonPath) as jsonFile:
-            props = json.load(jsonFile)
-        return props

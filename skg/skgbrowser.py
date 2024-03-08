@@ -5,7 +5,7 @@ Created on 2022-11-18
 """
 from urllib import parse
 
-from ngwidgets.input_webserver import InputWebserver
+from ngwidgets.input_webserver import InputWebserver, InputWebSolution
 from ngwidgets.webserver import WebserverConfig
 from ngwidgets.widgets import Lang, Link
 from nicegui import Client, ui
@@ -24,26 +24,23 @@ class SkgBrowser(InputWebserver):
 
     @classmethod
     def get_config(cls) -> WebserverConfig:
-        copy_right = "(c)2022 Wolfgang Fahl"
-        if not hasattr(cls, "config"):
-            cls.config = WebserverConfig(
-                copy_right=copy_right, version=Version(), default_port=8765
-            )
-        return cls.config
+        copy_right = "(c)2022-2024 Wolfgang Fahl"
+        config = WebserverConfig(
+            copy_right=copy_right, 
+            version=Version(), 
+            default_port=8765,
+            short_name="sotsog"
+        )
+        server_config = WebserverConfig.get(config)
+        server_config.solution_class = SkgSolution
+        return server_config
 
     def __init__(self):
         """Constructs all the necessary attributes for the WebServer object."""
         config = SkgBrowser.get_config()
-        self.sotsog = config.sotsog
-        self.options = config.options
         InputWebserver.__init__(self, config=config)
-        self.language = "en"
-        self.wikiId = "or"
-        self.markup_name = None
-
+       
     def configure_run(self):
-        self.markup_names = ["-", "bibtex", "scite", "smw"]
-        self.markup_name = self.markup_names[1]
         # wiki users
         self.wikiUsers = WikiUser.getWikiUsers()
         self.wikiId = self.args.wikiId
@@ -51,8 +48,31 @@ class SkgBrowser(InputWebserver):
         self.sparql = wikidata.sparql
 
         @ui.page("/scholars")
-        async def scholars(client: Client):
-            return await self.scholars(client)
+        async def scholars(client: Client):     
+            return await self.page(
+                client, SkgSolution.scholars
+            )
+        
+def SkgSolution(InputWebSolution):
+    """
+    the scholarly knowledge graph solution
+    """
+    
+    def __init__(self, webserver: SkgBrowser, client: Client):
+        """
+        Initialize the solution
+
+        Calls the constructor of the base solution
+        Args:
+            webserver (SkgBrowser): The webserver instance associated with this context.
+            client (Client): The client instance this context is associated with.
+        """
+        super().__init__(webserver, client)  # Call to the superclass constructor
+        self.language = "en"
+        self.wikiId = "or"
+        self.markup_names = ["-", "bibtex", "scite", "smw"]
+        self.markup_name = self.markup_names[1]
+    
 
     def configure_menu(self):
         """

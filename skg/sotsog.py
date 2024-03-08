@@ -3,11 +3,7 @@ Created on 2022-11-16
 
 @author: wf
 """
-import sys
 import webbrowser
-from argparse import ArgumentParser
-
-from ngwidgets.ngwidgets_cmd import WebserverCmd
 
 from skg.crossref import Crossref
 from skg.doi import DOI
@@ -20,9 +16,8 @@ from skg.skgbrowser import SkgBrowser
 from skg.smw import SemWiki
 from skg.wdsearch import WikidataSearch
 from skg.wikidata import Wikidata
-from skg.dblp2wikidata import Dblp2Wikidata
 
-class SotSog(WebserverCmd):
+class SotSog():
     """
     Standing on the shoulders of giants
     """
@@ -32,9 +27,6 @@ class SotSog(WebserverCmd):
         constructor
 
         """
-        self.config = SkgBrowser.get_config()
-        self.config.sotsog = self
-        WebserverCmd.__init__(self, self.config, SkgBrowser, DEBUG)
         Node.debug = self.debug
         self.wikipedia_url = (
             "https://en.wikipedia.org/wiki/Standing_on_the_shoulders_of_giants"
@@ -177,77 +169,3 @@ class SotSog(WebserverCmd):
             items = self.wd_search(wd, search_term, options)
         search_result.items = items
         return search_result
-
-    def getArgParser(self, description: str, version_msg) -> ArgumentParser:
-        """
-        override the default argparser call
-        """
-        parser = super().getArgParser(description, version_msg)
-        parser.add_argument("search", action="store", nargs="*", help="search terms")
-        parser.add_argument(
-            "--bibtex", help="output bibtex format", action="store_true"
-        )
-        parser.add_argument("-la", "--lang", help="language code to use", default="en")
-        parser.add_argument(
-            "-li",
-            "--limit",
-            help="limit the number of search results",
-            type=int,
-            default=9,
-        )
-        parser.add_argument(
-            "-nb", "--nobrowser", help="do not open browser", action="store_true"
-        )
-        parser.add_argument("--scite", help="output #scite format", action="store_true")
-        parser.add_argument(
-            "--smw", help="output Semantic MediaWiki (SMW) format", action="store_true"
-        )
-        parser.add_argument(
-            "--wikiId", help="the id of the SMW wiki to connect with", default="ceur-ws"
-        )
-        parser.add_argument("-dw","--dblp2wikidata", action="store_true", help="Transfer DBLP entries to Wikidata")
- 
-        return parser
-
-    def handle_args(self) -> bool:
-        """
-        handle the command line args
-        """
-        markup_names = []
-        args = self.args
-        if args.bibtex:
-            markup_names.append("bibtex")
-        if args.scite:
-            markup_names.append("scite")
-        if args.smw:
-            markup_names.append("smw")
-        self.config.options = SearchOptions(
-            limit=args.limit,
-            lang=args.lang,
-            markup_names=markup_names,
-            open_browser=not args.nobrowser,
-        )
-        handled = super().handle_args()
-        if not handled:
-            if args.dblp2wikidata:
-                d2w=Dblp2Wikidata()
-                d2w.transfer(args)
-            self.search(args.search, self.config.options)
-            handled = True
-        return handled
-
-
-def main(argv: list = None):
-    """
-    main call
-    """
-    cmd = SotSog()
-    exit_code = cmd.cmd_main(argv)
-    return exit_code
-
-
-DEBUG = 0
-if __name__ == "__main__":
-    if DEBUG:
-        sys.argv.append("-d")
-    sys.exit(main())

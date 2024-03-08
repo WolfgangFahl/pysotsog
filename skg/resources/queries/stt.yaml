@@ -1,0 +1,34 @@
+#
+# Sample Queries for Software Technik Trends
+#
+# WF 2024-03-08
+'STT-Papers':
+  sparql: |
+    # Papers published in a certain venue
+    # e.g. Softwaretechnik-Trends
+    # WF 2024-03-08
+    PREFIX dblp: <https://dblp.org/rdf/schema#>
+    SELECT 
+      ?paper
+      ?title
+      (GROUP_CONCAT(DISTINCT ?author; SEPARATOR="; ") AS ?authors)
+      ?year
+      ?archivedWebpage
+      ?listedOnTocPage
+      ?volume
+      ?issue
+      (COUNT(DISTINCT ?author) AS ?author_count)
+    WHERE {
+      ?paper dblp:publishedIn "Softwaretechnik-Trends".
+      OPTIONAL{?paper dblp:title ?title .}
+      OPTIONAL{?paper dblp:authoredBy ?author .}
+      OPTIONAL{?paper dblp:yearOfPublication ?year .}
+      OPTIONAL{?paper dblp:archivedWebpage ?archivedWebpage .}
+      OPTIONAL{?paper dblp:listedOnTocPage ?listedOnTocPage .}
+      OPTIONAL{?paper dblp:publishedInJournalVolume ?volume .}
+      OPTIONAL{?paper dblp:publishedInJournalVolumeIssue ?issue .}
+      # Other fields from the n-triples not explicitly queried due to their nature or presumed relevance. 
+      # This includes fields like hasIdentifier, hasSignature, etc., which are typically used for internal management or more detailed data tracking.
+    }
+    GROUP BY ?paper ?title ?year ?archivedWebpage ?listedOnTocPage ?volume ?issue
+    ORDER BY ?year
