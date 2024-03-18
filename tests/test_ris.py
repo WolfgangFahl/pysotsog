@@ -5,6 +5,7 @@ Created on 2024-03-08
 """
 import json
 import re
+from dataclasses import field
 from ngwidgets.basetest import Basetest
 from skg.ris import RIS_Entry
 import os
@@ -14,15 +15,53 @@ from ez_wikidata.wikidata import Wikidata
 from ez_wikidata.wdproperty import PropertyMapping, WdDatatype
 from lodstorage.sparql import SPARQL
 from lodstorage.query import QueryManager
+from ngwidgets.yamlable import lod_storable
+from typing import Dict
 
-class STT_Paper:
+class STT_Paper(RIS_Entry):
     """
     Softwaretechnik Trend Paper
     """
-    def __init__(self,ris_entry:RIS_Entry):
-        self.paper=ris_entry
+    volume:str=None
+    issue:str=None
+    
+    def __post_init__(self):
+        super().__post_init__() 
+        self.initialize_record()
+        
+    @classmethod
+    def from_ris_entry(cls, ris_entry):
+        """
+        Class method to create an STT_Paper instance from an RIS_Entry instance.
+        """
+        # Initialize a new STT_Paper instance with RIS_Entry data
+        paper = cls(**ris_entry.to_dict())
+        # Perform any additional initialization specific to STT_Paper
+        paper.initialize_record()
+        return paper
+    
+    @staticmethod
+    def from_dblp_lod(record: Dict) -> "STT_Paper":
+        ris_entry=RIS_Entry(
+            primary_title=record["title"],
+            #authors=lod["authors"],
+            year=record["year"],
+            #archivedWebpage=lod["archivedWebpage"],
+            #listedOnTocPage=lod["listedOnTocPage"],
+        )
+        paper=STT_Paper.from_ris_entry(ris_entry)
+        paper.volume=record["volume"]
+        paper.issue=record["issue"]
+            #author_count=int(lod["author_count"]),
+            #paper=lod["paper"]
+        return paper
+
+    def initialize_record(self):
         regex = r"Band (\d+), Heft (\d+)"
-        match = re.search(regex, self.paper.secondary_title)
+        if self.secondary_title:
+            match = re.search(regex, self.secondary_title)
+            self.volume = match.group(1)
+            self.issue = match.group(2)
         self.property_mappings=RIS_Entry.get_property_mappings()
         self.property_mappings.extend([ 
             PropertyMapping(
@@ -46,14 +85,21 @@ class STT_Paper:
             )
         ]
         )
-        record=self.paper.to_dict()
-        record["lang_qid"]=self.paper.lang_qid
-        record["label"]=self.paper.primary_title
+        record=self.to_dict()
+        record["lang_qid"]=self.lang_qid
+        record["label"]=self.primary_title
         record["description"]="Paper in Software Technik Trends"
-        record["volume"] = match.group(1)
-        record["issue"] = match.group(2)
         self.record=record
         
+@lod_storable
+class STT:
+    papers: dict[str,STT_Paper]=field(default_factory=dict)
+       
+    def add_from_dblp_lod(self, lod: [Dict]):
+        for record in lod:
+            paper = STT_Paper.from_dblp_lod(record)
+            self.papers[paper.primary_title] = paper  # Or merge based on your logic
+ 
         
 class TestRis2Wikidata(Basetest):
     """
@@ -84,9 +130,14 @@ class TestRis2Wikidata(Basetest):
             qm = QueryManager(lang="sparql", queriesPath=qYamlFile)
         query = qm.queriesByName["STT-Papers"]
         lod = sparql.queryAsListOfDicts(query.query)
+        stt=STT()
+        stt.add_from_dblp_lod(lod)
         debug=True
         if debug:
             print(f"found {len(lod)} STT papers")
+            for i,record in enumerate(lod,start=1):
+                if i<10:
+                    print(json.dumps(record,indent=2,default=str))
     
         
     def testPaper(self):
@@ -96,7 +147,7 @@ class TestRis2Wikidata(Basetest):
         # ParTeG - A Model-Based Testing Tool
         wd=Wikidata()
         wd.loginWithCredentials()
-        paper=STT_Paper(self.ris_dict[416])
+        paper=STT_Paper.from_ris_entry(self.ris_dict[416])
         print(json.dumps(paper.record,indent=2,default=str))
         #return
         write=True
