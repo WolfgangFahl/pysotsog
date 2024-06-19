@@ -5,8 +5,8 @@ Created on 2023-01-04
 """
 from typing import Callable
 
+from ez_wikidata.wbquery import WikibaseQuery
 from lodstorage.sparql import SPARQL
-from spreadsheet.wbquery import WikibaseQuery
 from wd.wdgrid import GridSync, WikidataGrid
 
 from skg.smw import SemWiki
@@ -159,7 +159,7 @@ class SmwGrid(GridSync):
 
     def __init__(
         self,
-        app,
+        solution,
         entityName: str,
         entityPluralName: str,
         pk: str,
@@ -173,7 +173,7 @@ class SmwGrid(GridSync):
         constructor
 
         Args:
-            app(App): the app that i am part of
+            solution:  the solutio that i am part of
             entityName(str): the name of the entity type of items to be shown in the grid
             entityPluralName(str): the plural name of the entities to be shown
             pk(str): the name of the primary key
@@ -183,7 +183,7 @@ class SmwGrid(GridSync):
             sparql(SPARQL): the SPARQL endpoint to use
             debug(bool): if True show debugging information
         """
-        self.app = app
+        self.solution = solution
         self.wikiUsers = wikiUsers
         self.wikiId = wikiId
         wikiUser = self.wikiUsers[wikiId]

@@ -1,22 +1,27 @@
-'''
+"""
 Created on 2024-02-26
 
 @author: wf
-'''
+"""
 import sys
 from argparse import ArgumentParser
-from skg.sotsog import SotSog, SearchOptions
-from skg.dblp2wikidata import Dblp2Wikidata
-from skg.skgbrowser import SkgBrowser
 
 from ngwidgets.ngwidgets_cmd import WebserverCmd
 
+from skg.dblp2wikidata import Dblp2Wikidata
+from skg.skgbrowser import SkgBrowser
+from skg.sotsog import SearchOptions, SotSog
+
+
 class SotSogCmd(WebserverCmd):
     """
-    command line handling for Standing on the Shoulders of Giants 
+    command line handling for Standing on the Shoulders of Giants
     """
-    
+
     def __init__(self):
+        """
+        constructor
+        """
         self.config = SkgBrowser.get_config()
         WebserverCmd.__init__(self, self.config, SkgBrowser, DEBUG)
 
@@ -47,8 +52,13 @@ class SotSogCmd(WebserverCmd):
         parser.add_argument(
             "--wikiId", help="the id of the SMW wiki to connect with", default="ceur-ws"
         )
-        parser.add_argument("-dw","--dblp2wikidata", action="store_true", help="Transfer DBLP entries to Wikidata")
- 
+        parser.add_argument(
+            "-dw",
+            "--dblp2wikidata",
+            action="store_true",
+            help="Synchronize DBLP entries with Wikidata",
+        )
+
         return parser
 
     def handle_args(self) -> bool:
@@ -73,11 +83,13 @@ class SotSogCmd(WebserverCmd):
         handled = super().handle_args()
         if not handled:
             if args.dblp2wikidata:
-                d2w=Dblp2Wikidata()
-                d2w.transfer(args)
+                d2w = Dblp2Wikidata()
+                handled=d2w.transfer(args)
+        if not handled:
             self.search(args.search, self.sotsog.options)
             handled = True
         return handled
+
 
 def main(argv: list = None):
     """

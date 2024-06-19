@@ -26,10 +26,10 @@ class SkgBrowser(InputWebserver):
     def get_config(cls) -> WebserverConfig:
         copy_right = "(c)2022-2024 Wolfgang Fahl"
         config = WebserverConfig(
-            copy_right=copy_right, 
-            version=Version(), 
+            copy_right=copy_right,
+            version=Version(),
             default_port=8765,
-            short_name="sotsog"
+            short_name="sotsog",
         )
         server_config = WebserverConfig.get(config)
         server_config.solution_class = SkgSolution
@@ -39,7 +39,11 @@ class SkgBrowser(InputWebserver):
         """Constructs all the necessary attributes for the WebServer object."""
         config = SkgBrowser.get_config()
         InputWebserver.__init__(self, config=config)
-       
+
+        @ui.page("/scholars")
+        async def scholars(client: Client):
+            return await self.page(client, SkgSolution.scholars)
+
     def configure_run(self):
         # wiki users
         self.wikiUsers = WikiUser.getWikiUsers()
@@ -47,17 +51,12 @@ class SkgBrowser(InputWebserver):
         wikidata = Wikidata()
         self.sparql = wikidata.sparql
 
-        @ui.page("/scholars")
-        async def scholars(client: Client):     
-            return await self.page(
-                client, SkgSolution.scholars
-            )
-        
+
 def SkgSolution(InputWebSolution):
     """
     the scholarly knowledge graph solution
     """
-    
+
     def __init__(self, webserver: SkgBrowser, client: Client):
         """
         Initialize the solution
@@ -72,7 +71,6 @@ def SkgSolution(InputWebSolution):
         self.wikiId = "or"
         self.markup_names = ["-", "bibtex", "scite", "smw"]
         self.markup_name = self.markup_names[1]
-    
 
     def configure_menu(self):
         """

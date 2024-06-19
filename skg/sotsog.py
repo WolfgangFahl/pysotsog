@@ -17,7 +17,8 @@ from skg.smw import SemWiki
 from skg.wdsearch import WikidataSearch
 from skg.wikidata import Wikidata
 
-class SotSog():
+
+class SotSog:
     """
     Standing on the shoulders of giants
     """
