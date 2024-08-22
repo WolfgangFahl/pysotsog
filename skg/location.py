@@ -3,6 +3,7 @@ Created on 2022-11-21
 
 @author: wf
 """
+
 import skg.graph
 
 

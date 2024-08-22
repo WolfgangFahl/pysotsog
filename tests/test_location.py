@@ -3,6 +3,7 @@ Created on 2022-11-21
 
 @author: wf
 """
+
 from skg.graph import Node
 from skg.location import Country
 from tests.base_skg_test import BaseSkgTest

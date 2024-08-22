@@ -3,6 +3,7 @@ Created on 2024-02-26
 
 @author: wf
 """
+
 import sys
 from argparse import ArgumentParser
 
@@ -84,7 +85,7 @@ class SotSogCmd(WebserverCmd):
         if not handled:
             if args.dblp2wikidata:
                 d2w = Dblp2Wikidata()
-                handled=d2w.transfer(args)
+                handled = d2w.transfer(args)
         if not handled:
             self.search(args.search, self.sotsog.options)
             handled = True

@@ -3,6 +3,7 @@ Created on 2022-11-16
 
 @author: wf
 """
+
 from ngwidgets.basetest import Basetest
 
 from skg.search import SearchOptions

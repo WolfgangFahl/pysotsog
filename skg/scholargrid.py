@@ -3,6 +3,7 @@ Created on 2023-01-04
 
 @author: wf
 """
+
 from typing import Callable
 
 from ez_wikidata.wbquery import WikibaseQuery

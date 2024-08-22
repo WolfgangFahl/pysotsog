@@ -3,6 +3,7 @@ Created on 22.11.2022
 
 @author: wf
 """
+
 from wikibot3rd.smw import SMWClient
 from wikibot3rd.wikiclient import WikiClient
 from wikibot3rd.wikiuser import WikiUser

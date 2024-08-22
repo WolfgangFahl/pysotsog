@@ -3,6 +3,7 @@ Created on 2022-11-22
 
 @author: wf
 """
+
 # see https://pypi.org/project/semanticscholar/
 from semanticscholar import SemanticScholar as SemScholar
 

@@ -3,6 +3,7 @@ Created on 2023-01-04
 
 @author: wf
 """
+
 from ez_wikidata.wbquery import WikibaseQuery
 from ngwidgets.basetest import Basetest
 from wikibot3rd.wikiuser import WikiUser

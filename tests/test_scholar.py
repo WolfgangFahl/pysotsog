@@ -3,6 +3,7 @@ Created on 2022-11-16
 
 @author: wf
 """
+
 from skg.graph import Node
 from skg.scholar import Scholar
 from skg.smw import SemWiki

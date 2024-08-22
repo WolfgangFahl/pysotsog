@@ -3,6 +3,7 @@ Created on 24.07.2022
 
 @author: wf
 """
+
 import json
 import os
 import urllib.parse

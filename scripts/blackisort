@@ -1,5 +1,5 @@
 #!/bin/bash
-# WF 2024-01-10
+# WF 2024-08-21
 package=skg
 isort tests/*.py
 black tests/*.py

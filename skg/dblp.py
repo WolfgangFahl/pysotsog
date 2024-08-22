@@ -3,6 +3,7 @@ Created on 2022-11-17
 
 @author: wf
 """
+
 from lodstorage.sparql import SPARQL
 
 from skg.owl import Owl

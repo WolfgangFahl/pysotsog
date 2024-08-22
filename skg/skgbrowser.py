@@ -3,6 +3,7 @@ Created on 2022-11-18
 
 @author: wf
 """
+
 from urllib import parse
 
 from ngwidgets.input_webserver import InputWebserver, InputWebSolution

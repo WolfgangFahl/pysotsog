@@ -3,6 +3,7 @@ Created on 2022-11-16
 
 @author: wf
 """
+
 import datetime
 
 from skg.event import Event, EventSeries, Proceedings

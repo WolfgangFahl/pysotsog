@@ -3,6 +3,7 @@ Created on 18.11.2022
 
 @author: wf
 """
+
 import sys
 
 from search_engine_parser.core.engines.bing import Search as BingSearch

@@ -3,6 +3,7 @@ Created on 2024-02-26
 
 @author: wf
 """
+
 from argparse import Namespace
 
 from ngwidgets.basetest import Basetest
