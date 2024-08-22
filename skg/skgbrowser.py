@@ -3,7 +3,7 @@ Created on 2022-11-18
 
 @author: wf
 """
-
+import os
 from urllib import parse
 
 from ngwidgets.input_webserver import InputWebserver, InputWebSolution
@@ -51,9 +51,21 @@ class SkgBrowser(InputWebserver):
         self.wikiId = self.args.wikiId
         wikidata = Wikidata()
         self.sparql = wikidata.sparql
+        root_path = (
+            self.args.root_path
+            if self.args.root_path
+            else SkgBrowser.examples_path()
+        )
+
+    @classmethod
+    def examples_path(cls) -> str:
+        # the root directory (default: examples)
+        path = os.path.join(os.path.dirname(__file__), "../sotsog_examples")
+        path = os.path.abspath(path)
+        return path
 
 
-def SkgSolution(InputWebSolution):
+class SkgSolution(InputWebSolution):
     """
     the scholarly knowledge graph solution
     """

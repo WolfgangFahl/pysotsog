@@ -87,7 +87,7 @@ class SotSogCmd(WebserverCmd):
                 d2w = Dblp2Wikidata()
                 handled = d2w.transfer(args)
         if not handled:
-            self.search(args.search, self.sotsog.options)
+            self.sotsog.search(args.search, self.sotsog.options)
             handled = True
         return handled
 

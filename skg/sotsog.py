@@ -13,7 +13,6 @@ from skg.kg import SKG_Def
 from skg.orcid import ORCID
 from skg.paper import Paper
 from skg.search import SearchOptions, SearchResult
-from skg.skgbrowser import SkgBrowser
 from skg.smw import SemWiki
 from skg.wdsearch import WikidataSearch
 from skg.wikidata import Wikidata

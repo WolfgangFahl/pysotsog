@@ -73,10 +73,11 @@ test = [
 ]
 
 [tool.hatch.build.targets.wheel]
-only-include = ["skg"]
+only-include = ["skg","sotsog_examples"]
 
 [tool.hatch.build.targets.wheel.sources]
 "skg" = "skg"
+"sotsog_examples" = "sotsog_examples"
 
 [project.scripts]
 sotsog = "skg.sotsog_cmd:main"
