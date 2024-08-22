@@ -1,0 +1,7 @@
+#!/bin/bash
+# install and test
+# command to install dependencies
+scripts/install
+# command to run tests
+scripts/test
+
