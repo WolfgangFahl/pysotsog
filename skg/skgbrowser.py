@@ -9,7 +9,7 @@ from urllib import parse
 from ngwidgets.input_webserver import InputWebserver, InputWebSolution
 from ngwidgets.webserver import WebserverConfig
 from ngwidgets.widgets import Lang, Link
-from nicegui import Client, ui
+from nicegui import Client, ui, run
 from wikibot3rd.wikiuser import WikiUser
 
 from skg.orcid import ORCID
@@ -85,6 +85,7 @@ class SkgSolution(InputWebSolution):
         self.markup_names = ["-", "bibtex", "scite", "smw"]
         self.markup_name = self.markup_names[1]
         self.sotsog = SotSog.instance
+        self.sotsog.options.open_browser=False
 
     def configure_menu(self):
         """
@@ -123,49 +124,53 @@ class SkgSolution(InputWebSolution):
         """
         handle button to search for terms
         """
-        try:
-            self.results.content = ""
-            self.markup.content = ""
-            terms = self.searchTerms.value.split("\n")
-            self.messages.content = "Searching"
-            delim = ""
-            for term in terms:
-                if term:
-                    msg = f"... {term}\n"
-                    self.messages.content += msg
-                    if self.markup_name == "-":
-                        self.options.markup_names = []
-                    else:
-                        self.options.markup_names = [self.markup_name]
-                    search_result = self.sotsog.search([term], self.options)
-                    items = search_result.items
-                    rmarkup = ""
-                    if len(items) == 0:
-                        # TODO check google search
-                        # https://pypi.org/project/googlesearch-python/
-                        params = parse.urlencode({"q": term})
-                        search_url = f"https://www.google.com/search?{params}"
-                        rmarkup = Link.create(
-                            search_url,
-                            term,
-                            "not found",
-                            target="_blank",
-                            style="color:red",
-                        )
-                    else:
-                        for i, item in enumerate(items):
-                            rmarkup += self.createItemLink(item, term, i)
-                            if len(item.markups) > 0:
-                                markups = ""
-                                for _markup_name, markup in item.markups.items():
-                                    markups += markup
-                                    self.markup.content += f"<pre>{markups}</pre>"
-                                    # break
-                    self.results.content += delim + rmarkup
-                    delim = "<br>"
+        await run.io_bound(self.do_search)
 
-        except BaseException as ex:
-            self.handle_exception(ex)
+    def do_search(self):
+        with self.content_div:
+            try:
+                self.results.content = ""
+                self.markup.content = ""
+                terms = self.searchTerms.value.split("\n")
+                self.messages.content = "Searching"
+                delim = ""
+                for term in terms:
+                    if term:
+                        msg = f"... {term}\n"
+                        self.messages.content += msg
+                        if self.markup_name == "-":
+                            self.sotsog.options.markup_names = []
+                        else:
+                            self.sotsog.options.markup_names = [self.markup_name]
+                        search_result = self.sotsog.search([term], self.sotsog.options)
+                        items = search_result.items
+                        rmarkup = ""
+                        if len(items) == 0:
+                            # TODO check google search
+                            # https://pypi.org/project/googlesearch-python/
+                            params = parse.urlencode({"q": term})
+                            search_url = f"https://www.google.com/search?{params}"
+                            rmarkup = Link.create(
+                                search_url,
+                                term,
+                                "not found",
+                                target="_blank",
+                                style="color:red",
+                            )
+                        else:
+                            for i, item in enumerate(items):
+                                rmarkup += self.createItemLink(item, term, i)
+                                if len(item.markups) > 0:
+                                    markups = ""
+                                    for _markup_name, markup in item.markups.items():
+                                        markups += markup
+                                        self.markup.content += f"<pre>{markups}</pre>"
+                                        # break
+                        self.results.content += delim + rmarkup
+                        delim = "<br>"
+
+            except BaseException as ex:
+                self.handle_exception(ex)
 
     def addLanguageSelect(self):
         """
