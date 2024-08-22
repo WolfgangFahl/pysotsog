@@ -8,7 +8,7 @@ from typing import Callable
 
 from ez_wikidata.wbquery import WikibaseQuery
 from lodstorage.sparql import SPARQL
-from wd.wdgrid import GridSync, WikidataGrid
+#from wd.wdgrid import GridSync, WikidataGrid
 
 from skg.smw import SemWiki
 
@@ -152,9 +152,10 @@ class ScholarQuery:
         return wbQuery
 
 
-class SmwGrid(GridSync):
+#class SmwGrid(GridSync):
+class SmwGrid():
     """
-    a semantic mediawiki based grid synchable with WikiData
+    a semantic mediawiki based grid syncable with WikiData
 
     """
 
@@ -189,17 +190,17 @@ class SmwGrid(GridSync):
         self.wikiId = wikiId
         wikiUser = self.wikiUsers[wikiId]
         self.semwiki = SemWiki(wikiUser)
-        wdGrid = WikidataGrid(
-            app=app,
-            source=wikiId,
-            entityName=entityName,
-            entityPluralName=entityPluralName,
-            getLod=getLod,
-            debug=debug,
-        )
+        #wdGrid = WikidataGrid(
+        #    solution=solution,
+        #    source=wikiId,
+        #    entityName=entityName,
+        #    entityPluralName=entityPluralName,
+        #    getLod=getLod,
+        #    debug=debug,
+        #)
         # we'd rather lazy load
         # wdGrid.lod=wdGrid.getLod()
-        super().__init__(wdGrid, entityName, pk, sparql=sparql, debug=debug)
+        #super().__init__(wdGrid, entityName, pk, sparql=sparql, debug=debug)
 
 
 class ScholarGrid(SmwGrid):
