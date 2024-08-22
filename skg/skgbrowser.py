@@ -51,11 +51,10 @@ class SkgBrowser(InputWebserver):
         self.wikiId = self.args.wikiId
         wikidata = Wikidata()
         self.sparql = wikidata.sparql
-        root_path = (
-            self.args.root_path
-            if self.args.root_path
-            else SkgBrowser.examples_path()
-        )
+        if hasattr(self.args, "root_path"):
+            self.root_path = self.args.root_path
+        else:
+            self.root_path = SkgBrowser.examples_path()
 
     @classmethod
     def examples_path(cls) -> str:
