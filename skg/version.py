@@ -3,10 +3,10 @@ Created on 2022-04-01
 
 @author: wf
 """
-
+from dataclasses import dataclass
 import skg
 
-
+@dataclass
 class Version(object):
     """
     Version handling for pysotsog

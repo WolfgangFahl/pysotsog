@@ -24,11 +24,12 @@ class SotSog:
     Standing on the shoulders of giants
     """
 
-    def __init__(self):
+    def __init__(self,debug:bool=False):
         """
         constructor
 
         """
+        self.debug=debug
         Node.debug = self.debug
         self.wikipedia_url = (
             "https://en.wikipedia.org/wiki/Standing_on_the_shoulders_of_giants"
