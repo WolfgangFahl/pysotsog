@@ -79,4 +79,4 @@ only-include = ["skg"]
 "skg" = "skg"
 
 [project.scripts]
-sotsog = "skg.sotsog:main"
+sotsog = "skg.sotsog_cmd:main"
