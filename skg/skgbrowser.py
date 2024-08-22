@@ -16,6 +16,7 @@ from skg.orcid import ORCID
 from skg.scholargrid import ScholarGrid
 from skg.version import Version
 from skg.wikidata import Wikidata
+from skg.sotsog import SotSog
 
 
 class SkgBrowser(InputWebserver):
@@ -80,9 +81,10 @@ class SkgSolution(InputWebSolution):
         """
         super().__init__(webserver, client)  # Call to the superclass constructor
         self.language = "en"
-        self.wikiId = "or"
+        self.wikiId = "cr"
         self.markup_names = ["-", "bibtex", "scite", "smw"]
         self.markup_name = self.markup_names[1]
+        self.sotsog = SotSog.instance
 
     def configure_menu(self):
         """
@@ -182,7 +184,7 @@ class SkgSolution(InputWebSolution):
                 wu_dict[wikiUser] = wikiUser
             self.add_select("wiki:", wu_dict).bind_value(self, "wikiId")
 
-    async def scholars(self, client: Client):
+    async def scholars(self):
         """
         scholar display
 
@@ -207,24 +209,25 @@ class SkgSolution(InputWebSolution):
         self.addLanguageSelect()
         self.addWikiUserSelect()
 
-    async def home(self, _client: Client):
+    def setup_content(self):
+        with ui.splitter() as self.splitter:
+            with self.splitter.before:
+                self.add_select("markup", self.markup_names).bind_value(
+                    self, "markup_name"
+                )
+                self.searchTerms = ui.textarea(placeholder="enter search terms")
+                self.searchButton = ui.button(
+                    "search", on_click=self.onSearchButton
+                )
+            with self.splitter.after:
+                self.markup = ui.html()
+        self.messages = ui.html()
+        self.results = ui.html()
+
+    async def home(self):
         """
         provide the main content page
 
         """
-        self.setup_menu()
-        with ui.element("div").classes("w-full h-full"):
-            with ui.splitter() as splitter:
-                with splitter.before:
-                    self.add_select("markup", self.markup_names).bind_value(
-                        self, "markup_name"
-                    )
-                    self.searchTerms = ui.textarea(placeholder="enter search terms")
-                    self.searchButton = ui.button(
-                        "search", on_click=self.onSearchButton
-                    )
-                with splitter.after:
-                    self.markup = ui.html()
-            self.messages = ui.html()
-            self.results = ui.html()
-        await self.setup_footer()
+
+        await self.setup_content_div(self.setup_content)

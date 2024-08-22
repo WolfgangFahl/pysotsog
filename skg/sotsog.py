@@ -22,12 +22,14 @@ class SotSog:
     """
     Standing on the shoulders of giants
     """
+    instance=None
 
     def __init__(self,debug:bool=False):
         """
         constructor
 
         """
+        SotSog.instance=self
         self.debug=debug
         Node.debug = self.debug
         self.wikipedia_url = (
