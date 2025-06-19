@@ -7,7 +7,7 @@ Created on 2022-18-11
 import pprint
 from collections import Counter
 
-from ngwidgets.basetest import Basetest
+from basemkit.basetest import Basetest
 
 from skg.dblp import Dblp
 from skg.searchengine import InternetSearch

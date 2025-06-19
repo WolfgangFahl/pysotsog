@@ -23,7 +23,7 @@ class Version(object):
     doc_url = "https://wiki.bitplan.com/index.php/Pysotsog"
     chat_url = "https://github.com/WolfgangFahl/pysotsog/discussions"
     cm_url = "https://github.com/WolfgangFahl/pysotsog"
-    license = f"""Copyright 2022 contributors. All rights reserved.
+    license = f"""Copyright 2022-2025 contributors. All rights reserved.
   Licensed under the Apache License 2.0
   http://www.apache.org/licenses/LICENSE-2.0
   Distributed on an "AS IS" basis without warranties
