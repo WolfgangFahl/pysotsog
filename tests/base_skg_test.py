@@ -4,7 +4,7 @@ Created on 2022-11-21
 @author: wf
 """
 
-from ngwidgets.basetest import Basetest
+from basemkit.basetest import Basetest
 
 from skg.kg import SKG_Def
 

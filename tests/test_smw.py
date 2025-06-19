@@ -7,7 +7,7 @@ Created on 2022-11-22
 import json
 from collections import Counter
 
-from ngwidgets.basetest import Basetest
+from basemkit.basetest import Basetest
 from wikibot3rd.wikiuser import WikiUser
 
 from skg.doi import DOI

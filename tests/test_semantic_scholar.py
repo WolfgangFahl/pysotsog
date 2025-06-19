@@ -6,7 +6,7 @@ Created on 2022-11-22
 
 import json
 
-from ngwidgets.basetest import Basetest
+from basemkit.basetest import Basetest
 
 from skg.semantic_scholar import SemanticScholar
 

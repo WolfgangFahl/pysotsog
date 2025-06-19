@@ -16,8 +16,8 @@ from ez_wikidata.wdsearch import WikidataSearch
 from ez_wikidata.wikidata import Wikidata
 from lodstorage.query import QueryManager
 from lodstorage.sparql import SPARQL
-from ngwidgets.basetest import Basetest
-from ngwidgets.yamlable import lod_storable
+from basemkit.basetest import Basetest
+from basemkit.yamlable import lod_storable
 
 from skg.ris import RIS_Entry
 import unittest

@@ -7,7 +7,7 @@ Created on 2022-11-17
 import json
 from dataclasses import dataclass
 
-from ngwidgets.basetest import Basetest
+from basemkit.basetest import Basetest
 
 from skg.crossref import Crossref
 

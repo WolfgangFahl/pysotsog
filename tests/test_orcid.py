@@ -6,7 +6,7 @@ Created on 2022-12-17
 
 import json
 
-from ngwidgets.basetest import Basetest
+from basemkit.basetest import Basetest
 
 from skg.orcid import ORCID
 

@@ -6,7 +6,7 @@ Created on 2024-02-26
 
 from argparse import Namespace
 
-from ngwidgets.basetest import Basetest
+from basemkit.basetest import Basetest
 
 from skg.dblp2wikidata import Dblp2Wikidata
 

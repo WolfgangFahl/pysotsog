@@ -8,7 +8,7 @@ import json
 import unittest
 
 from lodstorage.lod import LOD
-from ngwidgets.basetest import Basetest
+from basemkit.basetest import Basetest
 
 from skg.wdsearch import WikidataSearch
 from skg.wikidata import Wikidata

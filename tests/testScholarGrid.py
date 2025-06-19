@@ -5,7 +5,7 @@ Created on 2023-01-04
 """
 
 from ez_wikidata.wbquery import WikibaseQuery
-from ngwidgets.basetest import Basetest
+from basemkit.basetest import Basetest
 from wikibot3rd.wikiuser import WikiUser
 
 from skg.scholargrid import ScholarGrid, ScholarQuery

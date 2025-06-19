@@ -8,7 +8,7 @@ import json
 from dataclasses import dataclass
 from unittest import IsolatedAsyncioTestCase
 
-from ngwidgets.basetest import Basetest
+from basemkit.basetest import Basetest
 
 from skg.dblp import Dblp
 from skg.doi import DOI

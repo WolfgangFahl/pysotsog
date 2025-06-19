@@ -9,7 +9,7 @@ from typing import List, Optional
 
 import rispy
 from ez_wikidata.wdproperty import PropertyMapping, WdDatatype
-from lodstorage.yamlable import lod_storable
+from basemkit.yamlable import lod_storable
 
 
 @lod_storable
