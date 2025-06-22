@@ -13,6 +13,7 @@ class Dblp:
     """
     Schloss Dagstuhl Dblp computer science bibliography
     """
+    _instance=None
 
     def __init__(self, endpoint: str = "https://qlever.cs.uni-freiburg.de/api/dblp"):
         """
@@ -26,6 +27,12 @@ class Dblp:
             "dblp", "https://dblp.org/rdf/schema", "Wolfgang Fahl", "2022-11-19"
         )
         self.sparql = SPARQL(self.endpoint)
+
+    @classmethod
+    def getInstance(cls)->'Dblp':
+        if cls._instance is None:
+            cls._instance=cls()
+        return cls._instance
 
     def get_paper_records(
         self,
@@ -49,7 +56,7 @@ class Dblp:
         sparql_query = """PREFIX dblp: <https://dblp.org/rdf/schema#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT
-  ?paper 
+  ?paper
   ?year
   ?yearofevent
   #?month
@@ -71,15 +78,15 @@ WHERE {
         sparql_query += f"""FILTER regex(?{prop_name}, "{regex}").\n"""
         sparql_query += f"""
 }}
-GROUP BY 
-  ?paper 
-  ?title 
-  ?doi 
+GROUP BY
+  ?paper
+  ?title
+  ?doi
   ?isbn
-  ?year 
+  ?year
   ?yearofevent
-  ?month 
-  ?publishedin 
+  ?month
+  ?publishedin
 ORDER BY DESC(?year)
 LIMIT {limit}"""
         if debug:
@@ -89,8 +96,8 @@ LIMIT {limit}"""
 
     def get_random_papers(self, year: int = 2020, limit: int = 10):
         sparql_query = f"""PREFIX dblp: <https://dblp.org/rdf/schema#>
-SELECT 
-  ?paper 
+SELECT
+  ?paper
   (SAMPLE(?doi_o) as ?doi)
   (SAMPLE(?title_o) as ?title)
   (MIN(?year_o) as ?year)
@@ -107,6 +114,6 @@ WHERE {{
   BIND(RAND() AS ?sortKey)
 }}
 GROUP BY ?paper
-ORDER BY ?sortKey 
+ORDER BY ?sortKey
 LIMIT {limit}
         """

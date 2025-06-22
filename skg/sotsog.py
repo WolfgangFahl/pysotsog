@@ -6,7 +6,9 @@ Created on 2022-11-16
 
 import webbrowser
 
+from basemkit.persistent_log import Log
 from skg.crossref import Crossref
+from skg.dblp import Dblp
 from skg.doi import DOI
 from skg.graph import Node
 from skg.kg import SKG_Def
@@ -29,6 +31,7 @@ class SotSog:
         constructor
 
         """
+        self.log=Log()
         SotSog.instance=self
         self.debug=debug
         Node.debug = self.debug
@@ -138,6 +141,7 @@ class SotSog:
             search_list(list): a list of search terms
             options(SearchOptions): the search options to apply
         """
+        self.log.clear()
         search_result = SearchResult(search_list, options)
         search_term = " ".join(search_list)
         for prefix in ["https://doi.org"]:
@@ -157,9 +161,15 @@ class SotSog:
                 paper_concept, "doi", search_term, options.lang
             )
             self.handleItems(items, options)
-            dblp_items = Paper.from_dblp_via_id(
-                paper_concept, "doi", search_term.lower()
-            )
+            dblp_items=[]
+            try:
+                dblp_items = Paper.from_dblp_via_id(
+                    paper_concept, "doi", search_term.lower()
+                )
+            except Exception as ex:
+                dblp=Dblp.getInstance()
+                msg=f"{str(ex)}:{dblp.endpoint}"
+                self.log.log("❌","dblp",msg)
             if len(dblp_items) == 0:
                 paper = Paper()
                 paper.concept = paper_concept

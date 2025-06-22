@@ -127,6 +127,9 @@ class SkgSolution(InputWebSolution):
         await run.io_bound(self.do_search)
 
     def do_search(self):
+        """
+        perform a search with the given search terms
+        """
         with self.content_div:
             try:
                 self.results.content = ""
@@ -168,6 +171,11 @@ class SkgSolution(InputWebSolution):
                                         # break
                         self.results.content += delim + rmarkup
                         delim = "<br>"
+                # handle errors
+                for entry in self.sotsog.log.entries:
+                    markup=entry.as_html()
+                    self.markup.content +=  delim + markup
+                    delim = "<br>"
 
             except BaseException as ex:
                 self.handle_exception(ex)
