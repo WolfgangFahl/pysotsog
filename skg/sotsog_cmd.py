@@ -62,7 +62,7 @@ class SotSogCmd(WebserverCmd):
 
         return parser
 
-    def handle_args(self) -> bool:
+    def handle_args(self,args) -> bool:
         """
         handle the command line args
         """
@@ -81,7 +81,7 @@ class SotSogCmd(WebserverCmd):
             markup_names=markup_names,
             open_browser=not args.nobrowser,
         )
-        handled = super().handle_args()
+        handled = super().handle_args(args)
         if not handled:
             if args.dblp2wikidata:
                 d2w = Dblp2Wikidata()
