@@ -56,6 +56,7 @@ class TestDOI(Basetest):
         """
         test DOI lookup
         """
+        debug=self.debug
         #debug = True
         dois = ["10.1109/TBDATA.2022.3224749"]
         expected = ["@article{Li_2023,", "@inproceedings{Faruqui_2015,"]
