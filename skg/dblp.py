@@ -15,7 +15,7 @@ class Dblp:
     """
     _instance=None
 
-    def __init__(self, endpoint: str = "https://qlever.cs.uni-freiburg.de/api/dblp"):
+    def __init__(self, endpoint: str = "https://qlever.dev/api/dblp"):
         """
         constructor
 

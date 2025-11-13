@@ -26,8 +26,8 @@ class TestDblp(BaseSkgTest):
         """
         sparql_query = """
 PREFIX dblp: <https://dblp.org/rdf/schema#>
-SELECT 
-  ?paper 
+SELECT
+  ?paper
   (SAMPLE(?doi_o) as ?doi)
   (SAMPLE(?title_o) as ?title)
   (MIN(?year_o) as ?year)
@@ -47,7 +47,7 @@ LIMIT 10
         # rows since the query above returns truly tabular results
         paper_rows = self.dblp.sparql.queryAsListOfDicts(sparql_query)
         debug = self.debug
-        debug = True
+        #debug = True
         if debug:
             for row in paper_rows:
                 print(row)
