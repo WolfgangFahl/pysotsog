@@ -26,7 +26,7 @@ class SkgBrowser(InputWebserver):
 
     @classmethod
     def get_config(cls) -> WebserverConfig:
-        copy_right = "(c)2022-2024 Wolfgang Fahl"
+        copy_right = "(c)2022-2025 Wolfgang Fahl"
         config = WebserverConfig(
             copy_right=copy_right,
             version=Version(),

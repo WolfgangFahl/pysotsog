@@ -18,7 +18,7 @@ class Version(object):
     )
     version = skg.__version__
     date = "2022-11-16"
-    updated = "2025-06-19"
+    updated = "2025-11-13"
     authors = "Wolfgang Fahl"
     doc_url = "https://wiki.bitplan.com/index.php/Pysotsog"
     chat_url = "https://github.com/WolfgangFahl/pysotsog/discussions"
