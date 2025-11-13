@@ -271,7 +271,7 @@ SELECT
             if prop.hasmap("dblp"):
                 sparql_query += f" ?{prop.name}"
         if id_name == "doi":
-            value_clause = f"<http://dx.doi.org/{id_value}>"
+            value_clause = f"<https://doi.org/{id_value}>"
         elif id_name == "orcid":
             value_clause = f"<https://orcid.org/{id_value}>"
         else:

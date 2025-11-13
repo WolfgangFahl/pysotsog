@@ -60,7 +60,7 @@ LIMIT 10
         schema.loadSchema(formats="n3,json-ld")  # xml
         classes = schema.toClasses()
         debug = self.debug
-        debug = True
+        #debug = True
         if debug:
             print(json.dumps(classes, indent=2))
         classes = classes["classes"]
@@ -76,7 +76,8 @@ LIMIT 10
         schema = self.dblp.schema
         schema.loadSchema()
         uml_markup = schema.toPlantUml()
-        debug = True
+        debug=self.debug
+        #debug = True
         if debug:
             print(uml_markup)
 
@@ -85,7 +86,7 @@ LIMIT 10
         test getting papers by id from dblp
         """
         debug = self.debug
-        debug = True
+        #debug = True
         paper_concept = self.skg_def.concepts["Paper"]
         author_concept = self.skg_def.concepts["Scholar"]
         id_examples = [
@@ -112,7 +113,7 @@ LIMIT 10
                 debug(bool): if True show debug information
             """
             if id_name == "doi":
-                self.assertEqual(f"http://dx.doi.org/{id_value}", item.doi)
+                self.assertEqual(f"https://doi.org/{id_value}", item.doi)
 
         self.check_id_examples(
             id_examples,
