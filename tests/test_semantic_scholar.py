@@ -47,12 +47,12 @@ class TestSemanticScholar(Basetest):
         """
         test paper search
         """
-        titles = [
-            "M. Agosti, C. Thanos (Eds). Post-proceedings of the First Italian Research Conference on Digital Library Management Systems (IRCDL 2005), Padova, 28th January, 2005. September 2005."
+        phrases = [
+            "Get your own copy of wikidata"
         ]
-        for title in titles:
+        for phrase in phrases:
             try:
-                results = self.semscholar.sch.search_paper(title)
+                results = self.semscholar.sch.search_paper(phrase)
                 self.showResults(results)
             except Exception as ex:
                 print(f"exception on testSearchPaper: {str(ex)}")
