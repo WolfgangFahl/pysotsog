@@ -56,15 +56,16 @@ class TestDOI(Basetest):
         """
         test DOI lookup
         """
-        debug = True
+        #debug = True
         dois = ["10.1109/TBDATA.2022.3224749"]
         expected = ["@article{Li_2023,", "@inproceedings{Faruqui_2015,"]
         for i, doi in enumerate(dois):
             doi_obj = DOI(doi)
             result = doi_obj.doi2bibTex()
+            expected=expected[i]
             if debug:
-                print(result)
-            self.assertTrue(result.startswith(expected[i]))
+                print(f"{i+1}:{result}↔{expected}")
+            self.assertTrue(result.startswith(expected))
 
     def testCiteproc(self):
         """

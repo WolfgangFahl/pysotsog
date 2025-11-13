@@ -130,7 +130,7 @@ class TestRis2Wikidata(Basetest):
         """
         test Softwaretechnik Trend entries in dblp
         """
-        endpoint = "https://qlever.cs.uni-freiburg.de/api/dblp/query"
+        endpoint = "https://qlever.dev/api/dblp/query"
         sparql = SPARQL(endpoint)
         path = os.path.dirname(__file__)
         qYamlFile = f"{path}/../skg/resources/queries/stt.yaml"
@@ -182,7 +182,7 @@ class TestRis2Wikidata(Basetest):
             return
         wd_search = WikidataSearch()
         debug = self.debug
-        debug = True
+        #debug = True
 
         if debug:
             print(f"found {len(self.ris_dict)} RIS entries")
