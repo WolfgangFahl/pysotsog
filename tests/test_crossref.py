@@ -32,18 +32,18 @@ class TestCrossref(Basetest):
         test crossref
         """
         debug = self.debug
-        # debug=True
+        #debug=True
         doi_examples = [
-            Example("10.1007/11581116_19", "Atanas Kiryakov"),
-            Example("10.1016/J.ARTMED.2017.07.002", "Jean-Baptiste Lamy"),
-            Example("10.1145/2882903.2899389", "Rihan Hai"),
+            Example("10.1007/11581116_19", "Kiryakov, Atanas"),
+            Example("10.1016/J.ARTMED.2017.07.002", "Lamy, Jean-Baptiste"),
+            Example("10.1145/2882903.2899389", "Hai, Rihan"),
         ]
         for example in doi_examples:
             doi = example.doi
             bib_entry = self.crossref.doiBibEntry(doi)
             if debug:
                 print(bib_entry)
-            expected = f"author = {{{example.author}"
+            expected = f"author={{{example.author}"
             self.assertTrue(expected in bib_entry, expected)
             meta_data = self.crossref.doiMetaData(doi)
             if debug:
