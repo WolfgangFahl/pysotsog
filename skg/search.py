@@ -17,6 +17,7 @@ class SearchOptions:
         show: bool = True,
         markup_names=["bibtex"],
         open_browser: bool = False,
+        scholia_base: str = "https://qlever.scholia.wiki",
     ):
         """
         constructor
@@ -27,6 +28,7 @@ class SearchOptions:
             show(bool): if True print the search results
             markup_names(list): a list of markup names to support
             open_browser(bool): if True open a browser for the target page of the item e.g. scholia
+            scholia_base(str): the base URL for Scholia (e.g., https://qlever.scholia.wiki)
 
         """
         self.limit = limit
@@ -34,6 +36,7 @@ class SearchOptions:
         self.show = show
         self.markup_names = markup_names
         self.open_browser = open_browser
+        self.scholia_base = scholia_base
 
 
 class SearchResult:

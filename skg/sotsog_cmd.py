@@ -59,6 +59,11 @@ class SotSogCmd(WebserverCmd):
             action="store_true",
             help="Synchronize DBLP entries with Wikidata",
         )
+        parser.add_argument(
+            "--scholia",
+            help="the base URL for Scholia (default: https://qlever.scholia.wiki)",
+            default="https://qlever.scholia.wiki",
+        )
 
         return parser
 
@@ -80,6 +85,7 @@ class SotSogCmd(WebserverCmd):
             lang=args.lang,
             markup_names=markup_names,
             open_browser=not args.nobrowser,
+            scholia_base=args.scholia,
         )
         handled = super().handle_args(args)
         if not handled:

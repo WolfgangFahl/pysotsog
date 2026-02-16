@@ -49,7 +49,7 @@ class TestScholar(BaseSkgTest):
             """
             self.assertEqual("Tim Berners-Lee", scholar.label)
             self.assertEqual(
-                "https://scholia.toolforge.org/author/Q80", scholar.scholia_url()
+                "https://qlever.scholia.wiki/author/Q80", scholar.scholia_url()
             )
 
         debug = self.debug

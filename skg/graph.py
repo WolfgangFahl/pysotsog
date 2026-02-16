@@ -106,6 +106,7 @@ class Node:
     """
 
     debug = False
+    scholia_base = "https://qlever.scholia.wiki"
 
     def __init__(self):
         """
@@ -120,7 +121,7 @@ class Node:
         delim = "\n  "
         for prop in self.concept.props.values():
             if hasattr(self, prop.name):
-                text += f"{delim}{prop.name}={getattr(self,prop.name)}"
+                text += f"{delim}{prop.name}={getattr(self, prop.name)}"
         return text
 
     def from_dict(self, concept, record: str):
@@ -147,7 +148,7 @@ class Node:
         """
         get my scholia url
         """
-        prefix = f"https://scholia.toolforge.org/{self.concept.scholia_suffix}"
+        prefix = f"{Node.scholia_base}/{self.concept.scholia_suffix}"
         wd_url = getattr(self, "wikiDataId", None)
         if wd_url is None:
             return None

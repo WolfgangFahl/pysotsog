@@ -144,6 +144,7 @@ class SotSog:
             options(SearchOptions): the search options to apply
         """
         self.log.clear()
+        Node.scholia_base = options.scholia_base
         search_result = SearchResult(search_list, options)
         search_term = " ".join(search_list)
         for prefix in ["https://doi.org"]:

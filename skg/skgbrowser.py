@@ -13,6 +13,7 @@ from ngwidgets.widgets import Lang, Link
 from nicegui import Client, run, ui
 from wikibot3rd.wikiuser import WikiUser
 
+from skg.graph import Node
 from skg.orcid import ORCID
 from skg.scholargrid import ScholarGrid
 from skg.sotsog import SotSog
@@ -85,8 +86,10 @@ class SkgSolution(InputWebSolution):
         self.wikiId = "cr"
         self.markup_names = ["-", "bibtex", "scite", "smw"]
         self.markup_name = self.markup_names[1]
+        self.scholia_base = "https://qlever.scholia.wiki"
         self.sotsog = SotSog.instance
         self.sotsog.options.open_browser = False
+        Node.scholia_base = self.scholia_base
 
     def configure_menu(self):
         """
@@ -94,6 +97,21 @@ class SkgSolution(InputWebSolution):
         """
         # self.link_button(name='Scholars',icon_name='account-school',target='/scholars')
         pass
+
+    def configure_settings(self):
+        """
+        configure settings for the scholarly knowledge graph
+        """
+        super().configure_settings()
+
+        def update_scholia_base(e):
+            Node.scholia_base = e.value
+
+        scholia_select = self.add_select(
+            "scholia", ["https://qlever.scholia.wiki", "https://scholia.toolforge.org"]
+        )
+        scholia_select.bind_value(self, "scholia_base")
+        scholia_select.on_value_change(update_scholia_base)
 
     def createItemLink(self, item, term: str, index: int) -> str:
         """
@@ -214,13 +232,6 @@ class SkgSolution(InputWebSolution):
             except BaseException as ex:
                 self.handle_exception(ex)
         await self.setup_footer()
-
-    def configure_settings(self):
-        """
-        configure settings
-        """
-        self.addLanguageSelect()
-        self.addWikiUserSelect()
 
     def setup_content(self):
         with ui.splitter() as self.splitter:
