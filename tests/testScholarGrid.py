@@ -4,8 +4,8 @@ Created on 2023-01-04
 @author: wf
 """
 
-from ez_wikidata.wbquery import WikibaseQuery
 from basemkit.basetest import Basetest
+from ez_wikidata.wbquery import WikibaseQuery
 from wikibot3rd.wikiuser import WikiUser
 
 from skg.scholargrid import ScholarGrid, ScholarQuery
@@ -38,7 +38,7 @@ class TestScholarGrid(Basetest):
         for wikiId, expected in [("ceur-ws", 10), ("media", 500)]:
             if wikiId in wikiUsers:
                 scholarGrid = ScholarGrid(
-                    app=None, wikiUsers=wikiUsers, wikiId=wikiId, sparql=sparql
+                    solution=None, wikiUsers=wikiUsers, wikiId=wikiId, sparql=sparql
                 )
                 scholars = scholarGrid.getScholars()
                 debug = self.debug

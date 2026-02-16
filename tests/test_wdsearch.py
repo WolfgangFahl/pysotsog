@@ -7,8 +7,8 @@ Created on 2022-11-16
 import json
 import unittest
 
-from lodstorage.lod import LOD
 from basemkit.basetest import Basetest
+from lodstorage.lod import LOD
 
 from skg.wdsearch import WikidataSearch
 from skg.wikidata import Wikidata

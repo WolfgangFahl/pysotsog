@@ -56,16 +56,16 @@ class TestDOI(Basetest):
         """
         test DOI lookup
         """
-        debug=self.debug
-        #debug = True
+        debug = self.debug
+        # debug = True
         dois = ["10.1109/TBDATA.2022.3224749"]
         expected = ["@article{Li_2023,", "@inproceedings{Faruqui_2015,"]
         for i, doi in enumerate(dois):
             doi_obj = DOI(doi)
             result = doi_obj.doi2bibTex()
-            expected=expected[i]
+            expected = expected[i]
             if debug:
-                print(f"{i+1}:{result}↔{expected}")
+                print(f"{i + 1}:{result}↔{expected}")
             self.assertTrue(result.startswith(expected))
 
     def testCiteproc(self):
@@ -101,7 +101,7 @@ class TestDOI(Basetest):
             self.assertTrue("data" in json_data)
             data = json_data["data"]
             self.assertTrue("id" in data)
-            self.assertEquals(doi, data["id"])
+            self.assertEqual(doi, data["id"])
             pass
 
     def testScite(self):

@@ -47,9 +47,7 @@ class TestSemanticScholar(Basetest):
         """
         test paper search
         """
-        phrases = [
-            "Get your own copy of wikidata"
-        ]
+        phrases = ["Get your own copy of wikidata"]
         for phrase in phrases:
             try:
                 results = self.semscholar.sch.search_paper(phrase)

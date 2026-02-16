@@ -13,7 +13,8 @@ class Dblp:
     """
     Schloss Dagstuhl Dblp computer science bibliography
     """
-    _instance=None
+
+    _instance = None
 
     def __init__(self, endpoint: str = "https://qlever.dev/api/dblp"):
         """
@@ -29,9 +30,9 @@ class Dblp:
         self.sparql = SPARQL(self.endpoint)
 
     @classmethod
-    def getInstance(cls)->'Dblp':
+    def getInstance(cls) -> "Dblp":
         if cls._instance is None:
-            cls._instance=cls()
+            cls._instance = cls()
         return cls._instance
 
     def get_paper_records(

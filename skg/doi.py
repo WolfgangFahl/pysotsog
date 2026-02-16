@@ -114,8 +114,8 @@ class DOI:
         """
         url = f"https://doi.org/{self.doi}"
         headers = {"Accept": "application/x-bibtex; charset=utf-8"}
-        bibtex= self.fetch_text(url, headers)
-        bibtex=bibtex.strip()
+        bibtex = self.fetch_text(url, headers)
+        bibtex = bibtex.strip()
         return bibtex
 
     def doi2Citeproc(self):

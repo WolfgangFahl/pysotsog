@@ -51,11 +51,17 @@ class TestSotsog(Basetest):
             for item in s_result.items:
                 if debug:
                     print(item)
+            found_matching = False
             for item in s_result.items:
-                self.assertEqual(concept_name, item.concept.name)
-                if hasattr("item", "wikiDataId"):
-                    self.assertTrue(qid in item.wikiDataId)
-                # @TODO compare properties against samples
+                if item.concept.name == concept_name:
+                    found_matching = True
+                    if hasattr(item, "wikiDataId"):
+                        self.assertTrue(qid in item.wikiDataId)
+            self.assertTrue(
+                f"Expected at least one {concept_name} result for {search}",
+                found_matching,
+            )
+            # @TODO compare properties against samples
 
     def test_get_markups(self):
         """

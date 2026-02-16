@@ -262,7 +262,7 @@ WHERE {{
             id_value(str): the value of the id
             lang(str): the language code to apply
         """
-        dblp=Dblp.getInstance()
+        dblp = Dblp.getInstance()
         sparql_query = f"""
 PREFIX dblp: <https://dblp.org/rdf/schema#>
 SELECT

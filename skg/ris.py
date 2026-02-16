@@ -8,8 +8,8 @@ from dataclasses import field
 from typing import List, Optional
 
 import rispy
-from ez_wikidata.wdproperty import PropertyMapping, WdDatatype
 from basemkit.yamlable import lod_storable
+from ez_wikidata.wdproperty import PropertyMapping, WdDatatype
 
 
 @lod_storable

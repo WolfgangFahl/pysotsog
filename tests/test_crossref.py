@@ -32,7 +32,7 @@ class TestCrossref(Basetest):
         test crossref
         """
         debug = self.debug
-        #debug=True
+        # debug=True
         doi_examples = [
             Example("10.1007/11581116_19", "Kiryakov, Atanas"),
             Example("10.1016/J.ARTMED.2017.07.002", "Lamy, Jean-Baptiste"),

@@ -47,7 +47,7 @@ LIMIT 10
         # rows since the query above returns truly tabular results
         paper_rows = self.dblp.sparql.queryAsListOfDicts(sparql_query)
         debug = self.debug
-        #debug = True
+        # debug = True
         if debug:
             for row in paper_rows:
                 print(row)
@@ -60,7 +60,7 @@ LIMIT 10
         schema.loadSchema(formats="n3,json-ld")  # xml
         classes = schema.toClasses()
         debug = self.debug
-        #debug = True
+        # debug = True
         if debug:
             print(json.dumps(classes, indent=2))
         classes = classes["classes"]
@@ -76,8 +76,8 @@ LIMIT 10
         schema = self.dblp.schema
         schema.loadSchema()
         uml_markup = schema.toPlantUml()
-        debug=self.debug
-        #debug = True
+        debug = self.debug
+        # debug = True
         if debug:
             print(uml_markup)
 
@@ -86,7 +86,7 @@ LIMIT 10
         test getting papers by id from dblp
         """
         debug = self.debug
-        #debug = True
+        # debug = True
         paper_concept = self.skg_def.concepts["Paper"]
         author_concept = self.skg_def.concepts["Scholar"]
         id_examples = [

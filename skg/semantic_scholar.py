@@ -5,6 +5,7 @@ Created on 2022-11-22
 """
 
 import os
+
 from semanticscholar import SemanticScholar as SemScholar
 
 
@@ -23,7 +24,7 @@ class SemanticScholar:
             api_key: Semantic Scholar API key (reads from SEMANTIC_SCHOLAR_API_KEY env var if not provided)
         """
         self.timeout = timeout
-        self.api_key = api_key or os.getenv('SEMANTIC_SCHOLAR_API_KEY')
+        self.api_key = api_key or os.getenv("SEMANTIC_SCHOLAR_API_KEY")
         self.sch = SemScholar(timeout=timeout, retry=retry, api_key=self.api_key)
 
     def get_paper(self, doi: str):

@@ -7,20 +7,21 @@ Created on 2024-03-08
 import json
 import os
 import re
+import unittest
 from dataclasses import field
 from pathlib import Path
 from typing import Dict
 
+from basemkit.basetest import Basetest
+from basemkit.yamlable import lod_storable
 from ez_wikidata.wdproperty import PropertyMapping, WdDatatype
 from ez_wikidata.wdsearch import WikidataSearch
 from ez_wikidata.wikidata import Wikidata
 from lodstorage.query import QueryManager
 from lodstorage.sparql import SPARQL
-from basemkit.basetest import Basetest
-from basemkit.yamlable import lod_storable
 
 from skg.ris import RIS_Entry
-import unittest
+
 
 class STT_Paper(RIS_Entry):
     """
@@ -182,7 +183,7 @@ class TestRis2Wikidata(Basetest):
             return
         wd_search = WikidataSearch()
         debug = self.debug
-        #debug = True
+        # debug = True
 
         if debug:
             print(f"found {len(self.ris_dict)} RIS entries")

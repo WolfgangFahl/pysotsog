@@ -3,20 +3,21 @@ Created on 2022-11-18
 
 @author: wf
 """
+
 import os
 from urllib import parse
 
 from ngwidgets.input_webserver import InputWebserver, InputWebSolution
 from ngwidgets.webserver import WebserverConfig
 from ngwidgets.widgets import Lang, Link
-from nicegui import Client, ui, run
+from nicegui import Client, run, ui
 from wikibot3rd.wikiuser import WikiUser
 
 from skg.orcid import ORCID
 from skg.scholargrid import ScholarGrid
+from skg.sotsog import SotSog
 from skg.version import Version
 from skg.wikidata import Wikidata
-from skg.sotsog import SotSog
 
 
 class SkgBrowser(InputWebserver):
@@ -85,7 +86,7 @@ class SkgSolution(InputWebSolution):
         self.markup_names = ["-", "bibtex", "scite", "smw"]
         self.markup_name = self.markup_names[1]
         self.sotsog = SotSog.instance
-        self.sotsog.options.open_browser=False
+        self.sotsog.options.open_browser = False
 
     def configure_menu(self):
         """
@@ -173,8 +174,8 @@ class SkgSolution(InputWebSolution):
                         delim = "<br>"
                 # handle errors
                 for entry in self.sotsog.log.entries:
-                    markup=entry.as_html()
-                    self.markup.content +=  delim + markup
+                    markup = entry.as_html()
+                    self.markup.content += delim + markup
                     delim = "<br>"
 
             except BaseException as ex:
@@ -229,9 +230,7 @@ class SkgSolution(InputWebSolution):
                     self, "markup_name"
                 )
                 self.searchTerms = ui.textarea(placeholder="enter search terms")
-                self.searchButton = ui.button(
-                    "search", on_click=self.onSearchButton
-                )
+                self.searchButton = ui.button("search", on_click=self.onSearchButton)
             with self.splitter.after:
                 self.markup = ui.html()
         self.messages = ui.html()

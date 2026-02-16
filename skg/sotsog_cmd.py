@@ -62,7 +62,7 @@ class SotSogCmd(WebserverCmd):
 
         return parser
 
-    def handle_args(self,args) -> bool:
+    def handle_args(self, args) -> bool:
         """
         handle the command line args
         """

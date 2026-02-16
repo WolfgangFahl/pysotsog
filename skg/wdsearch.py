@@ -9,6 +9,8 @@ import os
 import urllib.parse
 import urllib.request
 
+from skg import __version__
+
 
 class WikidataSearch(object):
     """
@@ -27,6 +29,13 @@ class WikidataSearch(object):
         self.language = language
         self.timeout = timeout
         self.debug = debug
+
+    def get_headers(self) -> dict:
+        """
+        get the headers for the request
+        """
+        user_agent = f"pysotsog/{__version__} (https://github.com/WolfgangFahl/pysotsog; wf@bitplan.com)"
+        return {"User-Agent": user_agent}
 
     def searchOptions(self, searchFor: str, limit: int = 9) -> list:
         """
@@ -69,7 +78,9 @@ class WikidataSearch(object):
                 print(apiurl)
             searchEncoded = urllib.parse.quote_plus(searchFor)
             apisearch = apiurl + searchEncoded
-            with urllib.request.urlopen(apisearch, timeout=self.timeout) as url:
+            headers = self.get_headers()
+            req = urllib.request.Request(apisearch, headers=headers)
+            with urllib.request.urlopen(req, timeout=self.timeout) as url:
                 searchResult = json.loads(url.read().decode())
             return searchResult["search"]
         except Exception as _error:

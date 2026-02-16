@@ -7,6 +7,7 @@ Created on 2022-11-16
 import webbrowser
 
 from basemkit.persistent_log import Log
+
 from skg.crossref import Crossref
 from skg.dblp import Dblp
 from skg.doi import DOI
@@ -24,16 +25,17 @@ class SotSog:
     """
     Standing on the shoulders of giants
     """
-    instance=None
 
-    def __init__(self,debug:bool=False):
+    instance = None
+
+    def __init__(self, debug: bool = False):
         """
         constructor
 
         """
-        self.log=Log()
-        SotSog.instance=self
-        self.debug=debug
+        self.log = Log()
+        SotSog.instance = self
+        self.debug = debug
         Node.debug = self.debug
         self.wikipedia_url = (
             "https://en.wikipedia.org/wiki/Standing_on_the_shoulders_of_giants"
@@ -161,15 +163,15 @@ class SotSog:
                 paper_concept, "doi", search_term, options.lang
             )
             self.handleItems(items, options)
-            dblp_items=[]
+            dblp_items = []
             try:
                 dblp_items = Paper.from_dblp_via_id(
                     paper_concept, "doi", search_term.lower()
                 )
             except Exception as ex:
-                dblp=Dblp.getInstance()
-                msg=f"{str(ex)}:{dblp.endpoint}"
-                self.log.log("❌","dblp",msg)
+                dblp = Dblp.getInstance()
+                msg = f"{str(ex)}:{dblp.endpoint}"
+                self.log.log("❌", "dblp", msg)
             if len(dblp_items) == 0:
                 paper = Paper()
                 paper.concept = paper_concept

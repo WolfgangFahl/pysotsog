@@ -8,9 +8,10 @@ from typing import Callable
 
 from ez_wikidata.wbquery import WikibaseQuery
 from lodstorage.sparql import SPARQL
-#from wd.wdgrid import GridSync, WikidataGrid
 
 from skg.smw import SemWiki
+
+# from wd.wdgrid import GridSync, WikidataGrid
 
 
 class ScholarQuery:
@@ -152,8 +153,8 @@ class ScholarQuery:
         return wbQuery
 
 
-#class SmwGrid(GridSync):
-class SmwGrid():
+# class SmwGrid(GridSync):
+class SmwGrid:
     """
     a semantic mediawiki based grid syncable with WikiData
 
@@ -175,7 +176,7 @@ class SmwGrid():
         constructor
 
         Args:
-            solution:  the solutio that i am part of
+            solution:  the solution that i am part of
             entityName(str): the name of the entity type of items to be shown in the grid
             entityPluralName(str): the plural name of the entities to be shown
             pk(str): the name of the primary key
@@ -190,17 +191,17 @@ class SmwGrid():
         self.wikiId = wikiId
         wikiUser = self.wikiUsers[wikiId]
         self.semwiki = SemWiki(wikiUser)
-        #wdGrid = WikidataGrid(
+        # wdGrid = WikidataGrid(
         #    solution=solution,
         #    source=wikiId,
         #    entityName=entityName,
         #    entityPluralName=entityPluralName,
         #    getLod=getLod,
         #    debug=debug,
-        #)
+        # )
         # we'd rather lazy load
         # wdGrid.lod=wdGrid.getLod()
-        #super().__init__(wdGrid, entityName, pk, sparql=sparql, debug=debug)
+        # super().__init__(wdGrid, entityName, pk, sparql=sparql, debug=debug)
 
 
 class ScholarGrid(SmwGrid):
@@ -209,13 +210,13 @@ class ScholarGrid(SmwGrid):
     """
 
     def __init__(
-        self, app, wikiUsers, wikiId: str, sparql: SPARQL, debug: bool = False
+        self, solution, wikiUsers, wikiId: str, sparql: SPARQL, debug: bool = False
     ):
         """
         constructor
 
         Args:
-            app(App): the app that I am part of
+            solution: the solution that i am part of
             wikiUsers(list): the wikiUsers
             wikiId(str): the wikiId to use
             sparql(SPARQL): the SPARQL endpoint to use
@@ -225,7 +226,7 @@ class ScholarGrid(SmwGrid):
         entityPluralName = "Scholars"
         pk = "item"
         super().__init__(
-            app=app,
+            solution=solution,
             wikiUsers=wikiUsers,
             wikiId=wikiId,
             entityName=entityName,
