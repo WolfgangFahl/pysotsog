@@ -105,7 +105,7 @@ class SkgSolution(InputWebSolution):
         """
         if index > 0:
             style = "color:grey"
-            text = f"{term}<sub>{index+1}</sub>"
+            text = f"{term}<sub>{index + 1}</sub>"
             delim = "&nbsp"
         else:
             style = ""
@@ -131,55 +131,54 @@ class SkgSolution(InputWebSolution):
         """
         perform a search with the given search terms
         """
-        with self.content_div:
-            try:
-                self.results.content = ""
-                self.markup.content = ""
-                terms = self.searchTerms.value.split("\n")
-                self.messages.content = "Searching"
-                delim = ""
-                for term in terms:
-                    if term:
-                        msg = f"... {term}\n"
-                        self.messages.content += msg
-                        if self.markup_name == "-":
-                            self.sotsog.options.markup_names = []
-                        else:
-                            self.sotsog.options.markup_names = [self.markup_name]
-                        search_result = self.sotsog.search([term], self.sotsog.options)
-                        items = search_result.items
-                        rmarkup = ""
-                        if len(items) == 0:
-                            # TODO check google search
-                            # https://pypi.org/project/googlesearch-python/
-                            params = parse.urlencode({"q": term})
-                            search_url = f"https://www.google.com/search?{params}"
-                            rmarkup = Link.create(
-                                search_url,
-                                term,
-                                "not found",
-                                target="_blank",
-                                style="color:red",
-                            )
-                        else:
-                            for i, item in enumerate(items):
-                                rmarkup += self.createItemLink(item, term, i)
-                                if len(item.markups) > 0:
-                                    markups = ""
-                                    for _markup_name, markup in item.markups.items():
-                                        markups += markup
-                                        self.markup.content += f"<pre>{markups}</pre>"
-                                        # break
-                        self.results.content += delim + rmarkup
-                        delim = "<br>"
-                # handle errors
-                for entry in self.sotsog.log.entries:
-                    markup = entry.as_html()
-                    self.markup.content += delim + markup
+        try:
+            self.results.content = ""
+            self.markup.content = ""
+            terms = self.searchTerms.value.split("\n")
+            self.messages.content = "Searching"
+            delim = ""
+            for term in terms:
+                if term:
+                    msg = f"... {term}\n"
+                    self.messages.content += msg
+                    if self.markup_name == "-":
+                        self.sotsog.options.markup_names = []
+                    else:
+                        self.sotsog.options.markup_names = [self.markup_name]
+                    search_result = self.sotsog.search([term], self.sotsog.options)
+                    items = search_result.items
+                    rmarkup = ""
+                    if len(items) == 0:
+                        # TODO check google search
+                        # https://pypi.org/project/googlesearch-python/
+                        params = parse.urlencode({"q": term})
+                        search_url = f"https://www.google.com/search?{params}"
+                        rmarkup = Link.create(
+                            search_url,
+                            term,
+                            "not found",
+                            target="_blank",
+                            style="color:red",
+                        )
+                    else:
+                        for i, item in enumerate(items):
+                            rmarkup += self.createItemLink(item, term, i)
+                            if len(item.markups) > 0:
+                                markups = ""
+                                for _markup_name, markup in item.markups.items():
+                                    markups += markup
+                                    self.markup.content += f"<pre>{markups}</pre>"
+                                    # break
+                    self.results.content += delim + rmarkup
                     delim = "<br>"
+            # handle errors
+            for entry in self.sotsog.log.entries:
+                markup = entry.as_html()
+                self.markup.content += delim + markup
+                delim = "<br>"
 
-            except BaseException as ex:
-                self.handle_exception(ex)
+        except BaseException as ex:
+            self.handle_exception(ex)
 
     def addLanguageSelect(self):
         """
