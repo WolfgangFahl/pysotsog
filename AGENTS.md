@@ -9,7 +9,9 @@ The project uses `unittest` for testing and custom shell scripts for common task
 ### Running Tests
 The primary script for running tests is `scripts/test`. It supports various modes:
 
-- **Run all tests (Standard):**
+- **Run all tests:**
+You should never run all tests locally some are too slow and must be run in CI
+
   ```bash
   ./scripts/test
   ```
@@ -21,7 +23,7 @@ The primary script for running tests is `scripts/test`. It supports various mode
   ./scripts/test -g
   ```
 
-- **Run a single test module:**
+- **Run a single test module (Standard):**
   Use this when working on a specific feature to save time.
   ```bash
   python3 -m unittest tests/test_sotsog.py
@@ -69,7 +71,7 @@ The project enforces code style using `black` and `isort`.
 - **Type Hinting:** Use standard Python type hints for function arguments and return values.
   ```python
   from argparse import ArgumentParser
-  
+
   def getArgParser(self, description: str, version_msg: str) -> ArgumentParser:
       ...
   ```

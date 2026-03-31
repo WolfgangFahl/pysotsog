@@ -10,9 +10,10 @@ from urllib import parse
 from ngwidgets.input_webserver import InputWebserver, InputWebSolution
 from ngwidgets.webserver import WebserverConfig
 from ngwidgets.widgets import Lang, Link
-from nicegui import Client, run, ui
+from nicegui import Client, app, run, ui
 from wikibot3rd.wikiuser import WikiUser
 
+from skg.api import register_routes
 from skg.graph import Node
 from skg.orcid import ORCID
 from skg.scholargrid import ScholarGrid
@@ -28,7 +29,7 @@ class SkgBrowser(InputWebserver):
 
     @classmethod
     def get_config(cls) -> WebserverConfig:
-        copy_right = "(c)2022-2025 Wolfgang Fahl"
+        copy_right = "(c)2022-2026 Wolfgang Fahl"
         config = WebserverConfig(
             copy_right=copy_right,
             version=Version(),
@@ -47,6 +48,8 @@ class SkgBrowser(InputWebserver):
         @ui.page("/scholars")
         async def scholars(client: Client):
             return await self.page(client, SkgSolution.scholars)
+
+        register_routes(app)
 
     def configure_run(self):
         # wiki users
