@@ -5,9 +5,9 @@ Created on 2022-11-22
 """
 
 import json
+import unittest
 
 from basemkit.basetest import Basetest
-
 from skg.semantic_scholar import SemanticScholar
 
 
@@ -26,6 +26,7 @@ class TestSemanticScholar(Basetest):
             print(result)
         pass
 
+    @unittest.skipIf(Basetest.inPublicCI(), "requires quota")
     def testGetPaper(self):
         """
         test getting a paper
@@ -36,6 +37,7 @@ class TestSemanticScholar(Basetest):
             print(json.dumps(paper.raw_data, indent=2, default=str))
         pass
 
+    @unittest.skipIf(Basetest.inPublicCI(), "requires quota")
     def testSearchAuthor(self):
         """
         test author search
@@ -43,6 +45,7 @@ class TestSemanticScholar(Basetest):
         results = self.semscholar.sch.search_author("Tim Berners-Lee")
         self.showResults(results)
 
+    @unittest.skipIf(Basetest.inPublicCI(), "requires quota")
     def testSearchPaper(self):
         """
         test paper search
