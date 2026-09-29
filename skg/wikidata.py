@@ -50,8 +50,10 @@ class Wikidata:
   VALUES ?item {{
     wd:{qid}
   }}
-  ?item rdfs:label ?itemLabel.
-  FILTER(LANG(?itemLabel)="{lang}").
+  OPTIONAL {{ ?item rdfs:label ?langLabel. FILTER(LANG(?langLabel)="{lang}") }}
+  OPTIONAL {{ ?item rdfs:label ?mulLabel. FILTER(LANG(?mulLabel)="mul") }}
+  BIND(COALESCE(?langLabel, ?mulLabel) AS ?itemLabel)
+  FILTER(BOUND(?itemLabel))
 }}"""
         wd = Wikidata.getInstance()
         lod = wd.sparql.queryAsListOfDicts(sparql_query)
@@ -82,10 +84,15 @@ WHERE
             sparql_query += f"    <{wd_url}>\n"
         sparql_query += f"""}}
   ?item wdt:P31/wdt:P279* ?class.
-  ?item rdfs:label ?itemLabel
-  FILTER(LANG(?itemLabel)="en")
-  ?class rdfs:label ?classLabel
-  FILTER(LANG(?classLabel)="en")
+  # labels may only exist as language independent mul - prefer en
+  OPTIONAL {{ ?item rdfs:label ?itemEnLabel. FILTER(LANG(?itemEnLabel)="en") }}
+  OPTIONAL {{ ?item rdfs:label ?itemMulLabel. FILTER(LANG(?itemMulLabel)="mul") }}
+  BIND(COALESCE(?itemEnLabel, ?itemMulLabel) AS ?itemLabel)
+  FILTER(BOUND(?itemLabel))
+  OPTIONAL {{ ?class rdfs:label ?classEnLabel. FILTER(LANG(?classEnLabel)="en") }}
+  OPTIONAL {{ ?class rdfs:label ?classMulLabel. FILTER(LANG(?classMulLabel)="mul") }}
+  BIND(COALESCE(?classEnLabel, ?classMulLabel) AS ?classLabel)
+  FILTER(BOUND(?classLabel))
   BIND(REPLACE(STR(?class),"http://www.wikidata.org/entity/","") AS ?class_qid)
   BIND(REPLACE(STR(?item),"http://www.wikidata.org/entity/","") AS ?qid)
 }}"""

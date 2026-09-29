@@ -52,3 +52,11 @@ class TestWikidataSearch(Basetest):
             classes_by_class_qid, _dup = LOD.getLookup(classes, "class_qid")
             self.assertTrue(expected[i] in classes_by_class_qid)
             pass
+
+    def test_label_for_qid(self):
+        """
+        test getting labels - Q937 only carries a mul label see #61
+        """
+        for qid, expected in [("Q80", "Tim Berners-Lee"), ("Q937", "Albert Einstein")]:
+            label = Wikidata.getLabelForQid(qid)
+            self.assertEqual(expected, label)
