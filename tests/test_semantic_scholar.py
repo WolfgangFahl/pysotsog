@@ -8,6 +8,7 @@ import json
 import unittest
 
 from basemkit.basetest import Basetest
+
 from skg.semantic_scholar import SemanticScholar
 
 
